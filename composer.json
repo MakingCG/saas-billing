@@ -1,17 +1,17 @@
 {
-    "name": "vendor_slug/package_slug",
-    "description": ":package_description",
+    "name": "makingcg/subscription",
+    "description": "Subscription module for all great payment gateway",
     "keywords": [
-        ":vendor_name",
+        "MakingCG",
         "laravel",
-        "package_slug"
+        "subscription"
     ],
-    "homepage": "https://github.com/vendor_slug/package_slug",
+    "homepage": "https://github.com/makingcg/subscription",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Peter Papp",
+            "email": "peterpapp@makingcg.com",
             "role": "Developer"
         }
     ],
@@ -30,13 +30,16 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Makingcg\\Subscription\\": "src",
+            "Makingcg\\Subscription\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "App\\" : "src/App/",
+            "Domain\\" : "src/Domain/",
+            "Support\\" : "src/Support/",
+            "Tests\\" : "tests"
         }
     },
     "scripts": {
@@ -50,10 +53,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Makingcg\\Subscription\\SubscriptionServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\SkeletonFacade"
+                "Subscription": "Makingcg\\Subscription\\SubscriptionFacade"
             }
         }
     },
