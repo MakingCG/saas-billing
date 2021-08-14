@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Makingcg\Subscription\Engines;
-
 
 use Makingcg\Subscription\Services\FlutterWaveHttp;
 

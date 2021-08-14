@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Makingcg\Subscription\Services;
-
 
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
@@ -19,7 +17,7 @@ class FlutterWaveHttp
         $this->api = 'https://api.flutterwave.com/v3';
     }
 
-    public function post($url, $data): PromiseInterface|Response
+    public function post($url, $data): PromiseInterface | Response
     {
         return Http::withHeaders([
             'Authorization' => "Bearer $this->bearer",

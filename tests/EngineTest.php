@@ -28,13 +28,13 @@ class EngineTest extends TestCase
         $plan = $this->subscription
             ->driver('stripe')
             ->createPlan([
-                'name'               => $this->planName,
-                'description'        => 'When your business start grow up.',
-                'price'              => '$44.99',
-                'capacity'           => 1000,
+                'name' => $this->planName,
+                'description' => 'When your business start grow up.',
+                'price' => '$44.99',
+                'capacity' => 1000,
                 'capacity_formatted' => '1TB',
-                'currency'           => 'USD',
-                'tax_rates'          => [],
+                'currency' => 'USD',
+                'tax_rates' => [],
             ]);
 
         $this->assertEquals($this->planName, $plan['id']);
@@ -49,8 +49,8 @@ class EngineTest extends TestCase
         $plan = $this->subscription
             ->driver('flutter-wave')
             ->createPlan([
-                'name'     => $this->planName,
-                'amount'   => '2000',
+                'name' => $this->planName,
+                'amount' => '2000',
                 'interval' => 'monthly',
                 'duration' => null,
             ]);

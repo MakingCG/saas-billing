@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Makingcg\Subscription\Engines;
-
 
 use Cartalyst\Stripe\Stripe;
 use Illuminate\Support\Str;
@@ -24,19 +22,19 @@ class StripeEngine implements Engine
     public function createPlan($data): array
     {
         $product = $this->stripe->products()->create([
-            'name'        => $data['name'],
+            'name' => $data['name'],
             'description' => $data['description'],
-            'metadata'    => [
+            'metadata' => [
                 'capacity' => $data['capacity'],
             ],
         ]);
 
         return $this->stripe->plans()->create([
-            'id'       => Str::slug($data['name']),
-            'amount'   => $data['price'],
+            'id' => Str::slug($data['name']),
+            'amount' => $data['price'],
             'currency' => 'EUR',
             'interval' => 'month',
-            'product'  => $product['id'],
+            'product' => $product['id'],
         ]);
     }
 }
