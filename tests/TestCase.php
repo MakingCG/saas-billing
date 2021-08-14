@@ -20,7 +20,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            SubscriptionServiceProvider::class
+            SubscriptionServiceProvider::class,
         ];
     }
 
