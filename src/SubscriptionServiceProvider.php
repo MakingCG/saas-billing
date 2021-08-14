@@ -2,9 +2,9 @@
 
 namespace Makingcg\Subscription;
 
+use App\Console\Commands\SubscriptionCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use App\Console\Commands\SubscriptionCommand;
 
 class SubscriptionServiceProvider extends PackageServiceProvider
 {
