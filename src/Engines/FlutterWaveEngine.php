@@ -6,7 +6,7 @@ namespace Makingcg\Subscription\Engines;
 
 use Makingcg\Subscription\Services\FlutterWaveHttp;
 
-class FlutterWaveEngine extends Engine
+class FlutterWaveEngine implements Engine
 {
     public FlutterWaveHttp $api;
 

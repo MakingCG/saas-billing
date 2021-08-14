@@ -10,9 +10,7 @@ class SubscriptionServiceProvider extends PackageServiceProvider
 {
     public function registeringPackage()
     {
-        $this->app->singleton(EngineManager::class, function ($app) {
-            return new EngineManager($app);
-        });
+        $this->app->singleton(EngineManager::class, fn ($app) => new EngineManager($app));
     }
 
     public function configurePackage(Package $package): void
@@ -21,7 +19,6 @@ class SubscriptionServiceProvider extends PackageServiceProvider
             ->name('vuefilemanager-subscription')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_subscription_table')
-            ->hasCommand(SubscriptionCommand::class);
+            ->hasMigration('create_subscription_table');
     }
 }

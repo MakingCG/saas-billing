@@ -2,9 +2,9 @@
 
 namespace Makingcg\Subscription\Engines;
 
-abstract class Engine
+interface Engine
 {
-    abstract public function hello(): string;
+    public function hello(): string;
 
-    abstract public function createPlan($data): array;
+    public function createPlan($data): array;
 }

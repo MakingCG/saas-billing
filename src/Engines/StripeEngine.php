@@ -7,7 +7,7 @@ namespace Makingcg\Subscription\Engines;
 use Cartalyst\Stripe\Stripe;
 use Illuminate\Support\Str;
 
-class StripeEngine extends Engine
+class StripeEngine implements Engine
 {
     public Stripe $stripe;
 
