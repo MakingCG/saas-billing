@@ -4,10 +4,16 @@
 namespace Makingcg\Subscription\Engines;
 
 
-use Illuminate\Support\Facades\Http;
+use Makingcg\Subscription\Services\FlutterWaveHttp;
 
 class FlutterWaveEngine extends Engine
 {
+    public FlutterWaveHttp $api;
+
+    public function __construct()
+    {
+        $this->api = resolve(FlutterWaveHttp::class);
+    }
 
     public function hello(): string
     {
@@ -16,11 +22,7 @@ class FlutterWaveEngine extends Engine
 
     public function createPlan($data): array
     {
-        $bearer = config('vuefilemanager-subscription.credentials.flutter-wave.secret');
-
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer $bearer",
-        ])->post('https://api.flutterwave.com/v3/payment-plans', $data);
+        $response = $this->api->post('/payment-plans', $data);
 
         return $response->json();
     }
