@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Makingcg\Subscription;
-
 
 use Illuminate\Support\Manager;
 use Makingcg\Subscription\Engines\Engine;
