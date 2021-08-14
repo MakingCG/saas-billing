@@ -8,6 +8,13 @@ use App\Console\Commands\SubscriptionCommand;
 
 class SubscriptionServiceProvider extends PackageServiceProvider
 {
+    public function registeringPackage()
+    {
+        $this->app->singleton(EngineManager::class, function ($app) {
+            return new EngineManager($app);
+        });
+    }
+
     public function configurePackage(Package $package): void
     {
         $package

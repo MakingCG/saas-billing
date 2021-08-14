@@ -1,7 +1,8 @@
 <?php
 
-namespace Makingcg\\Subscription;
+namespace Makingcg\Subscription;
 
 class Subscription
 {
+
 }

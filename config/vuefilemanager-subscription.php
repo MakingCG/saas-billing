@@ -1,5 +1,7 @@
 <?php
-// config for Subscription/ClassName
+
 return [
 
+    // Implemented drivers: stripe, flutter-wave
+    'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
 ];
