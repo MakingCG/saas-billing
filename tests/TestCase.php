@@ -27,10 +27,7 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-        /*
-        include_once __DIR__.'/../database/migrations/create_subscription_table.php.stub';
-        (new \CreatePackageTable())->up();
-        */
+        config()->set('vuefilemanager-subscription.credentials.stripe.secret', 'sk_test_51GsACaCBETHMUxzVviYCrv0CeZMyWAOfBPe4uH5rkKJcJxrXhIciWQTr7UB1sgw9geoJMkNDVSWBQW36tuAsVznd00zhNHXhok');
+        config()->set('vuefilemanager-subscription.credentials.flutter-wave.secret', 'FLWSECK_TEST-eef4e042b75bcef881694b26914b7f47-X');
     }
 }
