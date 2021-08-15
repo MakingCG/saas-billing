@@ -52,7 +52,5 @@ class PlansTest extends TestCase
                 'description' => $this->plan['description'],
             ])
             ->assertDatabaseCount('plans', 1);
-
-        dd(PlanDriver::all()->toArray());
     }
 }
