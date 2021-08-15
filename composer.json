@@ -22,7 +22,8 @@
         "illuminate/contracts": "^8.37",
         "laravel/sanctum": "^2.11",
         "spatie/data-transfer-object": "^3.6",
-        "spatie/laravel-package-tools": "^1.4.3"
+        "spatie/laravel-package-tools": "^1.4.3",
+        "spatie/laravel-queueable-action": "^2.12"
     },
     "require-dev": {
         "brianium/paratest": "^6.2",

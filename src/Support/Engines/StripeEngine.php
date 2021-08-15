@@ -1,5 +1,4 @@
 <?php
-
 namespace Support\Engines;
 
 use Illuminate\Support\Str;
@@ -30,7 +29,7 @@ class StripeEngine implements Engine
                 'name'        => $data->name,
                 'description' => $data->description,
                 'metadata'    => [
-                    'storage' => $data->storage,
+                    'amount' => $data->amount,
                 ],
             ]);
 

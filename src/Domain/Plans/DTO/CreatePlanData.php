@@ -6,8 +6,8 @@ use Spatie\DataTransferObject\DataTransferObject;
 class CreatePlanData extends DataTransferObject
 {
     public string $name;
-    public string $price;
-    public string $storage;
+    public int $price;
+    public int $amount;
     public string $interval;
     public string $description;
 
@@ -16,7 +16,7 @@ class CreatePlanData extends DataTransferObject
         return new self([
             'name'        => $request->input('name'),
             'price'       => $request->input('price'),
-            'storage'     => $request->input('storage'),
+            'amount'      => $request->input('amount'),
             'interval'    => $request->input('interval'),
             'description' => $request->input('description'),
         ]);

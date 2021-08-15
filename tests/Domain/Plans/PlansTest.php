@@ -2,8 +2,8 @@
 namespace Tests\Domain\Plans;
 
 use Str;
-use Tests\Models\User;
 use Tests\TestCase;
+use Tests\Models\User;
 
 class PlansTest extends TestCase
 {
@@ -22,28 +22,34 @@ class PlansTest extends TestCase
             'description' => 'When your business start grow up.',
             'interval'    => 'month',
             'price'       => 10,
-            'storage'     => 1000,
+            'amount'      => 1000,
         ];
     }
 
     /**
      * @test
      */
-    public function it_create_plan_with_multiple_drivers()
+    public function it_create_plan()
     {
-        collect(['stripe', 'flutter-wave'])
-            ->each(function ($driver) {
+        $this
+            ->actingAs($this->user)
+            ->post('/api/subscription/plans', $this->plan)
+            ->assertCreated()
+            ->assertJsonFragment([
+                'name' => $this->plan['name'],
+            ]);
 
-                config()->set('vuefilemanager-subscription.driver', $driver);
-
-                $this
-                    ->actingAs($this->user)
-                    ->post('/api/subscription/plans', $this->plan)
-                    ->assertCreated()
-                    ->assertJsonFragment([
-                        'name' => $this->plan['name'],
-                    ]);
-            });
-
+        $this
+            ->assertDatabaseHas('plan_drivers', [
+                'driver' => 'stripe',
+            ])
+            ->assertDatabaseHas('plan_drivers', [
+                'driver' => 'flutter-wave',
+            ])
+            ->assertDatabaseHas('plans', [
+                'name'        => $this->plan['name'],
+                'description' => $this->plan['description'],
+            ])
+            ->assertDatabaseCount('plans', 1);
     }
 }
