@@ -4,6 +4,7 @@
 namespace Makingcg\Subscription\Engines;
 
 
+use Domain\Plans\DTO\CreatePlanData;
 use Makingcg\Subscription\Services\FlutterWaveHttp;
 
 class FlutterWaveEngine implements Engine
@@ -20,10 +21,25 @@ class FlutterWaveEngine implements Engine
         return "Hello, I'm FlutterWave!";
     }
 
-    public function createPlan($data): array
+    public function createPlan(CreatePlanData $data): array
     {
-        $response = $this->api->post('/payment-plans', $data);
+        $response = $this->api->post('/payment-plans', [
+            'amount'   => $data->price,
+            'name'     => $data->name,
+            'interval' => $this->mapInterval($data->interval),
+        ]);
 
         return $response->json();
+    }
+
+    private function mapInterval(string $interval): string
+    {
+        return match ($interval) {
+            'day' => 'daily',
+            'week' => 'weekly',
+            'month' => 'monthly',
+            'quarter' => 'quarterly',
+            'year' => 'yearly',
+        };
     }
 }

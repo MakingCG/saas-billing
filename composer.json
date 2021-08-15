@@ -19,6 +19,8 @@
         "php": "^8.0",
         "cartalyst/stripe-laravel": "^13.1",
         "illuminate/contracts": "^8.37",
+        "laravel/sanctum": "^2.11",
+        "spatie/data-transfer-object": "^3.6",
         "spatie/laravel-package-tools": "^1.4.3"
     },
     "require-dev": {

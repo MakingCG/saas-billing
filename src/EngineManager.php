@@ -2,11 +2,15 @@
 
 namespace Makingcg\Subscription;
 
+use Domain\Plans\DTO\CreatePlanData;
 use Illuminate\Support\Manager;
 use Makingcg\Subscription\Engines\Engine;
 use Makingcg\Subscription\Engines\FlutterWaveEngine;
 use Makingcg\Subscription\Engines\StripeEngine;
 
+/**
+ * @method createPlan(CreatePlanData $data)
+ */
 class EngineManager extends Manager
 {
     public function getDefaultDriver(): string

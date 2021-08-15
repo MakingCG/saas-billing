@@ -2,7 +2,6 @@
 
 namespace Makingcg\Subscription;
 
-use App\Console\Commands\SubscriptionCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -19,6 +18,13 @@ class SubscriptionServiceProvider extends PackageServiceProvider
             ->name('vuefilemanager-subscription')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_subscription_table');
+            ->hasRoutes([
+                'api',
+            ]);
+    }
+
+    public function bootingPackage()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 }
