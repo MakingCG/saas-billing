@@ -1,4 +1,5 @@
 <?php
+
 namespace Support\Engines;
 
 use Illuminate\Support\Str;
@@ -22,7 +23,7 @@ class StripeEngine implements Engine
 
     public function createPlan(CreatePlanData $data): array
     {
-        // Create product
+        // Create stripe product
         $product = $this->stripe
             ->products()
             ->create([
@@ -33,8 +34,8 @@ class StripeEngine implements Engine
                 ],
             ]);
 
-        // Create & return plan
-        return $this->stripe
+        // Create stripe plan and attach product into it
+        $plan = $this->stripe
             ->plans()
             ->create([
                 'id'       => Str::slug($data->name),
@@ -43,5 +44,10 @@ class StripeEngine implements Engine
                 'currency' => 'EUR',
                 'product'  => $product['id'],
             ]);
+
+        return [
+            'id'   => $plan['id'],
+            'name' => $product['name'],
+        ];
     }
 }

@@ -26,7 +26,10 @@ class FlutterWaveEngine implements Engine
             'interval' => $this->mapInterval($data->interval),
         ]);
 
-        return $response->json();
+        return [
+            'id'   => $response->json()['data']['id'],
+            'name' => $response->json()['data']['name'],
+        ];
     }
 
     private function mapInterval(string $interval): string
