@@ -15,7 +15,7 @@ class CreatePlanDriversTable extends Migration
     {
         Schema::create('plan_drivers', function (Blueprint $table) {
             $table->uuid('plan_id');
-            $table->uuid('driver_plan_id');
+            $table->string('driver_plan_id');
             $table->string('driver');
         });
     }

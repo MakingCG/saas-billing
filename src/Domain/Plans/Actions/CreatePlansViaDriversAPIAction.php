@@ -20,22 +20,23 @@ class CreatePlansViaDriversAPIAction
         CreatePlanData $data,
         Plan $plan,
     ) {
-        // Get available drivers
+        // TODO: Get available drivers
         $availableDrivers = ['stripe', 'flutter-wave'];
 
         collect($availableDrivers)
             ->each(function ($driver) use ($data, $plan) {
-                // Create plan
+
+                // Create plan via gateway api
                 $driverPlan = $this->subscription
                     ->driver($driver)
                     ->createPlan($data);
 
                 // Attach driver plan id into internal plan record
-                PlanDriver::create([
-                    'driver_plan_id' => $driverPlan['id'],
-                    'plan_id'        => $plan->id,
-                    'driver'         => $driver,
-                ]);
+                $plan->drivers()
+                    ->create([
+                        'driver_plan_id' => $driverPlan['id'],
+                        'driver'         => $driver,
+                    ]);
             });
     }
 }
