@@ -1,12 +1,11 @@
 <?php
+namespace Support;
 
-namespace Makingcg\Subscription;
-
-use Domain\Plans\DTO\CreatePlanData;
+use Support\Engines\Engine;
 use Illuminate\Support\Manager;
-use Makingcg\Subscription\Engines\Engine;
-use Makingcg\Subscription\Engines\FlutterWaveEngine;
-use Makingcg\Subscription\Engines\StripeEngine;
+use Support\Engines\StripeEngine;
+use Domain\Plans\DTO\CreatePlanData;
+use Support\Engines\FlutterWaveEngine;
 
 /**
  * @method createPlan(CreatePlanData $data)

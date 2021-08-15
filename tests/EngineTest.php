@@ -1,8 +1,6 @@
 <?php
-
 namespace Tests;
 
-use Makingcg\Subscription\EngineManager;
 use Str;
 use Tests\Models\User;
 

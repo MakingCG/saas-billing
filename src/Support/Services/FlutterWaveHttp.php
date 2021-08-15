@@ -1,10 +1,9 @@
 <?php
+namespace Support\Services;
 
-namespace Makingcg\Subscription\Services;
-
-use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Promise\PromiseInterface;
 
 class FlutterWaveHttp
 {

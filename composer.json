@@ -18,6 +18,7 @@
     "require": {
         "php": "^8.0",
         "cartalyst/stripe-laravel": "^13.1",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "illuminate/contracts": "^8.37",
         "laravel/sanctum": "^2.11",
         "spatie/data-transfer-object": "^3.6",
@@ -47,6 +48,7 @@
     },
     "scripts": {
         "psalm": "vendor/bin/psalm",
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
         "test": "./vendor/bin/testbench package:test --parallel --no-coverage",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },

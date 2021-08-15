@@ -1,6 +1,5 @@
 <?php
-
-namespace Makingcg\Subscription\Engines;
+namespace Support\Engines;
 
 use Domain\Plans\DTO\CreatePlanData;
 

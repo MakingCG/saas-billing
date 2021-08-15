@@ -1,12 +1,11 @@
 <?php
-
 namespace Tests;
 
+use Laravel\Sanctum\SanctumServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Laravel\Sanctum\SanctumServiceProvider;
 use Makingcg\Subscription\SubscriptionServiceProvider;
-use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     // Implemented drivers: stripe, flutter-wave
     'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
 
@@ -11,6 +10,6 @@ return [
         ],
         'flutter-wave' => [
             'secret' => env('FLUTTER_WAVE_SECRET'),
-        ]
-    ]
+        ],
+    ],
 ];

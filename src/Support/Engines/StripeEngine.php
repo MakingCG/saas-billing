@@ -1,12 +1,9 @@
 <?php
+namespace Support\Engines;
 
-
-namespace Makingcg\Subscription\Engines;
-
-
+use Illuminate\Support\Str;
 use Cartalyst\Stripe\Stripe;
 use Domain\Plans\DTO\CreatePlanData;
-use Illuminate\Support\Str;
 
 class StripeEngine implements Engine
 {

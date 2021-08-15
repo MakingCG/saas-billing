@@ -1,11 +1,8 @@
 <?php
-
-
-namespace Makingcg\Subscription\Engines;
-
+namespace Support\Engines;
 
 use Domain\Plans\DTO\CreatePlanData;
-use Makingcg\Subscription\Services\FlutterWaveHttp;
+use Support\Services\FlutterWaveHttp;
 
 class FlutterWaveEngine implements Engine
 {
@@ -35,11 +32,11 @@ class FlutterWaveEngine implements Engine
     private function mapInterval(string $interval): string
     {
         return match ($interval) {
-            'day' => 'daily',
-            'week' => 'weekly',
-            'month' => 'monthly',
+            'day'     => 'daily',
+            'week'    => 'weekly',
+            'month'   => 'monthly',
             'quarter' => 'quarterly',
-            'year' => 'yearly',
+            'year'    => 'yearly',
         };
     }
 }
