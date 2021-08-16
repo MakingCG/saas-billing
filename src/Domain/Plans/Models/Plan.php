@@ -10,6 +10,13 @@ use Makingcg\Subscription\Database\Factories\PlanFactory;
 /**
  * @method static create(array $array)
  * @property string id
+ * @property string name
+ * @property string description
+ * @property string price
+ * @property string currency
+ * @property int amount
+ * @property string interval
+ * @property boolean visible
  */
 class Plan extends Model
 {

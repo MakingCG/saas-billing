@@ -1,7 +1,6 @@
 <?php
 namespace Tests\Domain\Plans;
 
-use Domain\Plans\Models\PlanDriver;
 use Str;
 use Tests\TestCase;
 use Tests\Models\User;

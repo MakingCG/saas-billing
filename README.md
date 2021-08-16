@@ -5,7 +5,7 @@
 You can install the package via composer:
 
 ```bash
-composer require makingcg/subscription
+composer require VueFileManager/subscription
 ```
 
 You can publish and run the migrations with:

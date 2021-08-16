@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * @method static create(array $array)
+ * @property string plan_id
+ * @property string driver_plan_id
+ * @property string driver
  */
 class PlanDriver extends Model
 {
