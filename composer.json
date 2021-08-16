@@ -2,7 +2,7 @@
     "name": "makingcg/subscription",
     "description": "Subscription module for all great payment gateway",
     "keywords": [
-        "MakingCG",
+        "VueFileManager",
         "laravel",
         "subscription"
     ],
@@ -35,8 +35,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Makingcg\\Subscription\\": "src",
-            "Makingcg\\Subscription\\Database\\Factories\\": "database/factories"
+            "VueFileManager\\Subscription\\": "src",
+            "VueFileManager\\Subscription\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
@@ -59,10 +59,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Makingcg\\Subscription\\SubscriptionServiceProvider"
+                "VueFileManager\\Subscription\\SubscriptionServiceProvider"
             ],
             "aliases": {
-                "Subscription": "Makingcg\\Subscription\\SubscriptionFacade"
+                "Subscription": "VueFileManager\\Subscription\\SubscriptionFacade"
             }
         }
     },

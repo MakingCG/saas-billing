@@ -14,7 +14,7 @@ class EngineManager extends Manager
 {
     public function getDefaultDriver(): string
     {
-        return $this->config->get('vuefilemanager-subscription.driver', 'stripe');
+        return $this->config->get('subscription.driver', 'stripe');
     }
 
     public function createStripeDriver(): Engine

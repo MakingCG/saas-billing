@@ -15,7 +15,7 @@ class SubscriptionServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('vuefilemanager-subscription')
+            ->name('subscription')
             ->hasConfigFile()
             ->hasViews()
             ->hasRoutes([

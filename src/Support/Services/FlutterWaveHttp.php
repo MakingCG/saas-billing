@@ -12,7 +12,7 @@ class FlutterWaveHttp
 
     public function __construct()
     {
-        $this->bearer = config('vuefilemanager-subscription.credentials.flutter-wave.secret');
+        $this->bearer = config('subscription.credentials.flutter-wave.secret');
         $this->api = 'https://api.flutterwave.com/v3';
     }
 

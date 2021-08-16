@@ -1,2 +1,2 @@
 providers:
-  - Makingcg\\Subscription\SubscriptionServiceProvider
+  - VueFileManager\\Subscription\SubscriptionServiceProvider

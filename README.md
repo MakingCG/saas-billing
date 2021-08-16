@@ -11,13 +11,13 @@ composer require VueFileManager/subscription
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --provider="Makingcg\\Subscription\SubscriptionServiceProvider" --tag="subscription-migrations"
+php artisan vendor:publish --provider="VueFileManager\\Subscription\SubscriptionServiceProvider" --tag="subscription-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Makingcg\\Subscription\SubscriptionServiceProvider" --tag="subscription-config"
+php artisan vendor:publish --provider="VueFileManager\\Subscription\SubscriptionServiceProvider" --tag="subscription-config"
 ```
 
 This is the contents of the published config file:

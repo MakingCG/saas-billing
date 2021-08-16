@@ -12,7 +12,7 @@ class StripeEngine implements Engine
     public function __construct()
     {
         $this->stripe = resolve(Stripe::class)
-            ->make(config('vuefilemanager-subscription.credentials.stripe.secret'), '2020-03-02');
+            ->make(config('subscription.credentials.stripe.secret'), '2020-03-02');
     }
 
     public function hello(): string
