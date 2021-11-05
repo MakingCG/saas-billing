@@ -3,6 +3,7 @@ namespace Support\Engines;
 
 use Domain\Customers\Models\Customer;
 use Domain\Plans\DTO\CreatePlanData;
+use Illuminate\Http\Request;
 
 interface Engine
 {
@@ -20,4 +21,9 @@ interface Engine
      * Create new customer for service
      */
     public function createCustomer(array $user): Customer;
+
+    /**
+     * Create new subscription
+     */
+    public function webhook(Request $request): void;
 }

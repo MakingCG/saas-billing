@@ -4,7 +4,10 @@ namespace Support\Engines;
 
 use Domain\Customers\Models\Customer;
 use Domain\Plans\DTO\CreatePlanData;
+use Domain\Subscriptions\Models\Subscription;
+use Illuminate\Http\Request;
 use Support\Services\PayStackHttp;
+use Tests\Models\User;
 
 class PayStackEngine implements Engine
 {
@@ -54,6 +57,25 @@ class PayStackEngine implements Engine
             'driver_user_id' => $response->json()['data']['customer_code'],
             'driver'         => 'paystack',
         ]);
+    }
+
+    public function webhook(Request $request): void
+    {
+        if ($request->input('event') === 'subscription.create') {
+
+            // Get existing customer
+            $customer = Customer::where('driver', 'paystack')
+                ->where('driver_user_id', $request->input('data.customer.customer_code'))
+                ->firstOrFail();
+
+            Subscription::create([
+                'user_id'             => $customer->user_id,
+                'name'                => $request->input('data.plan.name'),
+                'plan_id'             => $request->input('data.plan.plan_code'),
+                'subscription_id'     => $request->input('data.subscription_code'),
+                'status' => $request->input('data.status'),
+            ]);
+        }
     }
 
     private function mapInterval(string $interval): string
