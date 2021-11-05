@@ -4,12 +4,12 @@ namespace Support\Engines;
 
 use Domain\Customers\Models\Customer;
 use Domain\Plans\DTO\CreatePlanData;
-use Domain\Subscriptions\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Support\Services\PayStackHttp;
-use Tests\Models\User;
+use Support\Webhooks\PayStackWebhooks;
 
-class PayStackEngine implements Engine
+class PayStackEngine extends PayStackWebhooks implements Engine
 {
     public PayStackHttp $api;
 
@@ -59,22 +59,15 @@ class PayStackEngine implements Engine
         ]);
     }
 
+    /**
+     * https://paystack.com/docs/payments/webhooks
+     */
     public function webhook(Request $request): void
     {
-        if ($request->input('event') === 'subscription.create') {
+        $method = 'handle' . Str::studly(str_replace('.', '_', $request->input('event')));
 
-            // Get existing customer
-            $customer = Customer::where('driver', 'paystack')
-                ->where('driver_user_id', $request->input('data.customer.customer_code'))
-                ->firstOrFail();
-
-            Subscription::create([
-                'user_id'             => $customer->user_id,
-                'name'                => $request->input('data.plan.name'),
-                'plan_id'             => $request->input('data.plan.plan_code'),
-                'subscription_id'     => $request->input('data.subscription_code'),
-                'status' => $request->input('data.status'),
-            ]);
+        if (method_exists($this, $method)) {
+            $this->{$method}($request);
         }
     }
 

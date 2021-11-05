@@ -9,7 +9,7 @@ use VueFileManager\Subscription\Database\Factories\CustomerFactory;
 
 /**
  * @method static create(array $array)
- * @method static where(string $string, string $string1)
+ * @method static where(string $key, string $value)
  * @property string user_id
  * @property string driver
  * @property string driver_user_id
