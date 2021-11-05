@@ -18,7 +18,7 @@ class CreatePlansViaDriversAPIAction
 
     public function __invoke(
         CreatePlanData $data,
-        Plan $plan,
+        Plan           $plan,
     ) {
         // Get available driver/s
         $availableDrivers = config('subscription.available_drivers');

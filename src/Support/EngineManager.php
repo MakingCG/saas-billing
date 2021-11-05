@@ -9,6 +9,7 @@ use Support\Engines\PayStackEngine;
 
 /**
  * @method createPlan(CreatePlanData $data)
+ * @method createCustomer(array $user)
  */
 class EngineManager extends Manager
 {

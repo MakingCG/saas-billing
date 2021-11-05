@@ -1,6 +1,7 @@
 <?php
 namespace Support\Engines;
 
+use Domain\Customers\Models\Customer;
 use Domain\Plans\DTO\CreatePlanData;
 
 interface Engine
@@ -14,4 +15,9 @@ interface Engine
      * Create new plan for subscription
      */
     public function createPlan(CreatePlanData $data): array;
+
+    /**
+     * Create new customer for service
+     */
+    public function createCustomer(array $user): Customer;
 }

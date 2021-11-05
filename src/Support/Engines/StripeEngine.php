@@ -1,6 +1,7 @@
 <?php
 namespace Support\Engines;
 
+use Domain\Customers\Models\Customer;
 use Illuminate\Support\Str;
 use Cartalyst\Stripe\Stripe;
 use Domain\Plans\DTO\CreatePlanData;
@@ -48,5 +49,10 @@ class StripeEngine implements Engine
             'id'   => $plan['id'],
             'name' => $product['name'],
         ];
+    }
+
+    public function createCustomer(array $user): Customer
+    {
+        // TODO: Implement createCustomer() method.
     }
 }

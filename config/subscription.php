@@ -2,7 +2,7 @@
 
 return [
     // Implemented drivers: stripe, paystack
-    'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
+    'driver' => env('SUBSCRIPTION_DRIVER', 'paystack'),
 
     'available_drivers' => [
         'paystack'
