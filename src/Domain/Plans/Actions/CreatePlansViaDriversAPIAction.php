@@ -20,8 +20,8 @@ class CreatePlansViaDriversAPIAction
         CreatePlanData $data,
         Plan $plan,
     ) {
-        // TODO: Get available drivers
-        $availableDrivers = ['stripe', 'flutter-wave'];
+        // Get available driver/s
+        $availableDrivers = config('subscription.available_drivers');
 
         collect($availableDrivers)
             ->each(function ($driver) use ($data, $plan) {

@@ -1,13 +1,14 @@
 <?php
 namespace Tests\Domain\Plans;
 
-use Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Models\User;
 
 class PlansTest extends TestCase
 {
-    public User $user;
+    public Model $user;
 
     public array $plan;
 
@@ -21,7 +22,7 @@ class PlansTest extends TestCase
             'name'        => Str::lower('test-plan-' . Str::random()),
             'description' => 'When your business start grow up.',
             'interval'    => 'month',
-            'price'       => 10,
+            'price'       => 1000,
             'amount'      => 1000,
         ];
     }
@@ -39,13 +40,16 @@ class PlansTest extends TestCase
                 'name' => $this->plan['name'],
             ]);
 
+        $availableDrivers = collect(config('subscription.available_drivers'));
+
+        $availableDrivers->each(fn ($driver) =>
+            $this
+                ->assertDatabaseHas('plan_drivers', [
+                    'driver' => $driver,
+                ])
+        );
+
         $this
-            ->assertDatabaseHas('plan_drivers', [
-                'driver' => 'stripe',
-            ])
-            ->assertDatabaseHas('plan_drivers', [
-                'driver' => 'flutter-wave',
-            ])
             ->assertDatabaseHas('plans', [
                 'name'        => $this->plan['name'],
                 'description' => $this->plan['description'],

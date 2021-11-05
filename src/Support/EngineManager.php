@@ -5,7 +5,7 @@ use Support\Engines\Engine;
 use Illuminate\Support\Manager;
 use Support\Engines\StripeEngine;
 use Domain\Plans\DTO\CreatePlanData;
-use Support\Engines\FlutterWaveEngine;
+use Support\Engines\PayStackEngine;
 
 /**
  * @method createPlan(CreatePlanData $data)
@@ -22,8 +22,8 @@ class EngineManager extends Manager
         return new StripeEngine();
     }
 
-    public function createFlutterWaveDriver(): Engine
+    public function createPayStackDriver(): Engine
     {
-        return new FlutterWaveEngine();
+        return new PayStackEngine();
     }
 }

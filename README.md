@@ -24,14 +24,14 @@ This is the contents of the published config file:
 
 ```php
 return [
-    // Implemented drivers: stripe, flutter-wave
+    // Implemented drivers: stripe, paystack
     'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
 
     'credentials' => [
         'stripe' => [
             'secret' => env('STRIPE_SECRET'),
         ],
-        'flutter-wave' => [
+        'paystack' => [
             'secret' => env('FLUTTER_WAVE_SECRET'),
         ],
     ],

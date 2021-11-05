@@ -2,32 +2,36 @@
 namespace Support\Engines;
 
 use Domain\Plans\DTO\CreatePlanData;
-use Support\Services\FlutterWaveHttp;
+use Support\Services\PayStackHttp;
 
-class FlutterWaveEngine implements Engine
+class PayStackEngine implements Engine
 {
-    public FlutterWaveHttp $api;
+    public PayStackHttp $api;
 
     public function __construct()
     {
-        $this->api = resolve(FlutterWaveHttp::class);
+        $this->api = resolve(PayStackHttp::class);
     }
 
     public function hello(): string
     {
-        return "Hello, I'm FlutterWave!";
+        return "Hello, I'm PayStack!";
     }
 
+
+    /**
+     * https://paystack.com/docs/api/#plan-create
+     */
     public function createPlan(CreatePlanData $data): array
     {
-        $response = $this->api->post('/payment-plans', [
-            'amount'   => $data->price,
+        $response = $this->api->post('/plan', [
             'name'     => $data->name,
+            'amount'   => $data->price,
             'interval' => $this->mapInterval($data->interval),
         ]);
 
         return [
-            'id'   => $response->json()['data']['id'],
+            'id'   => $response->json()['data']['plan_code'],
             'name' => $response->json()['data']['name'],
         ];
     }
@@ -38,8 +42,8 @@ class FlutterWaveEngine implements Engine
             'day'     => 'daily',
             'week'    => 'weekly',
             'month'   => 'monthly',
-            'quarter' => 'quarterly',
-            'year'    => 'yearly',
+            //'quarter' => 'quarterly',
+            'year'    => 'annually',
         };
     }
 }

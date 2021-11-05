@@ -1,15 +1,20 @@
 <?php
 
 return [
-    // Implemented drivers: stripe, flutter-wave
+    // Implemented drivers: stripe, paystack
     'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
+
+    'available_drivers' => [
+        'paystack'
+    ],
 
     'credentials' => [
         'stripe' => [
             'secret' => env('STRIPE_SECRET'),
         ],
-        'flutter-wave' => [
-            'secret' => env('FLUTTER_WAVE_SECRET'),
+        'paystack' => [
+            'secret' => env('PAYSTACK_SECRET'),
+            'public_key' => env('PAYSTACK_PUBLIC_KEY'),
         ],
     ],
 ];
