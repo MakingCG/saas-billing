@@ -1,6 +1,6 @@
 <?php
 
-namespace Makingcg\Subscription\Database\Factories;
+namespace VueFileManager\Subscription\Database\Factories;
 
 use Domain\Plans\Models\Plan;
 use Illuminate\Database\Eloquent\Factories\Factory;

@@ -5,7 +5,7 @@ use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Makingcg\Subscription\SubscriptionServiceProvider;
+use VueFileManager\Subscription\SubscriptionServiceProvider;
 
 class TestCase extends Orchestra
 {

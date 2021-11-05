@@ -1,5 +1,5 @@
 <?php
-namespace Makingcg\Subscription;
+namespace VueFileManager\Subscription;
 
 use Support\EngineManager;
 use Spatie\LaravelPackageTools\Package;
