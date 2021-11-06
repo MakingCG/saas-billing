@@ -1,13 +1,15 @@
 <?php
 
-use Domain\Webhooks\Controllers\WebhookController;
-use Domain\Plans\Controllers\PlansController;
 use Illuminate\Support\Facades\Route;
+use Domain\Plans\Controllers\PlansController;
+use Support\Webhooks\WebhookController;
 
 Route::group(['prefix' => 'api/subscription'], function () {
 
     Route::group(['middleware' => ['api']], function () {
-        Route::post('/webhook', WebhookController::class);
+
+        // TODO: resolve action issue
+        Route::post('/webhook', [WebhookController::class, 'store']);
     });
 
     Route::group(['middleware' => ['api', 'auth:sanctum']], function () {

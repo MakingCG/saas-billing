@@ -1,10 +1,11 @@
 <?php
 namespace Support\Engines;
 
-use Domain\Customers\Models\Customer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Cartalyst\Stripe\Stripe;
 use Domain\Plans\DTO\CreatePlanData;
+use Domain\Customers\Models\Customer;
 
 class StripeEngine implements Engine
 {
@@ -14,11 +15,6 @@ class StripeEngine implements Engine
     {
         $this->stripe = resolve(Stripe::class)
             ->make(config('subscription.credentials.stripe.secret'), '2020-03-02');
-    }
-
-    public function hello(): string
-    {
-        return "Hello, I'm Stripe!";
     }
 
     public function createPlan(CreatePlanData $data): array
@@ -54,5 +50,10 @@ class StripeEngine implements Engine
     public function createCustomer(array $user): Customer
     {
         // TODO: Implement createCustomer() method.
+    }
+
+    public function webhook(Request $request): void
+    {
+        // TODO: Implement webhook() method.
     }
 }

@@ -1,17 +1,12 @@
 <?php
 namespace Support\Engines;
 
-use Domain\Customers\Models\Customer;
-use Domain\Plans\DTO\CreatePlanData;
 use Illuminate\Http\Request;
+use Domain\Plans\DTO\CreatePlanData;
+use Domain\Customers\Models\Customer;
 
 interface Engine
 {
-    /**
-     * For testing purpose
-     */
-    public function hello(): string;
-
     /**
      * Create new plan for subscription
      */

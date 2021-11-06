@@ -5,7 +5,7 @@ return [
     'driver' => env('SUBSCRIPTION_DRIVER', 'paystack'),
 
     'available_drivers' => [
-        'paystack'
+        'paystack',
     ],
 
     'credentials' => [
@@ -13,7 +13,7 @@ return [
             'secret' => env('STRIPE_SECRET'),
         ],
         'paystack' => [
-            'secret' => env('PAYSTACK_SECRET'),
+            'secret'     => env('PAYSTACK_SECRET'),
             'public_key' => env('PAYSTACK_PUBLIC_KEY'),
         ],
     ],

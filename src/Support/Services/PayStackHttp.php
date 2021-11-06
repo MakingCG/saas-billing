@@ -20,7 +20,7 @@ class PayStackHttp
     {
         return Http::withHeaders([
             'Authorization' => "Bearer $this->bearer",
-            'Content-Type' => "application/json",
+            'Content-Type'  => 'application/json',
         ])->post("{$this->api}$url", $data);
     }
 }

@@ -1,9 +1,8 @@
 <?php
+namespace Support\Webhooks;
 
-namespace Domain\Webhooks\Controllers;
-
-use Illuminate\Http\Request;
 use Support\EngineManager;
+use Illuminate\Http\Request;
 
 class WebhookController
 {

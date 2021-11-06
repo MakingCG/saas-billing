@@ -1,10 +1,10 @@
 <?php
 namespace Tests\Domain\Plans;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
 
 class PlansTest extends TestCase
 {
@@ -42,7 +42,8 @@ class PlansTest extends TestCase
 
         $availableDrivers = collect(config('subscription.available_drivers'));
 
-        $availableDrivers->each(fn ($driver) =>
+        $availableDrivers->each(
+            fn ($driver) =>
             $this
                 ->assertDatabaseHas('plan_drivers', [
                     'driver' => $driver,

@@ -41,7 +41,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\" : "src/App/",
             "Domain\\" : "src/Domain/",
             "Support\\" : "src/Support/",
             "Tests\\" : "tests"

@@ -16,7 +16,7 @@ use VueFileManager\Subscription\Database\Factories\PlanFactory;
  * @property string currency
  * @property int amount
  * @property string interval
- * @property boolean visible
+ * @property bool visible
  */
 class Plan extends Model
 {

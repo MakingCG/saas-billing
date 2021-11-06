@@ -1,12 +1,11 @@
 <?php
-
 namespace Support\Engines;
 
-use Domain\Customers\Models\Customer;
-use Domain\Plans\DTO\CreatePlanData;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Support\Services\PayStackHttp;
+use Domain\Plans\DTO\CreatePlanData;
+use Domain\Customers\Models\Customer;
 use Support\Webhooks\PayStackWebhooks;
 
 class PayStackEngine extends PayStackWebhooks implements Engine
@@ -16,11 +15,6 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     public function __construct()
     {
         $this->api = resolve(PayStackHttp::class);
-    }
-
-    public function hello(): string
-    {
-        return "Hello, I'm PayStack!";
     }
 
     /**
@@ -74,8 +68,8 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     private function mapInterval(string $interval): string
     {
         return match ($interval) {
-            'day' => 'daily',
-            'week' => 'weekly',
+            'day'   => 'daily',
+            'week'  => 'weekly',
             'month' => 'monthly',
             //'quarter' => 'quarterly',
             'year' => 'annually',

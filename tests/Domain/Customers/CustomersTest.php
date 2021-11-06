@@ -1,12 +1,10 @@
 <?php
-
 namespace Tests\Domain\Customers;
 
-use Domain\Customers\Models\Customer;
-use Illuminate\Database\Eloquent\Model;
-use Support\EngineManager;
-use Tests\Models\User;
 use Tests\TestCase;
+use Tests\Models\User;
+use Support\EngineManager;
+use Illuminate\Database\Eloquent\Model;
 
 class CustomersTest extends TestCase
 {
