@@ -1,8 +1,11 @@
 <?php
 namespace Tests\Domain\Subscriptions;
 
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 
 class SubscriptionsTest extends TestCase
 {
@@ -11,6 +14,10 @@ class SubscriptionsTest extends TestCase
      */
     public function it_get_webhook_and_create_subscription()
     {
+        Event::fake([
+            SubscriptionWasCreated::class
+        ]);
+
         $subscriptionId = 'SUB_vsyqdmlzble3uii';
         $customerId = 'CUS_xnxdt6s1zg1f4nx';
 
@@ -72,5 +79,9 @@ class SubscriptionsTest extends TestCase
         $this->assertDatabaseHas('subscriptions', [
             'subscription_id' => $subscriptionId,
         ]);
+
+        $subscription = Subscription::first();
+
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 }

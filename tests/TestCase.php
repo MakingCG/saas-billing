@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use Illuminate\Events\EventServiceProvider;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Eloquent\Factories\Factory;
