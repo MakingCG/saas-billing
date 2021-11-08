@@ -21,7 +21,7 @@ class SubscriptionsTest extends TestCase
         ]);
 
         // Send webhook
-        $this->postJson('/api/subscription/webhook', [
+        $this->postJson('/api/subscription/webhooks', [
             'event' => 'subscription.create',
             'data'  => [
                 'domain'            => 'test',

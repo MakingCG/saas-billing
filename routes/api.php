@@ -2,14 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use Domain\Plans\Controllers\PlansController;
-use Support\Webhooks\WebhookController;
+use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 
 Route::group(['prefix' => 'api/subscription'], function () {
 
     Route::group(['middleware' => ['api']], function () {
-
-        // TODO: resolve action issue
-        Route::post('/webhook', [WebhookController::class, 'store']);
+        Route::post('/webhooks', WebhooksController::class);
     });
 
     Route::group(['middleware' => ['api', 'auth:sanctum']], function () {

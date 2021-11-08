@@ -1,10 +1,11 @@
 <?php
-namespace Support\Webhooks;
+namespace VueFileManager\Subscription\Support\Webhooks;
 
+use Illuminate\Routing\Controller;
 use Support\EngineManager;
 use Illuminate\Http\Request;
 
-class WebhookController
+class WebhooksController extends Controller
 {
     public function __invoke(Request $request)
     {

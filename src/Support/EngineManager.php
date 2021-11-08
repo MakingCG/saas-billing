@@ -1,6 +1,7 @@
 <?php
 namespace Support;
 
+use Illuminate\Http\Request;
 use Support\Engines\Engine;
 use Illuminate\Support\Manager;
 use Support\Engines\StripeEngine;
@@ -10,6 +11,7 @@ use Domain\Plans\DTO\CreatePlanData;
 /**
  * @method createPlan(CreatePlanData $data)
  * @method createCustomer(array $user)
+ * @method webhook(Request $request)
  */
 class EngineManager extends Manager
 {
