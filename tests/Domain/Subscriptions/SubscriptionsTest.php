@@ -1,11 +1,11 @@
 <?php
 namespace Tests\Domain\Subscriptions;
 
-use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Event;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
-use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class SubscriptionsTest extends TestCase
 {
@@ -15,7 +15,7 @@ class SubscriptionsTest extends TestCase
     public function it_get_webhook_and_create_subscription()
     {
         Event::fake([
-            SubscriptionWasCreated::class
+            SubscriptionWasCreated::class,
         ]);
 
         $subscriptionId = 'SUB_vsyqdmlzble3uii';

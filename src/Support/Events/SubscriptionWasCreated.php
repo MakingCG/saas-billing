@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Events;
 
 use Illuminate\Queue\SerializesModels;
@@ -10,10 +9,8 @@ class SubscriptionWasCreated
 {
     use Dispatchable, SerializesModels;
 
-    public Subscription $subscription;
-
-    public function __construct(Subscription $subscription)
-    {
-        $this->subscription = $subscription;
+    public function __construct(
+        public Subscription $subscription
+    ) {
     }
 }

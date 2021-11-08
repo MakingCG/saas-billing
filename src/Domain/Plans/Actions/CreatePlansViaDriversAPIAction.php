@@ -1,10 +1,10 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
+use Spatie\QueueableAction\QueueableAction;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
-use Spatie\QueueableAction\QueueableAction;
 
 class CreatePlansViaDriversAPIAction
 {

@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
+use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 
 Route::group(['prefix' => 'api/subscription'], function () {
-
     Route::group(['middleware' => ['api']], function () {
         Route::post('/webhooks', WebhooksController::class);
     });
