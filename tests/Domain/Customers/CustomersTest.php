@@ -3,7 +3,7 @@ namespace Tests\Domain\Customers;
 
 use Tests\TestCase;
 use Tests\Models\User;
-use Support\EngineManager;
+use VueFileManager\Subscription\Support\EngineManager;
 use Illuminate\Database\Eloquent\Model;
 
 class CustomersTest extends TestCase

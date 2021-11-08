@@ -1,7 +1,7 @@
 <?php
 namespace VueFileManager\Subscription;
 
-use Support\EngineManager;
+use VueFileManager\Subscription\Support\EngineManager;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

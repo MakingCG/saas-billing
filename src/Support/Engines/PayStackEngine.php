@@ -1,12 +1,12 @@
 <?php
-namespace Support\Engines;
+namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Support\Services\PayStackHttp;
+use VueFileManager\Subscription\Support\Services\PayStackHttp;
 use Domain\Plans\DTO\CreatePlanData;
 use Domain\Customers\Models\Customer;
-use Support\Webhooks\PayStackWebhooks;
+use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
 
 class PayStackEngine extends PayStackWebhooks implements Engine
 {

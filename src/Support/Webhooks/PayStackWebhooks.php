@@ -1,5 +1,5 @@
 <?php
-namespace Support\Webhooks;
+namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Illuminate\Http\Request;
 use Domain\Customers\Models\Customer;

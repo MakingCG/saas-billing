@@ -1,5 +1,5 @@
 <?php
-namespace Support\Services;
+namespace VueFileManager\Subscription\Support\Services;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;

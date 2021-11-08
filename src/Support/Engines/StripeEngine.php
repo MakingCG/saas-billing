@@ -1,5 +1,5 @@
 <?php
-namespace Support\Engines;
+namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;

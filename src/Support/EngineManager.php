@@ -1,11 +1,11 @@
 <?php
-namespace Support;
+namespace VueFileManager\Subscription\Support;
 
 use Illuminate\Http\Request;
-use Support\Engines\Engine;
+use VueFileManager\Subscription\Support\Engines\Engine;
 use Illuminate\Support\Manager;
-use Support\Engines\StripeEngine;
-use Support\Engines\PayStackEngine;
+use VueFileManager\Subscription\Support\Engines\StripeEngine;
+use VueFileManager\Subscription\Support\Engines\PayStackEngine;
 use Domain\Plans\DTO\CreatePlanData;
 
 /**

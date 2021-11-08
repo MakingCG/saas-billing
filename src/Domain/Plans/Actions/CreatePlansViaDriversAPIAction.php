@@ -1,7 +1,7 @@
 <?php
 namespace Domain\Plans\Actions;
 
-use Support\EngineManager;
+use VueFileManager\Subscription\Support\EngineManager;
 use Domain\Plans\Models\Plan;
 use Domain\Plans\DTO\CreatePlanData;
 use Spatie\QueueableAction\QueueableAction;
