@@ -2,7 +2,7 @@
 namespace Tests\Domain\Subscriptions;
 
 use Tests\TestCase;
-use Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 
 class SubscriptionsTest extends TestCase
 {

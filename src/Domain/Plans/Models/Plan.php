@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Plans\Models;
+namespace VueFileManager\Subscription\Domain\Plans\Models;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;

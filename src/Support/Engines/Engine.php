@@ -2,8 +2,8 @@
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Http\Request;
-use Domain\Plans\DTO\CreatePlanData;
-use Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 
 interface Engine
 {

@@ -2,8 +2,8 @@
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Illuminate\Http\Request;
-use Domain\Customers\Models\Customer;
-use Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class PayStackWebhooks
 {

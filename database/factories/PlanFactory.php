@@ -2,7 +2,7 @@
 
 namespace VueFileManager\Subscription\Database\Factories;
 
-use Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PlanFactory extends Factory

@@ -2,7 +2,7 @@
 
 namespace VueFileManager\Subscription\Database\Factories;
 
-use Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

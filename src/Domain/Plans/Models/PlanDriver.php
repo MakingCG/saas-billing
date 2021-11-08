@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Plans\Models;
+namespace VueFileManager\Subscription\Domain\Plans\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;

@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Plans\DTO;
+namespace VueFileManager\Subscription\Domain\Plans\DTO;
 
 use Spatie\DataTransferObject\DataTransferObject;
 

@@ -1,12 +1,12 @@
 <?php
-namespace Domain\Plans\Controllers;
+namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
-use Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Domain\Plans\DTO\CreatePlanData;
-use Domain\Plans\Requests\StorePlanRequest;
-use Domain\Plans\Actions\CreatePlansViaDriversAPIAction;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Plans\Requests\StorePlanRequest;
+use VueFileManager\Subscription\Domain\Plans\Actions\CreatePlansViaDriversAPIAction;
 
 class PlansController extends Controller
 {

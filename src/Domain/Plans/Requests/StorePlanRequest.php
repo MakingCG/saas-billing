@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Plans\Requests;
+namespace VueFileManager\Subscription\Domain\Plans\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

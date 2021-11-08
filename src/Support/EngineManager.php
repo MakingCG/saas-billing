@@ -6,7 +6,7 @@ use VueFileManager\Subscription\Support\Engines\Engine;
 use Illuminate\Support\Manager;
 use VueFileManager\Subscription\Support\Engines\StripeEngine;
 use VueFileManager\Subscription\Support\Engines\PayStackEngine;
-use Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 
 /**
  * @method createPlan(CreatePlanData $data)
