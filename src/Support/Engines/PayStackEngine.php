@@ -24,7 +24,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     {
         $response = $this->api->post('/plan', [
             'name'     => $data->name,
-            'amount'   => $data->price,
+            'amount'   => $data->amount,
             'interval' => $this->mapInterval($data->interval),
         ]);
 

@@ -34,7 +34,12 @@ class Plan extends Model
 
     public function drivers(): HasMany
     {
-        return $this->hasMany(PlanDriver::class, 'plan_id', 'id');
+        return $this->hasMany(PlanDriver::class);
+    }
+
+    public function features(): HasMany
+    {
+        return $this->hasMany(PlanFeature::class);
     }
 
     protected static function newFactory(): PlanFactory

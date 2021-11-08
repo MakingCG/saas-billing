@@ -1,50 +1,44 @@
 <?php
+
 namespace Tests\Domain\Plans;
 
 use Tests\TestCase;
 use Tests\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 class PlansTest extends TestCase
 {
-    public Model $user;
-
-    public array $plan;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = User::factory()->create();
-
-        $this->plan = [
-            'name'        => Str::lower('test-plan-' . Str::random()),
-            'description' => 'When your business start grow up.',
-            'interval'    => 'month',
-            'price'       => 1000,
-            'amount'      => 1000,
-        ];
-    }
-
     /**
      * @test
      */
     public function it_create_plan()
     {
+        $user = User::factory()->create();
+
+        $plan = Plan::factory()->make();
+
         $this
-            ->actingAs($this->user)
-            ->post('/api/subscription/plans', $this->plan)
+            ->actingAs($user)
+            ->post('/api/subscription/plans', [
+                'name'        => $plan->name,
+                'description' => $plan->description,
+                'interval'    => $plan->interval,
+                'price'       => $plan->price,
+                'amount'      => $plan->amount,
+                'features'    => [
+                    'max_storage_amount' => 100,
+                    'max_team_members'   => 6,
+                ],
+            ])
             ->assertCreated()
             ->assertJsonFragment([
-                'name' => $this->plan['name'],
+                'name' => $plan->name,
             ]);
 
         $availableDrivers = collect(config('subscription.available_drivers'));
 
         $availableDrivers->each(
-            fn ($driver) =>
-            $this
+            fn($driver) => $this
                 ->assertDatabaseHas('plan_drivers', [
                     'driver' => $driver,
                 ])
@@ -52,9 +46,16 @@ class PlansTest extends TestCase
 
         $this
             ->assertDatabaseHas('plans', [
-                'name'        => $this->plan['name'],
-                'description' => $this->plan['description'],
+                'name'        => $plan->name,
+                'description' => $plan->description,
             ])
-            ->assertDatabaseCount('plans', 1);
+            ->assertDatabaseHas('plan_features', [
+                'key'   => 'max_storage_amount',
+                'value' => 100,
+            ])
+            ->assertDatabaseHas('plan_features', [
+                'key'   => 'max_team_members',
+                'value' => 6,
+            ]);
     }
 }

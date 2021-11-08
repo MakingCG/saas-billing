@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Domain\Plans\DTO;
 
 use Spatie\DataTransferObject\DataTransferObject;
@@ -10,6 +11,7 @@ class CreatePlanData extends DataTransferObject
     public int $amount;
     public string $interval;
     public string $description;
+    public array $features;
 
     public static function fromRequest($request): self
     {
@@ -19,6 +21,7 @@ class CreatePlanData extends DataTransferObject
             'amount'      => $request->input('amount'),
             'interval'    => $request->input('interval'),
             'description' => $request->input('description'),
+            'features'    => $request->input('features'),
         ]);
     }
 }

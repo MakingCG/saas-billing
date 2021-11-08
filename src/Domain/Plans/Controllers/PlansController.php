@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
 use Illuminate\Http\Response;
@@ -11,9 +12,10 @@ use VueFileManager\Subscription\Domain\Plans\Actions\CreatePlansViaDriversAPIAct
 class PlansController extends Controller
 {
     public function store(
-        StorePlanRequest $request,
+        StorePlanRequest               $request,
         CreatePlansViaDriversAPIAction $createPlansViaDriversAPI,
-    ): Response {
+    ): Response
+    {
         $data = CreatePlanData::fromRequest($request);
 
         $plan = Plan::create([
@@ -23,6 +25,14 @@ class PlansController extends Controller
             'price'       => $data->price,
             'amount'      => $data->amount,
         ]);
+
+        // Create features
+        foreach ($data->features as $feature => $value) {
+            $plan->features()->create([
+                'key'   => $feature,
+                'value' => $value,
+            ]);
+        }
 
         // Create plan in available gateways
         $createPlansViaDriversAPI
