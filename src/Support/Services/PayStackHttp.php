@@ -16,11 +16,11 @@ class PayStackHttp
         $this->api = 'https://api.paystack.co';
     }
 
-    public function post($url, $data): PromiseInterface | Response
+    public function post($url, $data): PromiseInterface|Response
     {
-        return Http::withHeaders([
-            'Authorization' => "Bearer $this->bearer",
-            'Content-Type'  => 'application/json',
-        ])->post("{$this->api}$url", $data);
+        return Http::withToken($this->bearer)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post("{$this->api}$url", $data);
     }
 }

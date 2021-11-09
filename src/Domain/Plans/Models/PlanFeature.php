@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Plans\Models;
 
 use Illuminate\Database\Eloquent\Model;

@@ -13,6 +13,11 @@ interface Engine
     public function createPlan(CreatePlanData $data): array;
 
     /**
+     * Get plan
+     */
+    public function getPlan(string $planId): array;
+
+    /**
      * Create new customer for service
      */
     public function createCustomer(array $user): Customer;

@@ -1,12 +1,11 @@
 <?php
-
 namespace Tests\Domain\Subscriptions;
 
-use Tests\Models\User;
 use Tests\TestCase;
+use Tests\Models\User;
 use Illuminate\Support\Facades\Event;
-use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
@@ -101,6 +100,6 @@ class SubscriptionsTest extends TestCase
             'driver_subscription_id' => $subscription->driver_subscription_id,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 }

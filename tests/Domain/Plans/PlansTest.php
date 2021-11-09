@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Domain\Plans;
 
 use Tests\TestCase;
@@ -15,7 +14,8 @@ class PlansTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $plan = Plan::factory()->make();
+        $plan = Plan::factory()
+            ->make();
 
         $this
             ->actingAs($user)
@@ -38,7 +38,7 @@ class PlansTest extends TestCase
         $availableDrivers = collect(config('subscription.available_drivers'));
 
         $availableDrivers->each(
-            fn($driver) => $this
+            fn ($driver) => $this
                 ->assertDatabaseHas('plan_drivers', [
                     'driver' => $driver,
                 ])

@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
 use Illuminate\Http\Response;
@@ -12,10 +11,9 @@ use VueFileManager\Subscription\Domain\Plans\Actions\CreatePlansViaDriversAPIAct
 class PlansController extends Controller
 {
     public function store(
-        StorePlanRequest               $request,
+        StorePlanRequest $request,
         CreatePlansViaDriversAPIAction $createPlansViaDriversAPI,
-    ): Response
-    {
+    ): Response {
         $data = CreatePlanData::fromRequest($request);
 
         $plan = Plan::create([

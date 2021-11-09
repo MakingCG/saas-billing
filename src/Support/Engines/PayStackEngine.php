@@ -34,6 +34,11 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         ];
     }
 
+    public function getPlan(string $planId): array
+    {
+        // TODO: Implement getPlan() method.
+    }
+
     /**
      * https://paystack.com/docs/api/#customer-create
      */
