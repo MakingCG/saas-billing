@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 /**
  * @method static create(array $array)
@@ -33,6 +34,11 @@ class Subscription extends Model
     public function user(): HasOne
     {
         return $this->hasOne(config('auth.providers.users.model'), 'id', 'user_id');
+    }
+
+    public function plan(): HasOne
+    {
+        return $this->hasOne(Plan::class, 'id', 'plan_id');
     }
 
     protected static function boot()

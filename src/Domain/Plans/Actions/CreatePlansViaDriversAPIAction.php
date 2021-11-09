@@ -30,7 +30,8 @@ class CreatePlansViaDriversAPIAction
                     ->createPlan($data);
 
                 // Attach driver plan id into internal plan record
-                $plan->drivers()
+                $plan
+                    ->drivers()
                     ->create([
                         'driver_plan_id' => $driverPlan['id'],
                         'driver'         => $driver,

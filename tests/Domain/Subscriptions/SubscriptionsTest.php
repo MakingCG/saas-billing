@@ -1,9 +1,12 @@
 <?php
+
 namespace Tests\Domain\Subscriptions;
 
+use Tests\Models\User;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Event;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
@@ -18,12 +21,24 @@ class SubscriptionsTest extends TestCase
             SubscriptionWasCreated::class,
         ]);
 
-        $subscriptionId = 'SUB_vsyqdmlzble3uii';
-        $customerId = 'CUS_xnxdt6s1zg1f4nx';
+        $user = User::factory()
+            ->create();
 
         // Create customer
-        Customer::factory()->create([
-            'driver_user_id' => $customerId,
+        $customer = Customer::factory()
+            ->create([
+                'user_id'        => $user->id,
+                'driver_user_id' => 'CUS_xnxdt6s1zg1f4nx',
+                'driver'         => 'paystack',
+            ]);
+
+        // Create plan with features
+        $plan = Plan::factory()
+            ->hasFeatures(2)
+            ->create();
+
+        $planDriver = $plan->drivers()->create([
+            'driver_plan_id' => 'PLN_gx2wn530m0i3w3m',
             'driver'         => 'paystack',
         ]);
 
@@ -33,7 +48,7 @@ class SubscriptionsTest extends TestCase
             'data'  => [
                 'domain'            => 'test',
                 'status'            => 'active',
-                'subscription_code' => $subscriptionId,
+                'subscription_code' => 'SUB_vsyqdmlzble3uii',
                 'amount'            => 50000,
                 'cron_expression'   => '0 0 28 * *',
                 'next_payment_date' => '2016-05-19T07:00:00.000Z',
@@ -41,10 +56,10 @@ class SubscriptionsTest extends TestCase
                 'createdAt'         => '2016-03-20T00:23:24.000Z',
                 'plan'              => [
                     'name'          => 'Monthly retainer',
-                    'plan_code'     => 'PLN_gx2wn530m0i3w3m',
+                    'plan_code'     => $planDriver->driver_plan_id,
                     'description'   => null,
-                    'amount'        => 50000,
-                    'interval'      => 'monthly',
+                    'amount'        => $plan->amount,
+                    'interval'      => $plan->interval,
                     'send_invoices' => true,
                     'send_sms'      => true,
                     'currency'      => 'NGN',
@@ -65,7 +80,7 @@ class SubscriptionsTest extends TestCase
                     'first_name'    => 'BoJack',
                     'last_name'     => 'Horseman',
                     'email'         => 'bojack@horsinaround.com',
-                    'customer_code' => $customerId,
+                    'customer_code' => $customer->driver_user_id,
                     'phone'         => '',
                     'metadata'      => [
                     ],
@@ -76,12 +91,16 @@ class SubscriptionsTest extends TestCase
         ]);
 
         // Check if subscription was created
-        $this->assertDatabaseHas('subscriptions', [
-            'subscription_id' => $subscriptionId,
-        ]);
-
         $subscription = Subscription::first();
 
-        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        // Check relationships are correct
+        $this->assertEquals($user->id, $subscription->user->id);
+        $this->assertEquals($plan->id, $subscription->plan->id);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'driver_subscription_id' => $subscription->driver_subscription_id,
+        ]);
+
+        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 }

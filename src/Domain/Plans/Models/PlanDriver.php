@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string plan_id
  * @property string driver_plan_id
  * @property string driver
+ * @method static where(string $string, mixed $planCode)
  */
 class PlanDriver extends Model
 {

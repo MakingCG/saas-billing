@@ -1,10 +1,12 @@
 <?php
+
 namespace VueFileManager\Subscription\Domain\Plans\Models;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use phpDocumentor\Reflection\Types\Boolean;
 use VueFileManager\Subscription\Database\Factories\PlanFactory;
 
 /**
@@ -25,7 +27,9 @@ class Plan extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'id' => 'string',
+        'id'      => 'string',
+        'price'   => 'integer',
+        'visible' => 'bool',
     ];
 
     public $incrementing = false;

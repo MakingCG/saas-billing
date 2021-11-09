@@ -4,6 +4,7 @@ namespace VueFileManager\Subscription\Domain\Plans\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use VueFileManager\Subscription\Database\Factories\PlanFeatureFactory;
 
 /**
  * @method static create(array $array)
@@ -25,4 +26,9 @@ class PlanFeature extends Model
     public $incrementing = false;
 
     public $timestamps = false;
+
+    protected static function newFactory(): PlanFeatureFactory
+    {
+        return PlanFeatureFactory::new();
+    }
 }

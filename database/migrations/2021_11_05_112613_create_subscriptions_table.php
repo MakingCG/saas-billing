@@ -16,15 +16,20 @@ class CreateSubscriptionsTable extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->uuid('id');
             $table->uuid('user_id');
+            $table->string('plan_id');
+
             $table->string('name');
-            $table->string('status');
-            $table->string('subscription_id');
-            $table->string('plan_id')->nullable();
+            $table->enum('status', ['active', 'cancelled']);
+
+            $table->string('driver');
+            $table->string('driver_subscription_id');
+            $table->string('driver_plan_id');
+
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();
             $table->timestamps();
 
-            $table->index(['user_id', 'status']);
+            $table->index(['user_id', 'plan_id', 'status']);
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
         });
