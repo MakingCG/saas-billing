@@ -3,6 +3,7 @@ namespace VueFileManager\Subscription;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use VueFileManager\Subscription\App\Console\Commands\SetupDemoDataCommand;
 use VueFileManager\Subscription\Support\EngineManager;
 
 class SubscriptionServiceProvider extends PackageServiceProvider
@@ -18,6 +19,7 @@ class SubscriptionServiceProvider extends PackageServiceProvider
             ->name('subscription')
             ->hasConfigFile()
             ->hasViews()
+            ->hasCommand(SetupDemoDataCommand::class)
             ->hasRoutes([
                 'api',
             ]);
