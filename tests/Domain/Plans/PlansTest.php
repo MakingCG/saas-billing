@@ -24,7 +24,6 @@ class PlansTest extends TestCase
                 'name'        => $plan->name,
                 'description' => $plan->description,
                 'interval'    => $plan->interval,
-                'price'       => $plan->price,
                 'amount'      => $plan->amount,
                 'features'    => [
                     'max_storage_amount' => 100,

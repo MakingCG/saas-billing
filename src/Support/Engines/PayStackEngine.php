@@ -3,6 +3,7 @@ namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Support\Services\PayStackHttp;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
@@ -24,7 +25,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     {
         $response = $this->api->post('/plan', [
             'name'     => $data->name,
-            'amount'   => $data->amount,
+            'amount'   => $data->amount * 100,
             'interval' => $this->mapInterval($data->interval),
         ]);
 
@@ -34,7 +35,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         ];
     }
 
-    public function getPlan(string $planId): array
+    public function getPlan(string $planId): Response
     {
         // TODO: Implement getPlan() method.
     }

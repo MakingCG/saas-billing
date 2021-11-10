@@ -20,7 +20,6 @@ class StorePlanRequest extends FormRequest
     {
         return [
             'name'        => 'required|string',
-            'price'       => 'sometimes|integer',
             'amount'      => 'sometimes|integer|nullable',
             'interval'    => 'required|string',
             'description' => 'sometimes|string|nullable',

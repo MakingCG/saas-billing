@@ -12,7 +12,6 @@ use VueFileManager\Subscription\Database\Factories\PlanFactory;
  * @property string id
  * @property string name
  * @property string description
- * @property string price
  * @property string currency
  * @property int amount
  * @property string interval
@@ -26,7 +25,6 @@ class Plan extends Model
 
     protected $casts = [
         'id'      => 'string',
-        'price'   => 'integer',
         'visible' => 'bool',
     ];
 

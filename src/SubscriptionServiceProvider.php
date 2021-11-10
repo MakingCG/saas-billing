@@ -3,8 +3,8 @@ namespace VueFileManager\Subscription;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VueFileManager\Subscription\App\Console\Commands\SetupDemoDataCommand;
 use VueFileManager\Subscription\Support\EngineManager;
+use VueFileManager\Subscription\App\Console\Commands\SetupDemoDataCommand;
 
 class SubscriptionServiceProvider extends PackageServiceProvider
 {

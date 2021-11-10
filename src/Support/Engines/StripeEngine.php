@@ -35,7 +35,7 @@ class StripeEngine implements Engine
             ->plans()
             ->create([
                 'id'       => Str::slug($data->name),
-                'amount'   => $data->price,
+                'amount'   => $data->amount,
                 'interval' => $data->interval,
                 'currency' => 'EUR',
                 'product'  => $product['id'],

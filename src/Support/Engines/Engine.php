@@ -2,6 +2,7 @@
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 
@@ -15,7 +16,7 @@ interface Engine
     /**
      * Get plan
      */
-    public function getPlan(string $planId): array;
+    public function getPlan(string $planId): Response;
 
     /**
      * Create new customer for service

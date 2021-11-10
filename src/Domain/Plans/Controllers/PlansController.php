@@ -3,39 +3,21 @@ namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Plans\Requests\StorePlanRequest;
-use VueFileManager\Subscription\Domain\Plans\Actions\CreatePlansViaDriversAPIAction;
+use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanAndCreateDriverVersionAction;
 
 class PlansController extends Controller
 {
     public function store(
         StorePlanRequest $request,
-        CreatePlansViaDriversAPIAction $createPlansViaDriversAPI,
+        StorePlanAndCreateDriverVersionAction $storePlanAndCreateDriverVersion,
     ): Response {
+        // Map data into DTO
         $data = CreatePlanData::fromRequest($request);
 
-        $plan = Plan::create([
-            'name'        => $data->name,
-            'description' => $data->description,
-            'interval'    => $data->interval,
-            'price'       => $data->price,
-            'amount'      => $data->amount,
-        ]);
-
-        // Create features
-        foreach ($data->features as $feature => $value) {
-            $plan->features()->create([
-                'key'   => $feature,
-                'value' => $value,
-            ]);
-        }
-
-        // Create plan in available gateways
-        $createPlansViaDriversAPI
-            ->onQueue()
-            ->execute($data, $plan);
+        // Store plan to the internal database
+        $plan = $storePlanAndCreateDriverVersion($data);
 
         return response($plan, 201);
     }

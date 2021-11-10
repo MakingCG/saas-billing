@@ -3,6 +3,7 @@ namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Support\Services\PayPalHttp;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
@@ -58,7 +59,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
         ];
     }
 
-    public function getPlan(string $planId): array
+    public function getPlan(string $planId): Response
     {
         return $this->api->get("/billing/plans/$planId");
     }

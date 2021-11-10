@@ -19,8 +19,8 @@ return [
             'public_key' => env('PAYSTACK_PUBLIC_KEY'),
         ],
         'paypal'   => [
-            'id'     => env('CLIENT_ID'),
-            'secret' => env('CLIENT_SECRET'),
+            'id'     => env('PAYPAL_CLIENT_ID'),
+            'secret' => env('PAYPAL_CLIENT_SECRET'),
         ],
     ],
 ];
