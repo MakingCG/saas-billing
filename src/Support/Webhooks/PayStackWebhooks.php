@@ -15,6 +15,7 @@ class PayStackWebhooks
     {
         $customerCode = $request->input('data.customer.customer_code');
         $planCode = $request->input('data.plan.plan_code');
+        $subscriptionCode = $request->input('data.subscription_code');
 
         // Get existing customer
         $customer = Customer::where('driver', 'paystack')
@@ -34,12 +35,15 @@ class PayStackWebhooks
             'plan_id'                => $planDriver->plan->id,
             'user_id'                => $customer->user_id,
             'name'                   => $request->input('data.plan.name'),
-            'status'                 => $request->input('data.status'),
-
-            'driver'                 => 'paystack',
-            'driver_plan_id'         => $planCode,
-            'driver_subscription_id' => $request->input('data.subscription_code'),
         ]);
+
+        // Store subscription pivot to gateway
+        $subscription
+            ->driver()
+            ->create([
+                'driver'                 => 'paystack',
+                'driver_subscription_id' => $subscriptionCode,
+            ]);
 
         SubscriptionWasCreated::dispatch($subscription);
     }

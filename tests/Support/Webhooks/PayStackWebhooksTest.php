@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Domain\Subscriptions;
+namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
 use Tests\Models\User;
@@ -9,12 +9,12 @@ use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
-class SubscriptionsTest extends TestCase
+class PayStackWebhooksTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_get_webhook_and_create_subscription()
+    public function webhook_create_subscription()
     {
         Event::fake([
             SubscriptionWasCreated::class,
@@ -42,7 +42,7 @@ class SubscriptionsTest extends TestCase
         ]);
 
         // Send webhook
-        $this->postJson('/api/subscription/webhooks', [
+        $this->postJson('/api/subscription/paystack/webhooks', [
             'event' => 'subscription.create',
             'data'  => [
                 'domain'            => 'test',
@@ -96,8 +96,8 @@ class SubscriptionsTest extends TestCase
         $this->assertEquals($user->id, $subscription->user->id);
         $this->assertEquals($plan->id, $subscription->plan->id);
 
-        $this->assertDatabaseHas('subscriptions', [
-            'driver_subscription_id' => $subscription->driver_subscription_id,
+        $this->assertDatabaseHas('subscription_drivers', [
+            'driver_subscription_id' => 'SUB_vsyqdmlzble3uii',
         ]);
 
         Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);

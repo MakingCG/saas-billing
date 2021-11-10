@@ -12,7 +12,8 @@ class PlansTest extends TestCase
      */
     public function it_create_plan()
     {
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->create();
 
         $plan = Plan::factory()
             ->make();

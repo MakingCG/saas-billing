@@ -1,13 +1,15 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use VueFileManager\Subscription\Support\Services\PayPalHttp;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 
-class PayPalEngine implements Engine
+class PayPalEngine extends PayPalWebhooks implements Engine
 {
     public PayPalHttp $api;
 
@@ -73,6 +75,11 @@ class PayPalEngine implements Engine
      */
     public function webhook(Request $request): void
     {
+        $method = 'handle' . Str::studly(str_replace('.', '_', strtolower($request->input('event_type'))));
+
+        if (method_exists($this, $method)) {
+            $this->{$method}($request);
+        }
     }
 
     private function mapInterval(string $interval): string

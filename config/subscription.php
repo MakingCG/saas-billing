@@ -7,7 +7,7 @@ return [
     'default_currency' => env('SUBSCRIPTION_DEFAULT_CURRENCY', 'USD'),
 
     'available_drivers' => [
-        'paypal',
+        'paypal', 'paystack',
     ],
 
     'credentials' => [

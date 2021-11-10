@@ -19,11 +19,7 @@ class CreateSubscriptionsTable extends Migration
             $table->string('plan_id');
 
             $table->string('name');
-            $table->enum('status', ['active', 'cancelled']);
-
-            $table->string('driver');
-            $table->string('driver_subscription_id');
-            $table->string('driver_plan_id');
+            $table->enum('status', ['active', 'cancelled'])->default('active');
 
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();

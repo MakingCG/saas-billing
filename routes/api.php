@@ -6,7 +6,7 @@ use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 
 Route::group(['prefix' => 'api/subscription'], function () {
     Route::group(['middleware' => ['api']], function () {
-        Route::post('/webhooks', WebhooksController::class);
+        Route::post('/{driver}/webhooks', WebhooksController::class);
     });
 
     Route::group(['middleware' => ['api', 'auth:sanctum']], function () {

@@ -4,6 +4,7 @@ namespace VueFileManager\Subscription\Domain\Subscriptions\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
@@ -39,6 +40,11 @@ class Subscription extends Model
     public function plan(): HasOne
     {
         return $this->hasOne(Plan::class, 'id', 'plan_id');
+    }
+
+    public function driver(): HasMany
+    {
+        return $this->hasMany(SubscriptionDriver::class);
     }
 
     protected static function boot()

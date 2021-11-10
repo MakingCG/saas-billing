@@ -8,10 +8,12 @@ use VueFileManager\Subscription\Support\EngineManager;
 
 class WebhooksController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, $driver)
     {
         Log::info($request->all());
 
-        resolve(EngineManager::class)->webhook($request);
+        resolve(EngineManager::class)
+            ->driver($driver)
+            ->webhook($request);
     }
 }
