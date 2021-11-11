@@ -19,7 +19,7 @@ class PlanFactory extends Factory
             'currency'    => $this->faker->randomElement(['USD', 'EUR']),
             'amount'      => $this->faker->randomElement([100, 200, 500]),
             'interval'    => $this->faker->randomElement(['day', 'week', 'month', 'year']),
-            'visible'     => $this->faker->boolean(80),
+            'visible'     => 1,
             'created_at'  => $this->faker->dateTimeBetween('-36 months'),
         ];
     }

@@ -10,6 +10,26 @@ class PlansTest extends TestCase
     /**
      * @test
      */
+    public function it_get_plans()
+    {
+        $user = User::factory()
+            ->create();
+
+        $plan = Plan::factory()
+            ->hasFeatures(1)
+            ->hasDrivers(2)
+            ->create();
+
+        $this
+            ->actingAs($user)
+            ->getJson('/api/subscription/plans')
+            ->assertJsonFragment([
+                'id' => $plan->id,
+            ]);
+    }
+    /**
+     * @test
+     */
     public function it_create_plan()
     {
         $user = User::factory()

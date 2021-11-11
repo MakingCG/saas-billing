@@ -2,7 +2,6 @@
 namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Console\Command;
-use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanAndCreateDriverVersionAction;
 
@@ -13,7 +12,6 @@ class SetupDemoDataCommand extends Command
     public $description = 'Generate subscription demo data';
 
     public function __construct(
-        private EngineManager $subscription,
         private StorePlanAndCreateDriverVersionAction $storePlanAndCreateDriverVersion,
     ) {
         parent::__construct();
@@ -23,12 +21,10 @@ class SetupDemoDataCommand extends Command
     {
         $this->info('Setting up subscription demo data');
 
+        // To tasks
         $this->create_plans();
 
-        $this->info('Dispatching jobs...');
-        $this->call('queue:work', [
-            '--stop-when-empty' => true,
-        ]);
+        $this->after();
 
         $this->info('Everything is done, congratulations! 🥳🥳🥳');
     }
@@ -55,6 +51,42 @@ class SetupDemoDataCommand extends Command
                     ],
                 ],
             ],
+            [
+                'name'        => 'Business Pack',
+                'description' => 'Best for business needs',
+                'features'    => [
+                    'max_storage_amount' => 500,
+                    'max_team_members'   => 50,
+                ],
+                'intervals' => [
+                    [
+                        'interval'    => 'month',
+                        'amount'      => 29,
+                    ],
+                    [
+                        'interval'    => 'year',
+                        'amount'      => 189,
+                    ],
+                ],
+            ],
+            [
+                'name'        => 'Elite Pack',
+                'description' => 'Best for all your needs',
+                'features'    => [
+                    'max_storage_amount' => 2000,
+                    'max_team_members'   => -1,
+                ],
+                'intervals' => [
+                    [
+                        'interval'    => 'month',
+                        'amount'      => 59,
+                    ],
+                    [
+                        'interval'    => 'year',
+                        'amount'      => 349,
+                    ],
+                ],
+            ],
         ];
 
         // Create plans
@@ -74,5 +106,13 @@ class SetupDemoDataCommand extends Command
                 ($this->storePlanAndCreateDriverVersion)($data);
             }
         }
+    }
+
+    public function after()
+    {
+        $this->info('Dispatching jobs...');
+        $this->call('queue:work', [
+            '--stop-when-empty' => true,
+        ]);
     }
 }
