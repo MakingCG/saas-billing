@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Plans\Actions;
+namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

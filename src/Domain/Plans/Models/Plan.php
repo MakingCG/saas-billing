@@ -51,8 +51,12 @@ class Plan extends Model
     {
         parent::boot();
 
-        static::creating(function ($user) {
-            $user->id = Str::uuid();
+        static::creating(function ($plan) {
+            $plan->id = Str::uuid();
+        });
+
+        static::updated(function () {
+            cache()->add('action.synchronize-plans', now()->toString());
         });
     }
 }

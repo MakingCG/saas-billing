@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Support\Str;
@@ -27,7 +28,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         $response = $this->api->post('/plan', [
             'name'     => $data->name,
             'amount'   => $data->amount * 100,
-            'interval' => mapPaystackIntervals($data->interval),
+            'interval' => $this->mapIntervals($data->interval),
         ]);
 
         return [
@@ -48,7 +49,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
             ->first();
 
         return $this->api->put("/plan/{$planDriver->driver_plan_id}", [
-            'name'     => $plan->name,
+            'name' => $plan->name,
         ]);
     }
 
@@ -89,5 +90,15 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         if (method_exists($this, $method)) {
             $this->{$method}($request);
         }
+    }
+
+    private function mapIntervals(string $interval): string
+    {
+        return match ($interval) {
+            'day' => 'daily',
+            'week' => 'weekly',
+            'month' => 'monthly',
+            'year' => 'annually',
+        };
     }
 }

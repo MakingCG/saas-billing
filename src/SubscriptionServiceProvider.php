@@ -3,7 +3,9 @@ namespace VueFileManager\Subscription;
 
 use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\App\Console\Commands\SetupDemoDataCommand;
 
@@ -20,7 +22,10 @@ class SubscriptionServiceProvider extends PackageServiceProvider
             ->name('subscription')
             ->hasConfigFile()
             ->hasViews()
-            ->hasCommand(SetupDemoDataCommand::class)
+            ->hasCommands([
+                SetupDemoDataCommand::class,
+                SynchronizePlansCommand::class,
+            ])
             ->hasRoutes([
                 'api',
             ]);
@@ -30,6 +35,14 @@ class SubscriptionServiceProvider extends PackageServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
+        // Register validator
         Validator::extend('string_or_integer', fn ($attribute, $value) => is_string($value) || is_integer($value));
+
+        // Schedule background operations
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            $schedule->command('subscription:synchronize-plans')->everyFiveMinutes();
+        });
     }
 }
