@@ -22,6 +22,8 @@ class PlanFeature extends Model
         'value' => 'integer',
     ];
 
+    public $primaryKey = null;
+
     public $incrementing = false;
 
     public $timestamps = false;

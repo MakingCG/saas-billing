@@ -39,4 +39,12 @@ class PayStackHttp
                 'Content-Type' => 'application/json',
             ])->get("{$this->api}$url");
     }
+
+    public function delete($url): PromiseInterface|Response
+    {
+        return Http::withToken($this->bearer)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])->delete("{$this->api}$url");
+    }
 }

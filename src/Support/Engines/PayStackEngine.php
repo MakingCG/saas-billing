@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Support\Str;
@@ -62,6 +61,14 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     }
 
     /**
+     * Not documented, but it's working
+     */
+    public function deletePlan(string $planId): Response
+    {
+        return $this->api->delete("/plan/$planId");
+    }
+
+    /**
      * https://paystack.com/docs/api/#customer-create
      */
     public function createCustomer(array $user): Customer
@@ -95,10 +102,10 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     private function mapIntervals(string $interval): string
     {
         return match ($interval) {
-            'day' => 'daily',
-            'week' => 'weekly',
+            'day'   => 'daily',
+            'week'  => 'weekly',
             'month' => 'monthly',
-            'year' => 'annually',
+            'year'  => 'annually',
         };
     }
 }

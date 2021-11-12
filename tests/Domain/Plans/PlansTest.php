@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Domain\Plans;
 
-use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 use Tests\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 class PlansTest extends TestCase
@@ -148,6 +148,8 @@ class PlansTest extends TestCase
         // Synchronize plans
         Artisan::call('subscription:synchronize-plans');
 
+        // TODO: check if plan was really updated
+
         $this
             ->assertDatabaseHas('plans', [
                 'visible'     => false,
@@ -162,6 +164,46 @@ class PlansTest extends TestCase
                 'key'   => 'max_team_members',
                 'value' => 12,
             ])
-            ->assertTrue( !cache()->has('action.synchronize-plans'));
+            ->assertTrue(! cache()->has('action.synchronize-plans'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_delete_plan()
+    {
+        $user = User::factory()
+            ->create();
+
+        $plan = Plan::factory()
+            ->make();
+
+        $this
+            ->actingAs($user)
+            ->post('/api/subscription/plans', [
+                'name'        => $plan->name,
+                'description' => $plan->description,
+                'interval'    => $plan->interval,
+                'amount'      => $plan->amount,
+                'features'    => [
+                    'max_storage_amount' => 100,
+                    'max_team_members'   => 6,
+                ],
+            ])
+            ->assertCreated();
+
+        $plan = Plan::first();
+
+        $this
+            ->actingAs($user)
+            ->delete("/api/subscription/plans/{$plan->id}")
+            ->assertNoContent();
+
+        // TODO: check if plan was really deleted
+
+        $this
+            ->assertDatabaseCount('plans', 0)
+            ->assertDatabaseCount('plan_features', 0)
+            ->assertDatabaseCount('plan_drivers', 0);
     }
 }

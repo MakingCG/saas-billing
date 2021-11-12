@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Support\Str;
@@ -95,6 +94,14 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     }
 
     /**
+     * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_deactivate
+     */
+    public function deletePlan(string $planId): Response
+    {
+        return $this->api->post("/billing/plans/{$planId}/deactivate", []);
+    }
+
+    /**
      * https://paystack.com/docs/api/#customer-create
      */
     public function createCustomer(array $user): Customer
@@ -117,10 +124,10 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     private function mapInterval(string $interval): string
     {
         return match ($interval) {
-            'day' => 'DAY',
-            'week' => 'WEEK',
+            'day'   => 'DAY',
+            'week'  => 'WEEK',
             'month' => 'MONTH',
-            'year' => 'YEAR',
+            'year'  => 'YEAR',
         };
     }
 

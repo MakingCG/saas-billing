@@ -9,37 +9,60 @@ use VueFileManager\Subscription\Domain\Plans\Resources\PlanResource;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanCollection;
 use VueFileManager\Subscription\Domain\Plans\Requests\StorePlanRequest;
 use VueFileManager\Subscription\Domain\Plans\Requests\UpdatePlanRequest;
-use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanAndCreateDriverVersionAction;
+use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
+use VueFileManager\Subscription\Domain\Plans\Actions\DeletePlansFromPaymentServiceAction;
 
 class PlansController extends Controller
 {
-    public function index()
+    /**
+     * Show all visible subscription plans
+     */
+    public function index(): PlanCollection
     {
         $plans = Plan::where('visible', true)->get();
 
         return new PlanCollection($plans);
     }
 
+    /**
+     * Store new subscription plan
+     */
     public function store(
         StorePlanRequest $request,
-        StorePlanAndCreateDriverVersionAction $storePlanAndCreateDriverVersion,
+        StorePlanForPaymentServiceAction $storePlanForPaymentService,
     ): Response {
         // Map data into DTO
         $data = CreatePlanData::fromRequest($request);
 
         // Store plan to the internal database
-        $plan = $storePlanAndCreateDriverVersion($data);
+        $plan = $storePlanForPaymentService($data);
 
         return response(new PlanResource($plan), 201);
     }
 
+    /**
+     * Update only single attribute of subscription plan
+     */
     public function update(
         UpdatePlanRequest $request,
         Plan $plan,
     ): Response {
-        // Update plan
         $plan->update($request->all());
 
         return response(new PlanResource($plan), 200);
+    }
+
+    /**
+     * Delete subscription plan
+     */
+    public function destroy(
+        Plan $plan,
+        DeletePlansFromPaymentServiceAction $deletePlansFromPaymentService
+    ): Response {
+        $deletePlansFromPaymentService($plan);
+
+        $plan->delete();
+
+        return response('Deleted', 204);
     }
 }

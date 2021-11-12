@@ -3,26 +3,31 @@ namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 interface Engine
 {
     /**
-     * Create new plan for subscription
+     * Create new subscription plan
      */
     public function createPlan(CreatePlanData $data): array;
 
     /**
-     * Update plan for subscription
+     * Update subscription plan
      */
     public function updatePlan(Plan $plan): Response;
 
     /**
-     * Get plan
+     * Get subscription plan
      */
     public function getPlan(string $planId): Response;
+
+    /**
+     * Delete subscription plan
+     */
+    public function deletePlan(string $planId): Response;
 
     /**
      * Create new customer for service

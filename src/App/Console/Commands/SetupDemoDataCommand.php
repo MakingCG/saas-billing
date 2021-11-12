@@ -3,7 +3,7 @@ namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Console\Command;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
-use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanAndCreateDriverVersionAction;
+use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
 
 class SetupDemoDataCommand extends Command
 {
@@ -12,7 +12,7 @@ class SetupDemoDataCommand extends Command
     public $description = 'Generate subscription demo data';
 
     public function __construct(
-        private StorePlanAndCreateDriverVersionAction $storePlanAndCreateDriverVersion,
+        private StorePlanForPaymentServiceAction $storePlanForPaymentService,
     ) {
         parent::__construct();
     }
@@ -103,7 +103,7 @@ class SetupDemoDataCommand extends Command
                 $this->info("Creating plan with name: {$plan['name']} and interval: {$interval['interval']}");
 
                 // Store plans to the database and gateway
-                ($this->storePlanAndCreateDriverVersion)($data);
+                ($this->storePlanForPaymentService)($data);
             }
         }
     }

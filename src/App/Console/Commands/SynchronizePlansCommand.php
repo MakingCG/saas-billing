@@ -1,11 +1,10 @@
 <?php
-
 namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\EngineManager;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 class SynchronizePlansCommand extends Command
 {
@@ -15,8 +14,7 @@ class SynchronizePlansCommand extends Command
 
     public function __construct(
         private EngineManager $subscription,
-    )
-    {
+    ) {
         parent::__construct();
     }
 

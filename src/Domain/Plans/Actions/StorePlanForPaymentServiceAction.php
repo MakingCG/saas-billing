@@ -4,7 +4,7 @@ namespace VueFileManager\Subscription\Domain\Plans\Actions;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 
-class StorePlanAndCreateDriverVersionAction
+class StorePlanForPaymentServiceAction
 {
     public function __construct(
         private CreatePlansViaDriversAPIAction $createPlansViaDriversAPI,

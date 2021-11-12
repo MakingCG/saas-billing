@@ -58,5 +58,10 @@ class Plan extends Model
         static::updated(function () {
             cache()->add('action.synchronize-plans', now()->toString());
         });
+
+        static::deleting(function ($plan) {
+            $plan->features()->delete();
+            $plan->drivers()->delete();
+        });
     }
 }

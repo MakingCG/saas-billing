@@ -5,9 +5,9 @@ use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\App\Console\Commands\SetupDemoDataCommand;
+use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 
 class SubscriptionServiceProvider extends PackageServiceProvider
 {

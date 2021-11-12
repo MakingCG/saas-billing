@@ -21,6 +21,7 @@ class PlanFactory extends Factory
             'interval'    => $this->faker->randomElement(['day', 'week', 'month', 'year']),
             'visible'     => 1,
             'created_at'  => $this->faker->dateTimeBetween('-36 months'),
+            'updated_at'  => $this->faker->dateTimeBetween('-36 months'),
         ];
     }
 }
