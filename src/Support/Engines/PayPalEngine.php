@@ -1,9 +1,11 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Services\PayPalHttp;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
@@ -20,7 +22,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     }
 
     /**
-     * https://paystack.com/docs/api/#plan-create
+     * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create
      */
     public function createPlan(CreatePlanData $data): array
     {
@@ -59,6 +61,34 @@ class PayPalEngine extends PayPalWebhooks implements Engine
         ];
     }
 
+    /**
+     * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_patch
+     */
+    public function updatePlan(Plan $plan): Response
+    {
+        // Get PayPal plan id
+        $planDriver = $plan
+            ->drivers()
+            ->where('driver', 'paypal')
+            ->first();
+
+        return $this->api->patch("/billing/plans/$planDriver->driver_plan_id", [
+            [
+                'op'    => 'replace',
+                'path'  => '/name',
+                'value' => $plan->name,
+            ],
+            [
+                'op'    => 'replace',
+                'path'  => '/description',
+                'value' => $plan->description,
+            ],
+        ]);
+    }
+
+    /**
+     * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_get
+     */
     public function getPlan(string $planId): Response
     {
         return $this->api->get("/billing/plans/$planId");
@@ -87,10 +117,10 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     private function mapInterval(string $interval): string
     {
         return match ($interval) {
-            'day'   => 'DAY',
-            'week'  => 'WEEK',
+            'day' => 'DAY',
+            'week' => 'WEEK',
             'month' => 'MONTH',
-            'year'  => 'YEAR',
+            'year' => 'YEAR',
         };
     }
 

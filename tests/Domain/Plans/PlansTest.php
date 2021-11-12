@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Domain\Plans;
 
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 use Tests\Models\User;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
@@ -142,6 +143,11 @@ class PlansTest extends TestCase
                     ->assertOk();
             });
 
+        $this->assertTrue(cache()->has('action.synchronize-plans'));
+
+        // Synchronize plans
+        Artisan::call('subscription:synchronize-plans');
+
         $this
             ->assertDatabaseHas('plans', [
                 'visible'     => false,
@@ -155,6 +161,7 @@ class PlansTest extends TestCase
             ->assertDatabaseHas('plan_features', [
                 'key'   => 'max_team_members',
                 'value' => 12,
-            ]);
+            ])
+            ->assertTrue( !cache()->has('action.synchronize-plans'));
     }
 }

@@ -37,6 +37,14 @@ class PayPalHttp
             ])->post("{$this->api}$url", $data);
     }
 
+    public function patch($url, $data): PromiseInterface|Response
+    {
+        return Http::withToken($this->getAccessToken())
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])->patch("{$this->api}$url", $data);
+    }
+
     private function getAccessToken(): string
     {
         return Cache::remember('paypal_access_token', 3600, function () {

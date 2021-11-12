@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 interface Engine
 {
@@ -12,6 +13,11 @@ interface Engine
      * Create new plan for subscription
      */
     public function createPlan(CreatePlanData $data): array;
+
+    /**
+     * Update plan for subscription
+     */
+    public function updatePlan(Plan $plan): Response;
 
     /**
      * Get plan
