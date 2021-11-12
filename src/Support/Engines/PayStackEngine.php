@@ -37,7 +37,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
 
     public function getPlan(string $planId): Response
     {
-        // TODO: Implement getPlan() method.
+        return $this->api->get("/plan/$planId");
     }
 
     /**

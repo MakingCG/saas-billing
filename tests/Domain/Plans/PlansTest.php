@@ -27,6 +27,7 @@ class PlansTest extends TestCase
                 'id' => $plan->id,
             ]);
     }
+
     /**
      * @test
      */

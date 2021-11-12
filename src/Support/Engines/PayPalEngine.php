@@ -69,6 +69,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function createCustomer(array $user): Customer
     {
+        // empty
     }
 
     /**
