@@ -24,6 +24,14 @@ class PayStackHttp
             ])->post("{$this->api}$url", $data);
     }
 
+    public function put($url, $data): PromiseInterface|Response
+    {
+        return Http::withToken($this->bearer)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])->put("{$this->api}$url", $data);
+    }
+
     public function get($url): PromiseInterface|Response
     {
         return Http::withToken($this->bearer)

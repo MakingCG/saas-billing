@@ -79,4 +79,82 @@ class PlansTest extends TestCase
                 'value' => 6,
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function it_update_plan()
+    {
+        $user = User::factory()
+            ->create();
+
+        $plan = Plan::factory()
+            ->make();
+
+        // 1. create plan
+        $this
+            ->actingAs($user)
+            ->post('/api/subscription/plans', [
+                'name'        => $plan->name,
+                'description' => $plan->description,
+                'interval'    => $plan->interval,
+                'amount'      => $plan->amount,
+                'features'    => [
+                    'max_storage_amount' => 100,
+                    'max_team_members'   => 6,
+                ],
+            ])
+            ->assertCreated();
+
+        $planAttributes = [
+            'visible'     => false,
+            'name'        => 'New name',
+            'description' => 'New description',
+        ];
+
+        $planFeatures = [
+            'max_storage_amount' => 120,
+            'max_team_members'   => '12',
+        ];
+
+        // Get plan from database
+        $plan = Plan::first();
+
+        // 2. update plan attributes one by one
+        collect($planAttributes)
+            ->each(function ($value, $key) use ($user, $plan) {
+                $this
+                    ->actingAs($user)
+                    ->put("/api/subscription/plans/{$plan->id}", [
+                        $key => $value,
+                    ])
+                    ->assertOk();
+            });
+
+        // 3. update plan features one by one
+        collect($planFeatures)
+            ->each(function ($value, $key) use ($user, $plan) {
+                $this
+                    ->actingAs($user)
+                    ->put("/api/subscription/plans/$plan->id/features", [
+                        $key => $value,
+                    ])
+                    ->assertOk();
+            });
+
+        $this
+            ->assertDatabaseHas('plans', [
+                'visible'     => false,
+                'name'        => 'New name',
+                'description' => 'New description',
+            ])
+            ->assertDatabaseHas('plan_features', [
+                'key'   => 'max_storage_amount',
+                'value' => 120,
+            ])
+            ->assertDatabaseHas('plan_features', [
+                'key'   => 'max_team_members',
+                'value' => 12,
+            ]);
+    }
 }

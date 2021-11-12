@@ -4,6 +4,7 @@ namespace VueFileManager\Subscription\Support\Engines;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Services\PayStackHttp;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
@@ -26,7 +27,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         $response = $this->api->post('/plan', [
             'name'     => $data->name,
             'amount'   => $data->amount * 100,
-            'interval' => $this->mapInterval($data->interval),
+            'interval' => mapPaystackIntervals($data->interval),
         ]);
 
         return [
@@ -35,6 +36,25 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         ];
     }
 
+    /**
+     * https://paystack.com/docs/api/#plan-create
+     */
+    public function updatePlan(Plan $plan): Response
+    {
+        // Get paystack plan id
+        $planDriver = $plan
+            ->drivers()
+            ->where('driver', 'paystack')
+            ->first();
+
+        return $this->api->put("/plan/{$planDriver->driver_plan_id}", [
+            'name'     => $plan->name,
+        ]);
+    }
+
+    /**
+     * https://paystack.com/docs/api/#plan-fetch
+     */
     public function getPlan(string $planId): Response
     {
         return $this->api->get("/plan/$planId");
@@ -69,16 +89,5 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         if (method_exists($this, $method)) {
             $this->{$method}($request);
         }
-    }
-
-    private function mapInterval(string $interval): string
-    {
-        return match ($interval) {
-            'day'   => 'daily',
-            'week'  => 'weekly',
-            'month' => 'monthly',
-            //'quarter' => 'quarterly',
-            'year' => 'annually',
-        };
     }
 }

@@ -8,7 +8,8 @@ class StorePlanAndCreateDriverVersionAction
 {
     public function __construct(
         private CreatePlansViaDriversAPIAction $createPlansViaDriversAPI,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreatePlanData $data)
     {

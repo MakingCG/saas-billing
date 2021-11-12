@@ -2,6 +2,7 @@
 namespace VueFileManager\Subscription;
 
 use Spatie\LaravelPackageTools\Package;
+use Illuminate\Support\Facades\Validator;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\App\Console\Commands\SetupDemoDataCommand;
@@ -28,5 +29,7 @@ class SubscriptionServiceProvider extends PackageServiceProvider
     public function bootingPackage()
     {
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        Validator::extend('string_or_integer', fn ($attribute, $value) => is_string($value) || is_integer($value));
     }
 }

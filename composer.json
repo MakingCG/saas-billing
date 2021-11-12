@@ -45,7 +45,10 @@
             "Domain\\" : "src/Domain/",
             "Support\\" : "src/Support/",
             "Tests\\" : "tests"
-        }
+        },
+        "files": [
+            "src/Support/Helpers/PaystackHelpers.php"
+        ]
     },
     "scripts": {
         "psalm": "vendor/bin/psalm",
