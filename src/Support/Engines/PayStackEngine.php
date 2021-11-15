@@ -7,8 +7,10 @@ use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Services\PayStackHttp;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class PayStackEngine extends PayStackWebhooks implements Engine
 {
@@ -57,7 +59,14 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function getPlan(string $planId): Response
     {
-        return $this->api->get("/plan/$planId");
+        $response = $this->api->get("/plan/$planId");
+
+        // Check if subscription exist
+        if (! $response->json()['status']) {
+            throw new NotFoundHttpException($response->json()['message']);
+        }
+
+        return $response;
     }
 
     /**
@@ -106,6 +115,49 @@ class PayStackEngine extends PayStackWebhooks implements Engine
             'last_name'  => $user['surname'],
             'phone'      => $user['phone'],
         ]);
+    }
+
+    public function getSubscription(string $subscriptionId): Response
+    {
+        $response = $this->api->get("/subscription/$subscriptionId");
+
+        // Check if subscription exist
+        if (! $response->json()['status']) {
+            throw new NotFoundHttpException($response->json()['message']);
+        }
+
+        return $response;
+    }
+
+    public function cancelSubscription(Subscription $subscription): Response
+    {
+        // Get subscription details from payment gateway
+        $subscriptionDetail = $this->getSubscription(
+            $subscription->driver->driver_subscription_id
+        );
+
+        // Send cancel subscription request
+        $response = $this->api->post('/subscription/disable', [
+            'code'  => $subscriptionDetail->json()['data']['subscription_code'],
+            'token' => $subscriptionDetail->json()['data']['email_token'],
+        ]);
+
+        if (! $response->json()['status']) {
+            // TODO: create exception
+        }
+
+        // Store end_at period and update status as cancelled
+        $subscription->update([
+            'status'  => 'cancelled',
+            'ends_at' => $subscriptionDetail->json()['data']['next_payment_date'],
+        ]);
+
+        return $response;
+    }
+
+    public function resumeSubscription(Subscription $subscription): Response
+    {
+        // TODO: Implement resumeSubscription() method.
     }
 
     /**

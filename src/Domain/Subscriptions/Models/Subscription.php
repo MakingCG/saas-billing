@@ -1,12 +1,15 @@
 <?php
+
 namespace VueFileManager\Subscription\Domain\Subscriptions\Models;
 
+use Domain\Subscriptions\Traits\SubscriptionHelpers;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Database\Factories\SubscriptionFactory;
 
 /**
  * @method static create(array $array)
@@ -15,22 +18,30 @@ use VueFileManager\Subscription\Domain\Plans\Models\Plan;
  * @property string name
  * @property string subscription_id
  * @property string plan_id
- * @property timestamp trial_ends_at
- * @property timestamp ends_at
+ * @property DateTime trial_ends_at
+ * @property DateTime ends_at
  */
 class Subscription extends Model
 {
     use HasFactory;
+    use SubscriptionHelpers;
 
     protected $guarded = [];
 
     protected $casts = [
-        'id' => 'string',
+        'id'            => 'string',
+        'ends_at'       => 'datetime',
+        'trial_ends_at' => 'datetime',
     ];
 
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    protected static function newFactory(): SubscriptionFactory
+    {
+        return SubscriptionFactory::new();
+    }
 
     public function user(): HasOne
     {
@@ -42,9 +53,9 @@ class Subscription extends Model
         return $this->hasOne(Plan::class, 'id', 'plan_id');
     }
 
-    public function driver(): HasMany
+    public function driver(): hasOne
     {
-        return $this->hasMany(SubscriptionDriver::class);
+        return $this->hasOne(SubscriptionDriver::class);
     }
 
     protected static function boot()

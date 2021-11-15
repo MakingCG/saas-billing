@@ -2,6 +2,7 @@
 namespace Tests\Models;
 
 use Illuminate\Support\Str;
+use App\User\Traits\Billable;
 use Tests\Factories\UserFactory;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ class User extends Model implements AuthorizableContract, AuthenticatableContrac
     use Authorizable;
     use Authenticatable;
     use HasFactory;
+    use Billable;
 
     protected $guarded = [];
 

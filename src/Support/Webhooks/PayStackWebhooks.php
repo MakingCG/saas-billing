@@ -32,9 +32,9 @@ class PayStackWebhooks
             ->first();
 
         $subscription = Subscription::create([
-            'plan_id'                => $planDriver->plan->id,
-            'user_id'                => $customer->user_id,
-            'name'                   => $request->input('data.plan.name'),
+            'plan_id' => $planDriver->plan->id,
+            'user_id' => $customer->user_id,
+            'name'    => $request->input('data.plan.name'),
         ]);
 
         // Store subscription pivot to gateway

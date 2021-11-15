@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Support\Services\PayPalHttp;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
@@ -114,6 +115,21 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     public function updateCustomer(array $user): Response
     {
         // ...
+    }
+
+    public function getSubscription(string $subscriptionId): Response
+    {
+        // TODO: Implement getSubscription() method.
+    }
+
+    public function cancelSubscription(Subscription $subscription): Response
+    {
+        // TODO: Implement cancelSubscription() method.
+    }
+
+    public function resumeSubscription(Subscription $subscription): Response
+    {
+        // TODO: Implement resumeSubscription() method.
     }
 
     /**

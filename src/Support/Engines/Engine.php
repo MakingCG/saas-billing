@@ -6,6 +6,7 @@ use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 interface Engine
 {
@@ -38,6 +39,21 @@ interface Engine
      * Update customer for service
      */
     public function updateCustomer(array $user): Response;
+
+    /**
+     * Get Subscription
+     */
+    public function getSubscription(string $subscriptionId): Response;
+
+    /**
+     * Cancel Subscription
+     */
+    public function cancelSubscription(Subscription $subscription): Response;
+
+    /**
+     * Resume Subscription
+     */
+    public function resumeSubscription(Subscription $subscription): Response;
 
     /**
      * Create new subscription

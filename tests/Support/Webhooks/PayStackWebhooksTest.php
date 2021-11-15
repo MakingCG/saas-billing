@@ -50,7 +50,7 @@ class PayStackWebhooksTest extends TestCase
                 'subscription_code' => 'SUB_vsyqdmlzble3uii',
                 'amount'            => 50000,
                 'cron_expression'   => '0 0 28 * *',
-                'next_payment_date' => '2016-05-19T07:00:00.000Z',
+                'next_payment_date' => now()->addDays(28),
                 'open_invoice'      => null,
                 'createdAt'         => '2016-03-20T00:23:24.000Z',
                 'plan'              => [
