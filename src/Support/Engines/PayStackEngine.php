@@ -157,7 +157,28 @@ class PayStackEngine extends PayStackWebhooks implements Engine
 
     public function resumeSubscription(Subscription $subscription): Response
     {
-        // TODO: Implement resumeSubscription() method.
+        // Get subscription details from payment gateway
+        $subscriptionDetail = $this->getSubscription(
+            $subscription->driver->driver_subscription_id
+        );
+
+        // Enable subscription request
+        $response = $this->api->post('/subscription/enable', [
+            'code'  => $subscriptionDetail->json()['data']['subscription_code'],
+            'token' => $subscriptionDetail->json()['data']['email_token'],
+        ]);
+
+        if (! $response->json()['status']) {
+            // TODO: create exception
+        }
+
+        // Update end_at period and status as active
+        $subscription->update([
+            'status'  => 'active',
+            'ends_at' => null,
+        ]);
+
+        return $response;
     }
 
     /**
