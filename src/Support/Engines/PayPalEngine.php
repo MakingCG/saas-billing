@@ -9,7 +9,6 @@ use VueFileManager\Subscription\Support\Services\PayPalHttp;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
-use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 
 class PayPalEngine extends PayPalWebhooks implements Engine
 {
@@ -102,11 +101,19 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     }
 
     /**
-     * https://paystack.com/docs/api/#customer-create
+     * Method is not provided by PayPal api
      */
-    public function createCustomer(array $user): Customer
+    public function createCustomer(array $user): Response
     {
-        // empty
+        // ...
+    }
+
+    /**
+     * Method is not provided by PayPal api
+     */
+    public function updateCustomer(array $user): Response
+    {
+        // ...
     }
 
     /**
@@ -121,6 +128,9 @@ class PayPalEngine extends PayPalWebhooks implements Engine
         }
     }
 
+    /**
+     * Map internal request interval to PayPal supported intervals
+     */
     private function mapInterval(string $interval): string
     {
         return match ($interval) {

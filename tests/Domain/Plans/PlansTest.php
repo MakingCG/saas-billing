@@ -148,8 +148,6 @@ class PlansTest extends TestCase
         // Synchronize plans
         Artisan::call('subscription:synchronize-plans');
 
-        // TODO: check if plan was really updated
-
         $this
             ->assertDatabaseHas('plans', [
                 'visible'     => false,
@@ -198,8 +196,6 @@ class PlansTest extends TestCase
             ->actingAs($user)
             ->delete("/api/subscription/plans/{$plan->id}")
             ->assertNoContent();
-
-        // TODO: check if plan was really deleted
 
         $this
             ->assertDatabaseCount('plans', 0)

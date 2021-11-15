@@ -71,19 +71,40 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     /**
      * https://paystack.com/docs/api/#customer-create
      */
-    public function createCustomer(array $user): Customer
+    public function createCustomer(array $user): Response
     {
         $response = $this->api->post('/customer', [
-            'email'        => $user['email'],
-            'first_name'   => $user['name'],
-            'last_surname' => $user['surname'],
-            'phone'        => $user['phone'],
+            'email'      => $user['email'],
+            'first_name' => $user['name'],
+            'last_name'  => $user['surname'],
+            'phone'      => $user['phone'],
         ]);
 
-        return Customer::create([
+        // Store customer id to the database
+        Customer::create([
             'user_id'        => $user['id'],
             'driver_user_id' => $response->json()['data']['customer_code'],
             'driver'         => 'paystack',
+        ]);
+
+        return $response;
+    }
+
+    /**
+     * https://paystack.com/docs/api/#customer-update
+     */
+    public function updateCustomer(array $user): Response
+    {
+        // Get paystack customer id
+        $customer = Customer::where('user_id', $user['id'])
+            ->where('driver', 'paystack')
+            ->first();
+
+        return $this->api->put("/customer/{$customer->driver_user_id}", [
+            'email'      => $user['email'],
+            'first_name' => $user['name'],
+            'last_name'  => $user['surname'],
+            'phone'      => $user['phone'],
         ]);
     }
 
@@ -99,6 +120,9 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         }
     }
 
+    /**
+     * Map internal request interval to Paystack supported intervals
+     */
     private function mapIntervals(string $interval): string
     {
         return match ($interval) {

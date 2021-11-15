@@ -36,4 +36,30 @@ class CustomersTest extends TestCase
             'user_id' => $this->user->id,
         ]);
     }
+
+    /**
+     * @test
+     */
+    public function it_update_customer()
+    {
+        $this->subscription->createCustomer([
+            'id'      => $this->user->id,
+            'email'   => $this->user->email,
+            'name'    => 'John',
+            'surname' => 'Doe',
+            'phone'   => '+421 950 123 456',
+        ]);
+
+        $this->assertDatabaseHas('customers', [
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->subscription->updateCustomer([
+            'id'      => $this->user->id,
+            'email'   => $this->user->email,
+            'name'    => 'Jane',
+            'surname' => 'Does',
+            'phone'   => '+421 950 456 123',
+        ]);
+    }
 }
