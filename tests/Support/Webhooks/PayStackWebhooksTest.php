@@ -123,65 +123,77 @@ class PayStackWebhooksTest extends TestCase
                 'created_at' => now()->subDays(14),
             ]);
 
-        $ends_at = now()->addDays(14);
+        $cancelledAt = now()->addDays(30);
 
         // Send webhook
         $this->postJson('/api/subscription/paystack/webhooks', [
-            'event' => 'subscription.disable',
+            'event' => 'subscription.not_renew',
             'data' => [
+                'id' => 329496,
                 'domain' => 'test',
-                'status' => 'complete',
+                'status' => 'non-renewing',
                 'subscription_code' => $subscription->driver->driver_subscription_id,
-                'email_token' => 'ctt824k16n34u69',
-                'amount' => 300000,
-                'cron_expression' => '0 * * * *',
-                'next_payment_date' => $ends_at,
+                'email_token' => 'tdnx5c6ce0cj6ax',
+                'amount' => 10000,
+                'cron_expression' => '0 0 15 * *',
+                'next_payment_date' => NULL,
                 'open_invoice' => NULL,
+                'cancelledAt' => $cancelledAt,
+                'integration' => 665153,
                 'plan' => [
-                    'id' => 67572,
-                    'name' => 'Monthly retainer',
-                    'plan_code' => 'PLN_gx2wn530m0i3w3m',
+                    'id' => 190391,
+                    'name' => 'Professional Pack - tTI8ckCc',
+                    'plan_code' => 'PLN_yrs9eb5u94ac0ek',
                     'description' => NULL,
-                    'amount' => 50000,
+                    'amount' => 10000,
                     'interval' => 'monthly',
                     'send_invoices' => true,
                     'send_sms' => true,
-                    'currency' => 'NGN',
+                    'currency' => 'ZAR',
                 ],
                 'authorization' => [
-                    'authorization_code' => 'AUTH_96xphygz',
-                    'bin' => '539983',
-                    'last4' => '7357',
-                    'exp_month' => '10',
-                    'exp_year' => '2017',
-                    'card_type' => 'MASTERCARD DEBIT',
-                    'bank' => 'GTBANK',
-                    'country_code' => 'NG',
-                    'brand' => 'MASTERCARD',
-                    'account_name' => 'BoJack Horseman',
+                    'authorization_code' => 'AUTH_96ry2sqcxl',
+                    'bin' => '408408',
+                    'last4' => '4081',
+                    'exp_month' => '12',
+                    'exp_year' => '2030',
+                    'channel' => 'card',
+                    'card_type' => 'visa',
+                    'bank' => 'TEST BANK',
+                    'country_code' => 'ZA',
+                    'brand' => 'visa',
+                    'reusable' => true,
+                    'signature' => 'SIG_XtQmL8nBieEY6wPi0zzP',
+                    'account_name' => NULL,
                 ],
                 'customer' => [
-                    'first_name' => 'BoJack',
-                    'last_name' => 'Horseman',
-                    'email' => 'bojack@horsinaround.com',
-                    'customer_code' => 'CUS_xnxdt6s1zg1f4nx',
-                    'phone' => '',
-                    'metadata' => [
-                    ],
+                    'id' => 61536197,
+                    'first_name' => 'John',
+                    'last_name' => 'doe',
+                    'email' => 'howdy@hi5ve.digital',
+                    'customer_code' => 'CUS_vsdmoj9tete6il1',
+                    'phone' => NULL,
+                    'metadata' => NULL,
                     'risk_action' => 'default',
+                    'international_format_phone' => NULL,
                 ],
-                'created_at' => '2020-11-26T14:45:06.000Z',
+                'invoices' => [],
+                'invoices_history' => [],
+                'invoice_limit' => 0,
+                'split_code' => NULL,
+                'most_recent_invoice' => NULL,
+                'created_at' => '2021-11-15T11:00:09.000Z',
             ],
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
             'status' => 'cancelled',
-            'ends_at' => $ends_at,
+            'ends_at' => $cancelledAt,
         ]);
     }
 
     /**
-     * @test
+     * TODO: documented but not working on api side
      */
     public function paystack_webhook_enable_subscription()
     {

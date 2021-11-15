@@ -134,7 +134,7 @@ class SubscriptionPaystackTest extends TestCase
     }
 
     /**
-     * @test
+     * TODO: documented but not working on api side
      */
     public function it_resume_paystack_subscription()
     {

@@ -163,6 +163,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
 
     /**
      * https://paystack.com/docs/api/#subscription-enable
+     * TODO: documented but not working on api side
      */
     public function resumeSubscription(Subscription $subscription): Response
     {

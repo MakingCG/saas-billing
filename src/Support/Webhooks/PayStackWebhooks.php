@@ -50,6 +50,28 @@ class PayStackWebhooks
         SubscriptionWasCreated::dispatch($subscription);
     }
 
+    public function handleSubscriptionNotRenew(Request $request): void
+    {
+        $subscriptionCode = $request->input('data.subscription_code');
+        $endsAt = $request->input('data.cancelledAt');
+
+        $subscriptionDriver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first();
+
+        $subscription = Subscription::findOrFail($subscriptionDriver->subscription_id);
+
+        if ($subscription->active()) {
+            $subscription->update([
+                'status'  => 'cancelled',
+                'ends_at' => $endsAt,
+            ]);
+        }
+    }
+
+
+    /**
+     * TODO: documented but not working for api
+     */
     public function handleSubscriptionDisable(Request $request): void
     {
         $subscriptionCode = $request->input('data.subscription_code');
@@ -68,6 +90,9 @@ class PayStackWebhooks
         }
     }
 
+    /**
+     * TODO: documented but not working for api
+     */
     public function handleSubscriptionEnable(Request $request): void
     {
         $subscriptionCode = $request->input('data.subscription_code');
