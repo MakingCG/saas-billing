@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
@@ -14,7 +15,7 @@ class PayStackWebhooksTest extends TestCase
     /**
      * @test
      */
-    public function webhook_create_subscription()
+    public function paystack_webhook_create_subscription()
     {
         Event::fake([
             SubscriptionWasCreated::class,
@@ -100,6 +101,82 @@ class PayStackWebhooksTest extends TestCase
             'driver_subscription_id' => 'SUB_vsyqdmlzble3uii',
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+    }
+
+    /**
+     * @test
+     */
+    public function paystack_webhook_disabled_subscription()
+    {
+        $user = User::factory()
+            ->create();
+
+        $subscription = Subscription::factory()
+            ->hasDriver([
+                'driver' => 'paystack',
+            ])
+            ->create([
+                'user_id'    => $user->id,
+                'status'     => 'active',
+                'ends_at'    => null,
+                'created_at' => now()->subDays(14),
+            ]);
+
+        $ends_at = now()->addDays(14);
+
+        // Send webhook
+        $this->postJson('/api/subscription/paystack/webhooks', [
+            'event' => 'subscription.disable',
+            'data' => [
+                'domain' => 'test',
+                'status' => 'complete',
+                'subscription_code' => $subscription->driver->driver_subscription_id,
+                'email_token' => 'ctt824k16n34u69',
+                'amount' => 300000,
+                'cron_expression' => '0 * * * *',
+                'next_payment_date' => $ends_at,
+                'open_invoice' => NULL,
+                'plan' => [
+                    'id' => 67572,
+                    'name' => 'Monthly retainer',
+                    'plan_code' => 'PLN_gx2wn530m0i3w3m',
+                    'description' => NULL,
+                    'amount' => 50000,
+                    'interval' => 'monthly',
+                    'send_invoices' => true,
+                    'send_sms' => true,
+                    'currency' => 'NGN',
+                ],
+                'authorization' => [
+                    'authorization_code' => 'AUTH_96xphygz',
+                    'bin' => '539983',
+                    'last4' => '7357',
+                    'exp_month' => '10',
+                    'exp_year' => '2017',
+                    'card_type' => 'MASTERCARD DEBIT',
+                    'bank' => 'GTBANK',
+                    'country_code' => 'NG',
+                    'brand' => 'MASTERCARD',
+                    'account_name' => 'BoJack Horseman',
+                ],
+                'customer' => [
+                    'first_name' => 'BoJack',
+                    'last_name' => 'Horseman',
+                    'email' => 'bojack@horsinaround.com',
+                    'customer_code' => 'CUS_xnxdt6s1zg1f4nx',
+                    'phone' => '',
+                    'metadata' => [
+                    ],
+                    'risk_action' => 'default',
+                ],
+                'created_at' => '2020-11-26T14:45:06.000Z',
+            ],
+        ]);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'status' => 'cancelled',
+            'ends_at' => $ends_at,
+        ]);
     }
 }

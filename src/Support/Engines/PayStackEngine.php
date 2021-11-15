@@ -117,6 +117,9 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         ]);
     }
 
+    /**
+     * https://paystack.com/docs/api/#subscription-fetch
+     */
     public function getSubscription(string $subscriptionId): Response
     {
         $response = $this->api->get("/subscription/$subscriptionId");
@@ -129,6 +132,9 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         return $response;
     }
 
+    /**
+     * https://paystack.com/docs/api/#subscription-disable
+     */
     public function cancelSubscription(Subscription $subscription): Response
     {
         // Get subscription details from payment gateway
@@ -155,6 +161,9 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         return $response;
     }
 
+    /**
+     * https://paystack.com/docs/api/#subscription-enable
+     */
     public function resumeSubscription(Subscription $subscription): Response
     {
         // Get subscription details from payment gateway
