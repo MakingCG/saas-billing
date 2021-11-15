@@ -117,23 +117,38 @@ class PayPalEngine extends PayPalWebhooks implements Engine
         // ...
     }
 
+    /**
+     * https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_get
+     */
     public function getSubscription(string $subscriptionId): Response
     {
-        // TODO: Implement getSubscription() method.
-    }
-
-    public function cancelSubscription(Subscription $subscription): Response
-    {
-        // TODO: Implement cancelSubscription() method.
-    }
-
-    public function resumeSubscription(Subscription $subscription): Response
-    {
-        // TODO: Implement resumeSubscription() method.
+        return $this->api->get("/billing/subscriptions/$subscriptionId");
     }
 
     /**
-     * https://paystack.com/docs/payments/webhooks
+     * https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_cancel
+     */
+    public function cancelSubscription(Subscription $subscription): Response
+    {
+        // Get subscription details from payment gateway
+        $originalSubscription = $this->getSubscription($subscription->driverId());
+
+        // Cancel subscription request
+        $response = $this->api->post("/billing/subscriptions/{$subscription->driverId()}/cancel", [
+            'reason' => 'User decided cancel his subscription',
+        ]);
+
+        // Store end_at period and update status as cancelled
+        $subscription->update([
+            'status'  => 'cancelled',
+            'ends_at' => $originalSubscription->json()['billing_info']['next_billing_time'],
+        ]);
+
+        return $response;
+    }
+
+    /**
+     * https://developer.paypal.com/docs/api/webhooks/v1/
      */
     public function webhook(Request $request): void
     {
@@ -158,7 +173,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     }
 
     /**
-     * If isn't any created product, create them. If there is
+     * If isn't any product created, create them. If there is
      * some product, then get his id.
      */
     private function getOrCreateProductId(): string

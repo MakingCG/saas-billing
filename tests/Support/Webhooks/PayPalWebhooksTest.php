@@ -95,4 +95,11 @@ class PayPalWebhooksTest extends TestCase
 
         Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
+
+    /**
+     * TODO make webhook test
+     */
+    public function webhook_cancel_subscription()
+    {
+    }
 }

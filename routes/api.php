@@ -12,7 +12,7 @@ Route::group(['prefix' => 'api/subscription'], function () {
         Route::post('/{driver}/webhooks', WebhooksController::class);
 
         Route::post('/cancel', CancelSubscriptionController::class);
-        Route::post('/resume', ResumeSubscriptionController::class);
+        //Route::post('/resume', ResumeSubscriptionController::class);
     });
 
     Route::group(['middleware' => ['api', 'auth:sanctum']], function () {

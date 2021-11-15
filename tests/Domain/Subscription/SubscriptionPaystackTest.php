@@ -30,7 +30,7 @@ class SubscriptionPaystackTest extends TestCase
         $ends_at = now()->addDays(14);
 
         Http::fake([
-            "https://api.paystack.co/subscription/{$subscription->driver->driver_subscription_id}" => Http::response([
+            "https://api.paystack.co/subscription/{$subscription->driverId()}" => Http::response([
                 'status'  => true,
                 'message' => 'Subscription retrieved successfully',
                 'data'    => [
@@ -98,7 +98,7 @@ class SubscriptionPaystackTest extends TestCase
                     'status'            => 'active',
                     'quantity'          => 1,
                     'amount'            => 50000,
-                    'subscription_code' => $subscription->driver->driver_subscription_id,
+                    'subscription_code' => $subscription->driverId(),
                     'email_token'       => 'd7gofp6yppn3qz7',
                     'easy_cron_id'      => null,
                     'cron_expression'   => '0 0 28 * *',
@@ -153,7 +153,7 @@ class SubscriptionPaystackTest extends TestCase
             ]);
 
         Http::fake([
-            "https://api.paystack.co/subscription/{$subscription->driver->driver_subscription_id}" => Http::response([
+            "https://api.paystack.co/subscription/{$subscription->driverId()}" => Http::response([
                 'status'  => true,
                 'message' => 'Subscription retrieved successfully',
                 'data'    => [
@@ -221,7 +221,7 @@ class SubscriptionPaystackTest extends TestCase
                     'status'            => 'disabled',
                     'quantity'          => 1,
                     'amount'            => 50000,
-                    'subscription_code' => $subscription->driver->driver_subscription_id,
+                    'subscription_code' => $subscription->driverId(),
                     'email_token'       => 'd7gofp6yppn3qz7',
                     'easy_cron_id'      => null,
                     'cron_expression'   => '0 0 28 * *',

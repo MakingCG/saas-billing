@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Illuminate\Http\Request;
@@ -7,9 +6,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
-use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
 
 class PayStackWebhooks
 {
@@ -24,7 +23,7 @@ class PayStackWebhooks
             ->where('driver_user_id', $customerCode)
             ->first();
 
-        if (!$customer) {
+        if (! $customer) {
             Log::error("Customer with id $customerCode do not exist. We can't perform subscription.create");
 
             throw new ModelNotFoundException;
@@ -64,48 +63,6 @@ class PayStackWebhooks
             $subscription->update([
                 'status'  => 'cancelled',
                 'ends_at' => $endsAt,
-            ]);
-        }
-    }
-
-
-    /**
-     * TODO: documented but not working for api
-     */
-    public function handleSubscriptionDisable(Request $request): void
-    {
-        $subscriptionCode = $request->input('data.subscription_code');
-        $endsAt = $request->input('data.next_payment_date');
-
-        $subscriptionDriver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
-            ->first();
-
-        $subscription = Subscription::findOrFail($subscriptionDriver->subscription_id);
-
-        if ($subscription->active()) {
-            $subscription->update([
-                'status'  => 'cancelled',
-                'ends_at' => $endsAt,
-            ]);
-        }
-    }
-
-    /**
-     * TODO: documented but not working for api
-     */
-    public function handleSubscriptionEnable(Request $request): void
-    {
-        $subscriptionCode = $request->input('data.subscription_code');
-
-        $subscriptionDriver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
-            ->first();
-
-        $subscription = Subscription::findOrFail($subscriptionDriver->subscription_id);
-
-        if ($subscription->onGracePeriod()) {
-            $subscription->update([
-                'status'  => 'active',
-                'ends_at' => null,
             ]);
         }
     }

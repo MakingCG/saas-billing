@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
@@ -101,7 +100,7 @@ class PayStackWebhooksTest extends TestCase
             'driver_subscription_id' => 'SUB_vsyqdmlzble3uii',
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -128,142 +127,67 @@ class PayStackWebhooksTest extends TestCase
         // Send webhook
         $this->postJson('/api/subscription/paystack/webhooks', [
             'event' => 'subscription.not_renew',
-            'data' => [
-                'id' => 329496,
-                'domain' => 'test',
-                'status' => 'non-renewing',
-                'subscription_code' => $subscription->driver->driver_subscription_id,
-                'email_token' => 'tdnx5c6ce0cj6ax',
-                'amount' => 10000,
-                'cron_expression' => '0 0 15 * *',
-                'next_payment_date' => NULL,
-                'open_invoice' => NULL,
-                'cancelledAt' => $cancelledAt,
-                'integration' => 665153,
-                'plan' => [
-                    'id' => 190391,
-                    'name' => 'Professional Pack - tTI8ckCc',
-                    'plan_code' => 'PLN_yrs9eb5u94ac0ek',
-                    'description' => NULL,
-                    'amount' => 10000,
-                    'interval' => 'monthly',
+            'data'  => [
+                'id'                => 329496,
+                'domain'            => 'test',
+                'status'            => 'non-renewing',
+                'subscription_code' => $subscription->driverId(),
+                'email_token'       => 'tdnx5c6ce0cj6ax',
+                'amount'            => 10000,
+                'cron_expression'   => '0 0 15 * *',
+                'next_payment_date' => null,
+                'open_invoice'      => null,
+                'cancelledAt'       => $cancelledAt,
+                'integration'       => 665153,
+                'plan'              => [
+                    'id'            => 190391,
+                    'name'          => 'Professional Pack - tTI8ckCc',
+                    'plan_code'     => 'PLN_yrs9eb5u94ac0ek',
+                    'description'   => null,
+                    'amount'        => 10000,
+                    'interval'      => 'monthly',
                     'send_invoices' => true,
-                    'send_sms' => true,
-                    'currency' => 'ZAR',
+                    'send_sms'      => true,
+                    'currency'      => 'ZAR',
                 ],
                 'authorization' => [
                     'authorization_code' => 'AUTH_96ry2sqcxl',
-                    'bin' => '408408',
-                    'last4' => '4081',
-                    'exp_month' => '12',
-                    'exp_year' => '2030',
-                    'channel' => 'card',
-                    'card_type' => 'visa',
-                    'bank' => 'TEST BANK',
-                    'country_code' => 'ZA',
-                    'brand' => 'visa',
-                    'reusable' => true,
-                    'signature' => 'SIG_XtQmL8nBieEY6wPi0zzP',
-                    'account_name' => NULL,
+                    'bin'                => '408408',
+                    'last4'              => '4081',
+                    'exp_month'          => '12',
+                    'exp_year'           => '2030',
+                    'channel'            => 'card',
+                    'card_type'          => 'visa',
+                    'bank'               => 'TEST BANK',
+                    'country_code'       => 'ZA',
+                    'brand'              => 'visa',
+                    'reusable'           => true,
+                    'signature'          => 'SIG_XtQmL8nBieEY6wPi0zzP',
+                    'account_name'       => null,
                 ],
                 'customer' => [
-                    'id' => 61536197,
-                    'first_name' => 'John',
-                    'last_name' => 'doe',
-                    'email' => 'howdy@hi5ve.digital',
-                    'customer_code' => 'CUS_vsdmoj9tete6il1',
-                    'phone' => NULL,
-                    'metadata' => NULL,
-                    'risk_action' => 'default',
-                    'international_format_phone' => NULL,
+                    'id'                         => 61536197,
+                    'first_name'                 => 'John',
+                    'last_name'                  => 'doe',
+                    'email'                      => 'howdy@hi5ve.digital',
+                    'customer_code'              => 'CUS_vsdmoj9tete6il1',
+                    'phone'                      => null,
+                    'metadata'                   => null,
+                    'risk_action'                => 'default',
+                    'international_format_phone' => null,
                 ],
-                'invoices' => [],
-                'invoices_history' => [],
-                'invoice_limit' => 0,
-                'split_code' => NULL,
-                'most_recent_invoice' => NULL,
-                'created_at' => '2021-11-15T11:00:09.000Z',
+                'invoices'            => [],
+                'invoices_history'    => [],
+                'invoice_limit'       => 0,
+                'split_code'          => null,
+                'most_recent_invoice' => null,
+                'created_at'          => '2021-11-15T11:00:09.000Z',
             ],
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
-            'status' => 'cancelled',
+            'status'  => 'cancelled',
             'ends_at' => $cancelledAt,
-        ]);
-    }
-
-    /**
-     * TODO: documented but not working on api side
-     */
-    public function paystack_webhook_enable_subscription()
-    {
-        $user = User::factory()
-            ->create();
-
-        $subscription = Subscription::factory()
-            ->hasDriver([
-                'driver' => 'paystack',
-            ])
-            ->create([
-                'user_id'    => $user->id,
-                'status'     => 'cancelled',
-                'ends_at'    => now()->addDays(14),
-                'created_at' => now()->subDays(14),
-            ]);
-
-        // Send webhook
-        // TODO: check source from real api
-        $this->postJson('/api/subscription/paystack/webhooks', [
-            'event' => 'subscription.enable',
-            'data' => [
-                'domain' => 'test',
-                'status' => 'complete',
-                'subscription_code' => $subscription->driver->driver_subscription_id,
-                'email_token' => 'ctt824k16n34u69',
-                'amount' => 300000,
-                'cron_expression' => '0 * * * *',
-                'next_payment_date' => '2016-05-19T07:00:00.000Z',
-                'open_invoice' => NULL,
-                'plan' => [
-                    'id' => 67572,
-                    'name' => 'Monthly retainer',
-                    'plan_code' => 'PLN_gx2wn530m0i3w3m',
-                    'description' => NULL,
-                    'amount' => 50000,
-                    'interval' => 'monthly',
-                    'send_invoices' => true,
-                    'send_sms' => true,
-                    'currency' => 'NGN',
-                ],
-                'authorization' => [
-                    'authorization_code' => 'AUTH_96xphygz',
-                    'bin' => '539983',
-                    'last4' => '7357',
-                    'exp_month' => '10',
-                    'exp_year' => '2017',
-                    'card_type' => 'MASTERCARD DEBIT',
-                    'bank' => 'GTBANK',
-                    'country_code' => 'NG',
-                    'brand' => 'MASTERCARD',
-                    'account_name' => 'BoJack Horseman',
-                ],
-                'customer' => [
-                    'first_name' => 'BoJack',
-                    'last_name' => 'Horseman',
-                    'email' => 'bojack@horsinaround.com',
-                    'customer_code' => 'CUS_xnxdt6s1zg1f4nx',
-                    'phone' => '',
-                    'metadata' => [
-                    ],
-                    'risk_action' => 'default',
-                ],
-                'created_at' => '2020-11-26T14:45:06.000Z',
-            ],
-        ]);
-
-        $this->assertDatabaseHas('subscriptions', [
-            'status' => 'active',
-            'ends_at' => null,
         ]);
     }
 }

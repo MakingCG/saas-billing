@@ -138,9 +138,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     public function cancelSubscription(Subscription $subscription): Response
     {
         // Get subscription details from payment gateway
-        $subscriptionDetail = $this->getSubscription(
-            $subscription->driver->driver_subscription_id
-        );
+        $subscriptionDetail = $this->getSubscription($subscription->driverId());
 
         // Send cancel subscription request
         $response = $this->api->post('/subscription/disable', [
@@ -156,36 +154,6 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         $subscription->update([
             'status'  => 'cancelled',
             'ends_at' => $subscriptionDetail->json()['data']['next_payment_date'],
-        ]);
-
-        return $response;
-    }
-
-    /**
-     * https://paystack.com/docs/api/#subscription-enable
-     * TODO: documented but not working on api side
-     */
-    public function resumeSubscription(Subscription $subscription): Response
-    {
-        // Get subscription details from payment gateway
-        $subscriptionDetail = $this->getSubscription(
-            $subscription->driver->driver_subscription_id
-        );
-
-        // Enable subscription request
-        $response = $this->api->post('/subscription/enable', [
-            'code'  => $subscriptionDetail->json()['data']['subscription_code'],
-            'token' => $subscriptionDetail->json()['data']['email_token'],
-        ]);
-
-        if (! $response->json()['status']) {
-            // TODO: create exception
-        }
-
-        // Update end_at period and status as active
-        $subscription->update([
-            'status'  => 'active',
-            'ends_at' => null,
         ]);
 
         return $response;
