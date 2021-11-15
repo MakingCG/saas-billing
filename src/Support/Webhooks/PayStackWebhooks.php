@@ -70,5 +70,18 @@ class PayStackWebhooks
 
     public function handleSubscriptionEnable(Request $request): void
     {
+        $subscriptionCode = $request->input('data.subscription_code');
+
+        $subscriptionDriver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first();
+
+        $subscription = Subscription::findOrFail($subscriptionDriver->subscription_id);
+
+        if ($subscription->onGracePeriod()) {
+            $subscription->update([
+                'status'  => 'active',
+                'ends_at' => null,
+            ]);
+        }
     }
 }
