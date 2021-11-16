@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Illuminate\Http\Request;
@@ -7,6 +8,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 
 class PayPalWebhooks
 {
@@ -37,6 +39,27 @@ class PayPalWebhooks
             ]);
 
         SubscriptionWasCreated::dispatch($subscription);
+    }
+
+    public function handleBillingSubscriptionUpdated(Request $request): void
+    {
+        $subscriptionCode = $request->input('resource.id');
+        $planCode = $request->input('resource.plan_id');
+
+        $subscriptionDriver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first();
+
+        $planDriver = PlanDriver::where('driver_plan_id', $planCode)
+            ->first();
+
+        if ($subscriptionDriver->subscription->active()) {
+            $subscriptionDriver->subscription->update([
+                'name'    => $planDriver->plan->name,
+                'plan_id' => $planDriver->plan->id,
+            ]);
+
+            SubscriptionWasUpdated::dispatch($subscriptionDriver->subscription);
+        }
     }
 
     public function handleBillingSubscriptionCancelled(Request $request): void
