@@ -10,6 +10,11 @@ use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 interface Engine
 {
     /**
+     * Get subscription plan
+     */
+    public function getPlan(string $planId): Response;
+
+    /**
      * Create new subscription plan
      */
     public function createPlan(CreatePlanData $data): array;
@@ -18,11 +23,6 @@ interface Engine
      * Update subscription plan
      */
     public function updatePlan(Plan $plan): Response;
-
-    /**
-     * Get subscription plan
-     */
-    public function getPlan(string $planId): Response;
 
     /**
      * Delete subscription plan
@@ -43,6 +43,11 @@ interface Engine
      * Get Subscription
      */
     public function getSubscription(string $subscriptionId): Response;
+
+    /**
+     * Swap subscription plan
+     */
+    public function swapSubscription(Subscription $subscription, Plan $plan): Response;
 
     /**
      * Cancel Subscription

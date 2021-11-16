@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Subscriptions\Traits;
 
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\EngineManager;
 
 trait SubscriptionHelpers
@@ -21,6 +22,16 @@ trait SubscriptionHelpers
         $this->gateway()
             ->driver($this->driver->driver)
             ->cancelSubscription($this);
+    }
+
+    /**
+     * Swap subscription
+     */
+    public function swap(Plan $plan)
+    {
+        return $this->gateway()
+            ->driver($this->driver->driver)
+            ->swapSubscription($this, $plan);
     }
 
     /**

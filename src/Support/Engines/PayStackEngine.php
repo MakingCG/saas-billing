@@ -132,6 +132,11 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         return $response;
     }
 
+    public function swapSubscription(Subscription $subscription, Plan $plan): Response
+    {
+        // TODO: frontend / webhooks implementation
+    }
+
     /**
      * https://paystack.com/docs/api/#subscription-disable
      */

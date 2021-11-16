@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\CancelSubscriptionController;
+use VueFileManager\Subscription\Domain\Subscriptions\Controllers\SwapSubscriptionController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
@@ -11,6 +12,7 @@ Route::group(['prefix' => 'api/subscription'], function () {
         Route::post('/{driver}/webhooks', WebhooksController::class);
 
         Route::post('/cancel', CancelSubscriptionController::class);
+        Route::post('/swap/{plan}', SwapSubscriptionController::class);
         //Route::post('/resume', ResumeSubscriptionController::class);
     });
 

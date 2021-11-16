@@ -42,6 +42,16 @@ class Plan extends Model
         return $this->hasMany(PlanFeature::class);
     }
 
+    /**
+     * Get original driver id
+     */
+    public function driverId(string $driver) {
+        return $this->drivers()
+            ->where('driver', $driver)
+            ->first()
+            ->driver_plan_id;
+    }
+
     protected static function newFactory(): PlanFactory
     {
         return PlanFactory::new();
