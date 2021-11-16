@@ -29,7 +29,7 @@ class SubscriptionDriver extends Model
         return SubscriptionDriverFactory::new();
     }
 
-    public function plan(): HasOne
+    public function subscription(): HasOne
     {
         return $this->hasOne(Subscription::class, 'id', 'subscription_id');
     }

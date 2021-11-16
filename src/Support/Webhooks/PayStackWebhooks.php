@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
 
@@ -54,16 +55,16 @@ class PayStackWebhooks
         $subscriptionCode = $request->input('data.subscription_code');
         $endsAt = $request->input('data.cancelledAt');
 
-        $subscriptionDriver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+        $driver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
             ->first();
 
-        $subscription = Subscription::findOrFail($subscriptionDriver->subscription_id);
-
-        if ($subscription->active()) {
-            $subscription->update([
+        if ($driver->subscription->active()) {
+            $driver->subscription->update([
                 'status'  => 'cancelled',
                 'ends_at' => $endsAt,
             ]);
+
+            SubscriptionWasCancelled::dispatch($driver->subscription);
         }
     }
 }

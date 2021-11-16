@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Event;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class PayStackWebhooksTest extends TestCase
@@ -108,6 +109,10 @@ class PayStackWebhooksTest extends TestCase
      */
     public function paystack_webhook_disabled_subscription()
     {
+        Event::fake([
+            SubscriptionWasCancelled::class,
+        ]);
+
         $user = User::factory()
             ->create();
 
@@ -189,5 +194,7 @@ class PayStackWebhooksTest extends TestCase
             'status'  => 'cancelled',
             'ends_at' => $cancelledAt,
         ]);
+
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 }
