@@ -43,13 +43,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function updatePlan(Plan $plan): Response
     {
-        // Get paystack plan id
-        $planDriver = $plan
-            ->drivers()
-            ->where('driver', 'paystack')
-            ->first();
-
-        return $this->api->put("/plan/{$planDriver->driver_plan_id}", [
+        return $this->api->put("/plan/{$plan->driverId('paystack')}", [
             'name' => $plan->name,
         ]);
     }

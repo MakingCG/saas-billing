@@ -65,13 +65,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function updatePlan(Plan $plan): Response
     {
-        // Get PayPal plan id
-        $planDriver = $plan
-            ->drivers()
-            ->where('driver', 'paypal')
-            ->first();
-
-        return $this->api->patch("/billing/plans/$planDriver->driver_plan_id", [
+        return $this->api->patch("/billing/plans/{$plan->driverId('paypal')}", [
             [
                 'op'    => 'replace',
                 'path'  => '/name',
