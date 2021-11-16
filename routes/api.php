@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Domain\Subscriptions\Controllers\CancelSubscriptionController;
-use Domain\Subscriptions\Controllers\ResumeSubscriptionController;
+use VueFileManager\Subscription\Domain\Subscriptions\Controllers\CancelSubscriptionController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;

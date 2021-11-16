@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Subscriptions\Traits;
+namespace VueFileManager\Subscription\Domain\Subscriptions\Traits;
 
 use VueFileManager\Subscription\Support\EngineManager;
 
