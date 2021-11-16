@@ -128,7 +128,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
 
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
-        // TODO: frontend / webhooks implementation
+        //TODO: frontend implementation
     }
 
     /**
@@ -146,7 +146,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         ]);
 
         if (! $response->json()['status']) {
-            // TODO: create exception
+            //TODO: create exception
         }
 
         // Store end_at period and update status as cancelled

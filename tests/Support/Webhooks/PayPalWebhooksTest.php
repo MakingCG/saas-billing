@@ -27,13 +27,11 @@ class PayPalWebhooksTest extends TestCase
 
         // Create plan with features
         $plan = Plan::factory()
+            ->hasDrivers([
+                'driver' => 'paypal',
+            ])
             ->hasFeatures(2)
             ->create();
-
-        $planDriver = $plan->drivers()->create([
-            'driver_plan_id' => 'P-1P873319R2491082NMGFK3RY',
-            'driver'         => 'paypal',
-        ]);
 
         // Send webhook
         $this->postJson('/api/subscription/paypal/webhooks', [
@@ -68,7 +66,7 @@ class PayPalWebhooksTest extends TestCase
                 ],
                 'id'              => 'I-KHY6B042F1YA',
                 'plan_overridden' => false,
-                'plan_id'         => $planDriver->driver_plan_id,
+                'plan_id'         => $plan->driverId('paypal'),
                 'status'          => 'APPROVAL_PENDING',
             ],
             'links'            => [
@@ -108,16 +106,11 @@ class PayPalWebhooksTest extends TestCase
             SubscriptionWasUpdated::class,
         ]);
 
-        $plan = Plan::factory()
+        [$plan, $planHigher] = Plan::factory()
             ->hasDrivers([
                 'driver' => 'paypal',
             ])
-            ->create();
-
-        $planHigher = Plan::factory()
-            ->hasDrivers([
-                'driver' => 'paypal',
-            ])
+            ->count(2)
             ->create();
 
         $subscription = Subscription::factory()

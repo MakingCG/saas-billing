@@ -164,16 +164,11 @@ class SubscriptionPayPalTest extends TestCase
         $user = User::factory()
             ->create();
 
-        $plan = Plan::factory()
+        [$plan, $planHigher] = Plan::factory()
             ->hasDrivers([
                 'driver' => 'paypal',
             ])
-            ->create();
-
-        $planHigher = Plan::factory()
-            ->hasDrivers([
-                'driver' => 'paypal',
-            ])
+            ->count(2)
             ->create();
 
         $subscription = Subscription::factory()
