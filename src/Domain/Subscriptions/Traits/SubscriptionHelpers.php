@@ -40,6 +40,14 @@ trait SubscriptionHelpers
     }
 
     /**
+     * Check if subscription is on grace period
+     */
+    public function ended(): bool
+    {
+        return $this->ends_at && $this->ends_at->isPast();
+    }
+
+    /**
      * Check if subscription is active
      */
     public function active(): bool

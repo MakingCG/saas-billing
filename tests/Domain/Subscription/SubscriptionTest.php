@@ -53,4 +53,20 @@ class SubscriptionTest extends TestCase
         $this->assertEquals(true, $isCancelled->cancelled());
         $this->assertEquals(false, $isNotCancelled->cancelled());
     }
+
+    /**
+     * @test
+     */
+    public function it_test_ended_subscription()
+    {
+        [$isEnded, $isNotEnded] = Subscription::factory()
+            ->count(2)
+            ->sequence(
+                ['ends_at' => now()->subDay()],
+                ['ends_at' => now()->addDay()]
+            )->create();
+
+        $this->assertEquals(true, $isEnded->ended());
+        $this->assertEquals(false, $isNotEnded->ended());
+    }
 }
