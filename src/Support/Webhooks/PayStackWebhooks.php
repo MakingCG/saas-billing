@@ -5,6 +5,7 @@ namespace VueFileManager\Subscription\Support\Webhooks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Tests\Models\User;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\EngineManager;
@@ -19,8 +20,9 @@ class PayStackWebhooks
     public function handleSubscriptionCreate(Request $request): void
     {
         $customerCode = $request->input('data.customer.customer_code');
-        $planCode = $request->input('data.plan.plan_code');
+        $customerEmail = $request->input('data.customer.email');
         $subscriptionCode = $request->input('data.subscription_code');
+        $planCode = $request->input('data.plan.plan_code');
 
         // Get existing customer
         $customer = Customer::where('driver', 'paystack')
@@ -28,9 +30,19 @@ class PayStackWebhooks
             ->first();
 
         if (!$customer) {
-            Log::error("Customer with id $customerCode do not exist. We can't perform subscription.create");
 
-            throw new ModelNotFoundException;
+            // Get user by email
+            $user = User::where('email', $customerEmail)
+                ->first();
+
+            // Store customer id to the database
+            $user->customer()
+                ->create([
+                    'driver_user_id' => $customerCode,
+                    'driver'         => 'paystack',
+                ]);
+
+            $customer = $user->customer;
         }
 
         $planDriver = PlanDriver::where('driver_plan_id', $planCode)

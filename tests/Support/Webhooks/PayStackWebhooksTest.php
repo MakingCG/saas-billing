@@ -28,14 +28,6 @@ class PayStackWebhooksTest extends TestCase
         $user = User::factory()
             ->create();
 
-        // Create customer
-        $customer = Customer::factory()
-            ->create([
-                'user_id'        => $user->id,
-                'driver_user_id' => 'CUS_xnxdt6s1zg1f4nx',
-                'driver'         => 'paystack',
-            ]);
-
         // Create plan with features
         $plan = Plan::factory()
             ->hasDrivers([
@@ -81,8 +73,8 @@ class PayStackWebhooksTest extends TestCase
                 'customer'          => [
                     'first_name'    => 'BoJack',
                     'last_name'     => 'Horseman',
-                    'email'         => 'bojack@horsinaround.com',
-                    'customer_code' => $customer->driver_user_id,
+                    'email'         => $user->email,
+                    'customer_code' => 'CUS_xnxdt6s1zg1f4nx',
                     'phone'         => '',
                     'metadata'      => [
                     ],
@@ -101,6 +93,12 @@ class PayStackWebhooksTest extends TestCase
 
         $this->assertDatabaseHas('subscription_drivers', [
             'driver_subscription_id' => 'SUB_vsyqdmlzble3uii',
+        ]);
+
+        $this->assertDatabaseHas('customers', [
+            'driver_user_id' => 'CUS_xnxdt6s1zg1f4nx',
+            'user_id'        => $user->id,
+            'driver'         => 'paystack',
         ]);
 
         Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
