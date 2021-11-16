@@ -3,8 +3,6 @@
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Tests\Models\User;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
@@ -32,7 +30,7 @@ class PayStackWebhooks
         if (!$customer) {
 
             // Get user by email
-            $user = User::where('email', $customerEmail)
+            $user = config('auth.providers.users.model')::where('email', $customerEmail)
                 ->first();
 
             // Store customer id to the database
