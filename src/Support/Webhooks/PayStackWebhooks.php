@@ -115,7 +115,7 @@ class PayStackWebhooks
 
     public function handleChargeSuccess(Request $request): void
     {
-        $user = User::where('email', $request->input('data.customer.email'))
+        $user = config('auth.providers.users.model')::where('email', $request->input('data.customer.email'))
             ->first();
 
         $user->transactions()->create([

@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Domain\Transactions\GetTransactionsController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
+use VueFileManager\Subscription\Domain\Transactions\GetTransactionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\SwapSubscriptionController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\CancelSubscriptionController;
 

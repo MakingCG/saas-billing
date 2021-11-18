@@ -1,7 +1,9 @@
 <?php
 namespace VueFileManager\Subscription\Support\Webhooks;
 
+use Tests\Models\User;
 use Illuminate\Http\Request;
+use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
@@ -77,5 +79,36 @@ class PayPalWebhooks
 
             SubscriptionWasCancelled::dispatch($driver->subscription);
         }
+    }
+
+    public function handlePaymentSaleCompleted(Request $request): void
+    {
+        // Get subscription code from received webhook
+        $subscriptionCode = $request->input('resource.billing_agreement_id');
+
+        // Get original subscription detail from PayPal
+        $subscription = resolve(EngineManager::class)
+            ->driver('paypal')
+            ->getSubscription($subscriptionCode)
+            ->json();
+
+        // Get plan data from our database
+        $plan = PlanDriver::where('driver_plan_id', $subscription['plan_id'])
+            ->first()
+            ->plan;
+
+        // Get our user
+        $user = config('auth.providers.users.model')::find($request->input('resource.custom'))
+            ->first();
+
+        // Store transaction
+        $user->transactions()->create([
+            'status'    => 'success',
+            'driver'    => 'paypal',
+            'plan_name' => $plan->name,
+            'reference' => $request->input('resource.billing_agreement_id'),
+            'currency'  => $request->input('resource.amount.currency'),
+            'amount'    => $request->input('resource.amount.total'),
+        ]);
     }
 }

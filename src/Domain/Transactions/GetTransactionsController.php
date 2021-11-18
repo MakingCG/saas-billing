@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Transactions;
+namespace VueFileManager\Subscription\Domain\Transactions;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;

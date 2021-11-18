@@ -3,6 +3,7 @@ namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
 use Tests\Models\User;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Event;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
@@ -396,5 +397,212 @@ class PayPalWebhooksTest extends TestCase
         ]);
 
         Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+    }
+
+    /**
+     * @test
+     */
+    public function paypal_webhook_payment_sale_completed()
+    {
+        $user = User::factory()
+            ->create();
+
+        $plan = Plan::factory()
+            ->hasDrivers([
+                'driver' => 'paypal',
+            ])
+            ->create();
+
+        Http::fake([
+            'https://api-m.sandbox.paypal.com/v1/billing/subscriptions/*' => Http::response([
+                'id'                 => 'I-6W1M3FWTVL19',
+                'plan_id'            => $plan->driverId('paypal'),
+                'start_time'         => '2019-04-10T07:00:00Z',
+                'quantity'           => '20',
+                'shipping_amount'    => [
+                    'currency_code' => 'USD',
+                    'value'         => '10.0',
+                ],
+                'subscriber'         => [
+                    'shipping_address' => [
+                        'name'    => [
+                            'full_name' => 'John Doe',
+                        ],
+                        'address' => [
+                            'address_line_1' => '2211 N First Street',
+                            'address_line_2' => 'Building 17',
+                            'admin_area_2'   => 'San Jose',
+                            'admin_area_1'   => 'CA',
+                            'postal_code'    => '95131',
+                            'country_code'   => 'US',
+                        ],
+                    ],
+                    'name'             => [
+                        'given_name' => 'John',
+                        'surname'    => 'Doe',
+                    ],
+                    'email_address'    => 'customer@example.com',
+                    'payer_id'         => '2J6QB8YJQSJRJ',
+                ],
+                'billing_info'       => [
+                    'outstanding_balance'   => [
+                        'currency_code' => 'USD',
+                        'value'         => '1.0',
+                    ],
+                    'cycle_executions'      => [
+                        [
+                            'tenure_type'      => 'TRIAL',
+                            'sequence'         => 1,
+                            'cycles_completed' => 0,
+                            'cycles_remaining' => 2,
+                            'total_cycles'     => 2,
+                        ],
+                        [
+                            'tenure_type'      => 'TRIAL',
+                            'sequence'         => 2,
+                            'cycles_completed' => 0,
+                            'cycles_remaining' => 3,
+                            'total_cycles'     => 3,
+                        ],
+                        [
+                            'tenure_type'      => 'REGULAR',
+                            'sequence'         => 3,
+                            'cycles_completed' => 0,
+                            'cycles_remaining' => 12,
+                            'total_cycles'     => 12,
+                        ],
+                    ],
+                    'last_payment'          => [
+                        'amount' => [
+                            'currency_code' => 'USD',
+                            'value'         => '1.15',
+                        ],
+                        'time'   => '2019-04-09T10:27:20Z',
+                    ],
+                    'next_billing_time'     => '2019-04-09T10:26:04Z',
+                    'failed_payments_count' => 0,
+                ],
+                'create_time'        => '2019-04-09T10:26:04Z',
+                'update_time'        => '2019-04-09T10:27:27Z',
+                'links'              => [
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G/cancel',
+                        'rel'    => 'cancel',
+                        'method' => 'POST',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G',
+                        'rel'    => 'edit',
+                        'method' => 'PATCH',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G',
+                        'rel'    => 'self',
+                        'method' => 'GET',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G/suspend',
+                        'rel'    => 'suspend',
+                        'method' => 'POST',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G/capture',
+                        'rel'    => 'capture',
+                        'method' => 'POST',
+                    ],
+                ],
+                'status'             => 'ACTIVE',
+                'status_update_time' => '2019-04-09T10:27:27Z',
+            ]),
+        ]);
+
+        $this->postJson('/api/subscription/paypal/webhooks', [
+            'id'            => 'WH-9XV66238KD489590N-2R389597JR522592U',
+            'create_time'   => '2021-11-18T07:58:41.727Z',
+            'resource_type' => 'sale',
+            'event_type'    => 'PAYMENT.SALE.COMPLETED',
+            'summary'       => 'Payment completed for $ 10.0 USD',
+            'resource'      => [
+                'amount'                      => [
+                    'total'    => '10.00',
+                    'currency' => 'USD',
+                    'details'  => [
+                        'subtotal' => '10.00',
+                    ],
+                ],
+                'payment_mode'                => 'INSTANT_TRANSFER',
+                'create_time'                 => '2021-11-18T07:58:19Z',
+                'custom'                      => $user->id,
+                'transaction_fee'             => [
+                    'currency' => 'USD',
+                    'value'    => '0.64',
+                ],
+                'billing_agreement_id'        => 'I-6W1M3FWTVL19',
+                'update_time'                 => '2021-11-18T07:58:19Z',
+                'soft_descriptor'             => 'PAYPAL *MAKINGCG',
+                'protection_eligibility_type' => 'ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE',
+                'protection_eligibility'      => 'ELIGIBLE',
+                'links'                       => [
+                    [
+                        'method' => 'GET',
+                        'rel'    => 'self',
+                        'href'   => 'https://api.sandbox.paypal.com/v1/payments/sale/25S0310919017921W',
+                    ],
+                    [
+                        'method' => 'POST',
+                        'rel'    => 'refund',
+                        'href'   => 'https://api.sandbox.paypal.com/v1/payments/sale/25S0310919017921W/refund',
+                    ],
+                ],
+                'id'                          => '25S0310919017921W',
+                'state'                       => 'completed',
+                'invoice_number'              => '',
+            ],
+            'status'        => 'PENDING',
+            'transmissions' => [
+                [
+                    'webhook_url'      => 'https://internanogalakticky.vuefilemanager.com/api/subscription/paypal/webhooks',
+                    'http_status'      => 500,
+                    'reason_phrase'    => 'HTTP/1.1 200 Connection established',
+                    'response_headers' => [
+                        'Transfer-Encoding'           => 'chunked',
+                        'date'                        => 'Thu, 18 Nov 2021 07:58:56 GMT',
+                        'Server'                      => 'nginx/1.14.2',
+                        'Cache-Control'               => 'no-cache, private',
+                        'Access-Control-Allow-Origin' => '*',
+                        'Connection'                  => 'keep-alive',
+                        'Content-Type'                => 'text/html; charset=UTF-8',
+                    ],
+                    'transmission_id'  => '5af9daf0-4845-11ec-939e-edb49e359949',
+                    'status'           => 'PENDING',
+                    'timestamp'        => '2021-11-18T07:58:45Z',
+                ],
+            ],
+            'links'         => [
+                [
+                    'href'    => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-9XV66238KD489590N-2R389597JR522592U',
+                    'rel'     => 'self',
+                    'method'  => 'GET',
+                    'encType' => 'application/json',
+                ],
+                [
+                    'href'    => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-9XV66238KD489590N-2R389597JR522592U/resend',
+                    'rel'     => 'resend',
+                    'method'  => 'POST',
+                    'encType' => 'application/json',
+                ],
+            ],
+            'event_version' => '1.0',
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'user_id'   => $user->id,
+            'status'    => 'success',
+            'plan_name' => $plan->name,
+            'currency'  => 'USD',
+            'amount'    => 10,
+            'driver'    => 'paypal',
+            'reference' => 'I-6W1M3FWTVL19',
+        ]);
     }
 }
