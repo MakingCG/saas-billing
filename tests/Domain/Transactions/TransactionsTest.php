@@ -15,11 +15,9 @@ class TransactionsTest extends TestCase
             ->hasTransactions(2)
             ->create();
 
-        $response = $this
+        $this
             ->actingAs($user)
             ->getJson('/api/subscription/transactions')
             ->assertOk();
-
-        dd(json_decode($response->content(), true));
     }
 }
