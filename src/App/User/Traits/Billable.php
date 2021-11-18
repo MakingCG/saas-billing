@@ -2,6 +2,7 @@
 namespace VueFileManager\Subscription\App\User\Traits;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
@@ -18,8 +19,8 @@ trait Billable
         return $this->hasOne(Customer::class, 'user_id', 'id');
     }
 
-    public function transactions(): HasOne
+    public function transactions(): HasMany
     {
-        return $this->hasOne(Transaction::class);
+        return $this->hasMany(Transaction::class);
     }
 }

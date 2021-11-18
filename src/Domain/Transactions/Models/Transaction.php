@@ -27,7 +27,7 @@ class Transaction extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'id'      => 'string',
+        'id' => 'string',
     ];
 
     public $incrementing = false;
