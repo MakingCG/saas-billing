@@ -1,8 +1,8 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Subscriptions\Traits;
 
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\EngineManager;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 trait SubscriptionHelpers
 {

@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use VueFileManager\Subscription\Domain\Subscriptions\Controllers\CancelSubscriptionController;
-use VueFileManager\Subscription\Domain\Subscriptions\Controllers\SwapSubscriptionController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
+use VueFileManager\Subscription\Domain\Subscriptions\Controllers\SwapSubscriptionController;
+use VueFileManager\Subscription\Domain\Subscriptions\Controllers\CancelSubscriptionController;
 
 Route::group(['prefix' => 'api/subscription'], function () {
     Route::group(['middleware' => ['api']], function () {

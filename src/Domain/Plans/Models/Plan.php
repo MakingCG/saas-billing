@@ -45,7 +45,8 @@ class Plan extends Model
     /**
      * Get original driver id
      */
-    public function driverId(string $driver) {
+    public function driverId(string $driver)
+    {
         return $this->drivers()
             ->where('driver', $driver)
             ->first()

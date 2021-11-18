@@ -2,13 +2,13 @@
 namespace Tests\Models;
 
 use Illuminate\Support\Str;
-use App\User\Traits\Billable;
 use Tests\Factories\UserFactory;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use VueFileManager\Subscription\App\User\Traits\Billable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 

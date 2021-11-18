@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Domain\Subscription;
 
 use Tests\TestCase;
@@ -7,7 +6,6 @@ use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
-use VueFileManager\Subscription\Support\EngineManager;
 
 class SubscriptionPayPalTest extends TestCase
 {
@@ -183,40 +181,35 @@ class SubscriptionPayPalTest extends TestCase
 
         Http::fake([
             "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/{$subscription->driverId()}/revise" => Http::response([
-                "plan_id"         => $planHigher->driverId('paypal'),
-                "plan_overridden" => false,
-                "links"           => [
+                'plan_id'         => $planHigher->driverId('paypal'),
+                'plan_overridden' => false,
+                'links'           => [
                     [
-                        "href"   => "https://www.sandbox.paypal.com/webapps/billing/subscriptions/update?ba_token=BA-4CY05557UG442950B",
-                        "rel"    => "approve",
-                        "method" => "GET",
-                    ]
-                    , [
-                        "href"   => "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC",
-                        "rel"    => "edit",
-                        "method" => "PATCH",
-                    ]
-                    , [
-                        "href"   => "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC",
-                        "rel"    => "self",
-                        "method" => "GET",
-                    ]
-                    , [
-                        "href"   => "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/cancel",
-                        "rel"    => "cancel",
-                        "method" => "POST",
-                    ]
-                    , [
-                        "href"   => "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/suspend",
-                        "rel"    => "suspend",
-                        "method" => "POST",
-                    ]
-                    , [
-                        "href"   => "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/capture",
-                        "rel"    => "capture",
-                        "method" => "POST",
-                    ]
-                ]
+                        'href'   => 'https://www.sandbox.paypal.com/webapps/billing/subscriptions/update?ba_token=BA-4CY05557UG442950B',
+                        'rel'    => 'approve',
+                        'method' => 'GET',
+                    ], [
+                        'href'   => 'https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC',
+                        'rel'    => 'edit',
+                        'method' => 'PATCH',
+                    ], [
+                        'href'   => 'https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC',
+                        'rel'    => 'self',
+                        'method' => 'GET',
+                    ], [
+                        'href'   => 'https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/cancel',
+                        'rel'    => 'cancel',
+                        'method' => 'POST',
+                    ], [
+                        'href'   => 'https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/suspend',
+                        'rel'    => 'suspend',
+                        'method' => 'POST',
+                    ], [
+                        'href'   => 'https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/capture',
+                        'rel'    => 'capture',
+                        'method' => 'POST',
+                    ],
+                ],
             ]),
         ]);
 

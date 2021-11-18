@@ -1,17 +1,16 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Webhooks;
 
-use Illuminate\Http\Request;
 use Tests\Models\User;
+use Illuminate\Http\Request;
+use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
-use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
-use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 
 class PayStackWebhooks
 {
@@ -27,8 +26,7 @@ class PayStackWebhooks
             ->where('driver_user_id', $customerCode)
             ->first();
 
-        if (!$customer) {
-
+        if (! $customer) {
             // Get user by email
             $user = config('auth.providers.users.model')::where('email', $customerEmail)
                 ->first();
@@ -48,7 +46,6 @@ class PayStackWebhooks
 
         // Replace existing subscription
         if ($customer->user->subscription && ($customer->user->subscription->driverId() !== $subscriptionCode)) {
-
             // Cancel previous subscription
             resolve(EngineManager::class)
                 ->driver('paystack')
@@ -78,8 +75,7 @@ class PayStackWebhooks
         }
 
         // Create new subscription
-        if (!$customer->user->subscription) {
-
+        if (! $customer->user->subscription) {
             $subscription = Subscription::create([
                 'plan_id' => $planDriver->plan->id,
                 'user_id' => $customer->user_id,
@@ -115,5 +111,20 @@ class PayStackWebhooks
 
             SubscriptionWasCancelled::dispatch($driver->subscription);
         }
+    }
+
+    public function handleChargeSuccess(Request $request): void
+    {
+        $user = User::where('email', $request->input('data.customer.email'))
+            ->first();
+
+        $user->transactions()->create([
+            'status'    => 'success',
+            'driver'    => 'paystack',
+            'plan_name' => $request->input('data.plan.name'),
+            'reference' => $request->input('data.reference'),
+            'currency'  => $request->input('data.currency'),
+            'amount'    => $request->input('data.amount'),
+        ]);
     }
 }

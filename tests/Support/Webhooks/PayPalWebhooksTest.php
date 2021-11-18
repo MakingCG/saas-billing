@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
@@ -7,9 +6,9 @@ use Tests\Models\User;
 use Illuminate\Support\Facades\Event;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
-use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 
 class PayPalWebhooksTest extends TestCase
 {
@@ -94,7 +93,7 @@ class PayPalWebhooksTest extends TestCase
             'driver_subscription_id' => 'I-KHY6B042F1YA',
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -125,137 +124,137 @@ class PayPalWebhooksTest extends TestCase
 
         // Send webhook
         $this->postJson('/api/subscription/paypal/webhooks', [
-            "id"               => "WH-5W900153L71312432-5CW911939G6805917",
-            "create_time"      => "2021-11-16T10:50:47.259Z",
-            "resource_type"    => "subscription",
-            "event_type"       => "BILLING.SUBSCRIPTION.UPDATED",
-            "summary"          => "Subscription updated",
-            "resource"         => [
-                "quantity"           => "1",
-                "subscriber"         => [
-                    "email_address"    => "ernest@azet.sk",
-                    "payer_id"         => "XEBW65LBRMPMA",
-                    "name"             => [
-                        "given_name" => "Michal",
-                        "surname"    => "Kamenicky"
+            'id'               => 'WH-5W900153L71312432-5CW911939G6805917',
+            'create_time'      => '2021-11-16T10:50:47.259Z',
+            'resource_type'    => 'subscription',
+            'event_type'       => 'BILLING.SUBSCRIPTION.UPDATED',
+            'summary'          => 'Subscription updated',
+            'resource'         => [
+                'quantity'           => '1',
+                'subscriber'         => [
+                    'email_address'    => 'ernest@azet.sk',
+                    'payer_id'         => 'XEBW65LBRMPMA',
+                    'name'             => [
+                        'given_name' => 'Michal',
+                        'surname'    => 'Kamenicky',
                     ],
-                    "shipping_address" => [
-                        "address" => [
-                            "address_line_1" => "1 Main St",
-                            "admin_area_2"   => "San Jose",
-                            "admin_area_1"   => "CA",
-                            "postal_code"    => "95131",
-                            "country_code"   => "US"
-                        ]
-                    ]
-                ],
-                "create_time"        => "2021-11-10T06:42:47Z",
-                "custom_id"          => "user_id_howdy",
-                "plan_overridden"    => false,
-                "shipping_amount"    => [
-                    "currency_code" => "USD",
-                    "value"         => "0.0"
-                ],
-                "start_time"         => "2021-11-10T06:42:22Z",
-                "update_time"        => "2021-11-10T06:42:48Z",
-                "billing_info"       => [
-                    "outstanding_balance"   => [
-                        "currency_code" => "USD",
-                        "value"         => "0.0"
-                    ],
-                    "cycle_executions"      => [
-                        [
-                            "tenure_type"                    => "REGULAR",
-                            "sequence"                       => 1,
-                            "cycles_completed"               => 0,
-                            "cycles_remaining"               => 0,
-                            "current_pricing_scheme_version" => 1,
-                            "total_cycles"                   => 0
-                        ]
-                    ],
-                    "last_payment"          => [
-                        "amount" => [
-                            "currency_code" => "USD",
-                            "value"         => "500.0"
+                    'shipping_address' => [
+                        'address' => [
+                            'address_line_1' => '1 Main St',
+                            'admin_area_2'   => 'San Jose',
+                            'admin_area_1'   => 'CA',
+                            'postal_code'    => '95131',
+                            'country_code'   => 'US',
                         ],
-                        "time"   => "2021-11-10T06:42:48Z"
                     ],
-                    "next_billing_time"     => "2021-12-10T10:00:00Z",
-                    "failed_payments_count" => 0
                 ],
-                "links"              => [
-                    [
-                        "href"    => "https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/cancel",
-                        "rel"     => "cancel",
-                        "method"  => "POST",
-                        "encType" => "application/json"
-                    ],
-                    [
-                        "href"    => "https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC",
-                        "rel"     => "edit",
-                        "method"  => "PATCH",
-                        "encType" => "application/json"
-                    ],
-                    [
-                        "href"    => "https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC",
-                        "rel"     => "self",
-                        "method"  => "GET",
-                        "encType" => "application/json"
-                    ],
-                    [
-                        "href"    => "https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/suspend",
-                        "rel"     => "suspend",
-                        "method"  => "POST",
-                        "encType" => "application/json"
-                    ],
-                    [
-                        "href"    => "https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/capture",
-                        "rel"     => "capture",
-                        "method"  => "POST",
-                        "encType" => "application/json"
-                    ]
+                'create_time'        => '2021-11-10T06:42:47Z',
+                'custom_id'          => 'user_id_howdy',
+                'plan_overridden'    => false,
+                'shipping_amount'    => [
+                    'currency_code' => 'USD',
+                    'value'         => '0.0',
                 ],
-                "id"                 => $subscription->driverId(),
-                "plan_id"            => $planHigher->driverId('paypal'),
-                "status"             => "ACTIVE",
-                "status_update_time" => "2021-11-10T06:42:48Z"
-            ],
-            "status"           => "PENDING",
-            "transmissions"    => [
-                [
-                    "webhook_url"      => "https://internanogalakticky.vuefilemanager.com/api/subscription/paypal/webhooks",
-                    "http_status"      => 500,
-                    "reason_phrase"    => "HTTP/1.1 200 Connection established",
-                    "response_headers" => [
-                        "Transfer-Encoding"           => "chunked",
-                        "date"                        => "Tue, 16 Nov 2021 10:53:54 GMT",
-                        "Server"                      => "nginx/1.14.2",
-                        "Cache-Control"               => "no-cache, private",
-                        "Access-Control-Allow-Origin" => "*",
-                        "Connection"                  => "keep-alive",
-                        "Content-Type"                => "text/html; charset=UTF-8"
+                'start_time'         => '2021-11-10T06:42:22Z',
+                'update_time'        => '2021-11-10T06:42:48Z',
+                'billing_info'       => [
+                    'outstanding_balance'   => [
+                        'currency_code' => 'USD',
+                        'value'         => '0.0',
                     ],
-                    "transmission_id"  => "1092bc00-46cb-11ec-9b26-e1d8a0400366",
-                    "status"           => "PENDING",
-                    "timestamp"        => "2021-11-16T10:50:51Z"
-                ]
+                    'cycle_executions'      => [
+                        [
+                            'tenure_type'                    => 'REGULAR',
+                            'sequence'                       => 1,
+                            'cycles_completed'               => 0,
+                            'cycles_remaining'               => 0,
+                            'current_pricing_scheme_version' => 1,
+                            'total_cycles'                   => 0,
+                        ],
+                    ],
+                    'last_payment'          => [
+                        'amount' => [
+                            'currency_code' => 'USD',
+                            'value'         => '500.0',
+                        ],
+                        'time'   => '2021-11-10T06:42:48Z',
+                    ],
+                    'next_billing_time'     => '2021-12-10T10:00:00Z',
+                    'failed_payments_count' => 0,
+                ],
+                'links'              => [
+                    [
+                        'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/cancel',
+                        'rel'     => 'cancel',
+                        'method'  => 'POST',
+                        'encType' => 'application/json',
+                    ],
+                    [
+                        'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC',
+                        'rel'     => 'edit',
+                        'method'  => 'PATCH',
+                        'encType' => 'application/json',
+                    ],
+                    [
+                        'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC',
+                        'rel'     => 'self',
+                        'method'  => 'GET',
+                        'encType' => 'application/json',
+                    ],
+                    [
+                        'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/suspend',
+                        'rel'     => 'suspend',
+                        'method'  => 'POST',
+                        'encType' => 'application/json',
+                    ],
+                    [
+                        'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-GW6LUW7CW1AC/capture',
+                        'rel'     => 'capture',
+                        'method'  => 'POST',
+                        'encType' => 'application/json',
+                    ],
+                ],
+                'id'                 => $subscription->driverId(),
+                'plan_id'            => $planHigher->driverId('paypal'),
+                'status'             => 'ACTIVE',
+                'status_update_time' => '2021-11-10T06:42:48Z',
             ],
-            "links"            => [
+            'status'           => 'PENDING',
+            'transmissions'    => [
                 [
-                    "href"    => "https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-5W900153L71312432-5CW911939G6805917",
-                    "rel"     => "self",
-                    "method"  => "GET",
-                    "encType" => "application/json"
+                    'webhook_url'      => 'https://internanogalakticky.vuefilemanager.com/api/subscription/paypal/webhooks',
+                    'http_status'      => 500,
+                    'reason_phrase'    => 'HTTP/1.1 200 Connection established',
+                    'response_headers' => [
+                        'Transfer-Encoding'           => 'chunked',
+                        'date'                        => 'Tue, 16 Nov 2021 10:53:54 GMT',
+                        'Server'                      => 'nginx/1.14.2',
+                        'Cache-Control'               => 'no-cache, private',
+                        'Access-Control-Allow-Origin' => '*',
+                        'Connection'                  => 'keep-alive',
+                        'Content-Type'                => 'text/html; charset=UTF-8',
+                    ],
+                    'transmission_id'  => '1092bc00-46cb-11ec-9b26-e1d8a0400366',
+                    'status'           => 'PENDING',
+                    'timestamp'        => '2021-11-16T10:50:51Z',
+                ],
+            ],
+            'links'            => [
+                [
+                    'href'    => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-5W900153L71312432-5CW911939G6805917',
+                    'rel'     => 'self',
+                    'method'  => 'GET',
+                    'encType' => 'application/json',
                 ],
                 [
-                    "href"    => "https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-5W900153L71312432-5CW911939G6805917/resend",
-                    "rel"     => "resend",
-                    "method"  => "POST",
-                    "encType" => "application/json"
-                ]
+                    'href'    => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-5W900153L71312432-5CW911939G6805917/resend',
+                    'rel'     => 'resend',
+                    'method'  => 'POST',
+                    'encType' => 'application/json',
+                ],
             ],
-            "event_version"    => "1.0",
-            "resource_version" => "2.0"
+            'event_version'    => '1.0',
+            'resource_version' => '2.0',
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
@@ -263,7 +262,7 @@ class PayPalWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -396,6 +395,6 @@ class PayPalWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 }

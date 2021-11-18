@@ -1,14 +1,13 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Illuminate\Http\Request;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
-use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 
 class PayPalWebhooks
 {

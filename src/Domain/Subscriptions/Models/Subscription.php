@@ -4,10 +4,10 @@ namespace VueFileManager\Subscription\Domain\Subscriptions\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use VueFileManager\Subscription\Domain\Subscriptions\Traits\SubscriptionHelpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Database\Factories\SubscriptionFactory;
+use VueFileManager\Subscription\Domain\Subscriptions\Traits\SubscriptionHelpers;
 
 /**
  * @method static create(array $array)

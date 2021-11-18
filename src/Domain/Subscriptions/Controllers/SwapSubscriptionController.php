@@ -2,8 +2,8 @@
 namespace VueFileManager\Subscription\Domain\Subscriptions\Controllers;
 
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Auth;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 class SwapSubscriptionController extends Controller
