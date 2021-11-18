@@ -26,8 +26,15 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function createPlan(CreatePlanData $data): array
     {
+        // Get supported currency by paystack
+        $supportedCurrencies = ['ZAR'];
+
+        // Check currency availability form plan
+        $planCurrency = in_array($data->currency, $supportedCurrencies) ? $data->currency : 'ZAR';
+
         $response = $this->api->post('/plan', [
             'name'     => $data->name,
+            'currency' => $planCurrency,
             'amount'   => $data->amount * 100,
             'interval' => $this->mapIntervals($data->interval),
         ]);

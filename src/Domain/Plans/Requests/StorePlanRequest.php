@@ -23,6 +23,7 @@ class StorePlanRequest extends FormRequest
             'amount'      => 'sometimes|integer|nullable',
             'interval'    => 'required|string',
             'description' => 'sometimes|string|nullable',
+            'currency'    => 'required|string',
         ];
     }
 }

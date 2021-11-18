@@ -47,6 +47,7 @@ class PlansTest extends TestCase
                 'description' => $plan->description,
                 'interval'    => $plan->interval,
                 'amount'      => $plan->amount,
+                'currency'    => 'USD',
                 'features'    => [
                     'max_storage_amount' => 100,
                     'max_team_members'   => 6,
@@ -70,6 +71,7 @@ class PlansTest extends TestCase
             ->assertDatabaseHas('plans', [
                 'name'        => $plan->name,
                 'description' => $plan->description,
+                'currency'    => 'USD',
             ])
             ->assertDatabaseHas('plan_features', [
                 'key'   => 'max_storage_amount',
@@ -100,6 +102,7 @@ class PlansTest extends TestCase
                 'description' => $plan->description,
                 'interval'    => $plan->interval,
                 'amount'      => $plan->amount,
+                'currency'    => 'USD',
                 'features'    => [
                     'max_storage_amount' => 100,
                     'max_team_members'   => 6,
@@ -183,6 +186,7 @@ class PlansTest extends TestCase
                 'description' => $plan->description,
                 'interval'    => $plan->interval,
                 'amount'      => $plan->amount,
+                'currency'    => 'USD',
                 'features'    => [
                     'max_storage_amount' => 100,
                     'max_team_members'   => 6,

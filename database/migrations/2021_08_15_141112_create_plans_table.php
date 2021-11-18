@@ -17,8 +17,8 @@ class CreatePlansTable extends Migration
             $table->uuid('id')->index();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->integer('amount')->nullable();
-            $table->text('currency')->nullable();
+            $table->integer('amount');
+            $table->text('currency');
             $table->enum('interval', ['day', 'week', 'month', 'quarter', 'year'])->default('month');
             $table->boolean('visible')->default(true);
             $table->timestamps();

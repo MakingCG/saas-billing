@@ -19,6 +19,7 @@ class StorePlanForPaymentServiceAction
             'description' => $data->description,
             'interval'    => $data->interval,
             'amount'      => $data->amount,
+            'currency'    => $data->currency,
         ]);
 
         // Create features

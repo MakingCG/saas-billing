@@ -8,7 +8,7 @@ return [
 
     'available_drivers' => [
         'paypal',
-        //'paystack',
+        'paystack',
     ],
 
     'credentials' => [

@@ -8,6 +8,7 @@ class CreatePlanData extends DataTransferObject
 {
     public string $name;
     public int $amount;
+    public string $currency;
     public string $interval;
     public string $description;
     public array|Collection $features;
@@ -17,9 +18,10 @@ class CreatePlanData extends DataTransferObject
         return new self([
             'name'        => $request->input('name'),
             'amount'      => $request->input('amount'),
+            'currency'    => $request->input('currency'),
             'interval'    => $request->input('interval'),
-            'description' => $request->input('description'),
             'features'    => $request->input('features'),
+            'description' => $request->input('description'),
         ]);
     }
 
@@ -28,9 +30,10 @@ class CreatePlanData extends DataTransferObject
         return new self([
             'name'        => $array['name'],
             'amount'      => $array['amount'],
+            'currency'    => $array['currency'],
             'interval'    => $array['interval'],
-            'description' => $array['description'],
             'features'    => $array['features'],
+            'description' => $array['description'],
         ]);
     }
 }

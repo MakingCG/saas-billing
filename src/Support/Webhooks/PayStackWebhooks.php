@@ -1,7 +1,6 @@
 <?php
 namespace VueFileManager\Subscription\Support\Webhooks;
 
-use Tests\Models\User;
 use Illuminate\Http\Request;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;

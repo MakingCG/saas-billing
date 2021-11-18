@@ -43,7 +43,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
                     'pricing_scheme' => [
                         'fixed_price' => [
                             'value'         => $data->amount,
-                            'currency_code' => config('subscription.default_currency'),
+                            'currency_code' => $data->currency,
                         ],
                     ],
                 ],
