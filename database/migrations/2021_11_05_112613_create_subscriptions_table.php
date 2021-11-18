@@ -19,7 +19,7 @@ class CreateSubscriptionsTable extends Migration
             $table->string('plan_id');
 
             $table->string('name');
-            $table->enum('status', ['active', 'cancelled'])->default('active');
+            $table->enum('status', ['active', 'cancelled', 'completed'])->default('active');
 
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();

@@ -4,6 +4,7 @@ namespace VueFileManager\Subscription;
 use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
+use App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\App\Console\Commands\SetupDemoDataCommand;
@@ -42,7 +43,13 @@ class SubscriptionServiceProvider extends PackageServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('subscription:synchronize-plans')->everyFiveMinutes();
+            // Synchronize plans with services if there were some changes
+            $schedule->command('subscription:synchronize-plans')
+                ->everyFiveMinutes();
+
+            // Halt expired subscriptions
+            $schedule->call(HaltExpiredSubscriptionsSchedule::class)
+                ->daily();
         });
     }
 }
