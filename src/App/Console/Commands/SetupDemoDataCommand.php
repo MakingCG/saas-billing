@@ -36,6 +36,7 @@ class SetupDemoDataCommand extends Command
             [
                 'name'        => 'Professional Pack',
                 'description' => 'Best for all professionals',
+                'currency'    => 'USD',
                 'features'    => [
                     'max_storage_amount' => 200,
                     'max_team_members'   => 20,
@@ -43,17 +44,18 @@ class SetupDemoDataCommand extends Command
                 'intervals' => [
                     [
                         'interval'    => 'month',
-                        'amount'      => 10,
+                        'amount'      => 9.99,
                     ],
                     [
                         'interval'    => 'year',
-                        'amount'      => 99,
+                        'amount'      => 99.49,
                     ],
                 ],
             ],
             [
                 'name'        => 'Business Pack',
                 'description' => 'Best for business needs',
+                'currency'    => 'USD',
                 'features'    => [
                     'max_storage_amount' => 500,
                     'max_team_members'   => 50,
@@ -61,17 +63,18 @@ class SetupDemoDataCommand extends Command
                 'intervals' => [
                     [
                         'interval'    => 'month',
-                        'amount'      => 29,
+                        'amount'      => 29.99,
                     ],
                     [
                         'interval'    => 'year',
-                        'amount'      => 189,
+                        'amount'      => 189.99,
                     ],
                 ],
             ],
             [
                 'name'        => 'Elite Pack',
                 'description' => 'Best for all your needs',
+                'currency'    => 'USD',
                 'features'    => [
                     'max_storage_amount' => 2000,
                     'max_team_members'   => -1,
@@ -79,11 +82,11 @@ class SetupDemoDataCommand extends Command
                 'intervals' => [
                     [
                         'interval'    => 'month',
-                        'amount'      => 59,
+                        'amount'      => 59.99,
                     ],
                     [
                         'interval'    => 'year',
-                        'amount'      => 349,
+                        'amount'      => 349.99,
                     ],
                 ],
             ],
@@ -96,6 +99,7 @@ class SetupDemoDataCommand extends Command
                     'name'        => $plan['name'],
                     'description' => $plan['description'],
                     'features'    => $plan['features'],
+                    'currency'    => $plan['currency'],
                     'amount'      => $interval['amount'],
                     'interval'    => $interval['interval'],
                 ]);

@@ -31,13 +31,17 @@
         "nunomaduro/larastan": "^1.0",
         "orchestra/testbench": "^6.23.0",
         "phpunit/phpunit": "^9.3",
-        "spatie/laravel-ray": "^1.23"
+        "spatie/laravel-ray": "^1.23",
+        "ext-intl": "*"
     },
     "autoload": {
         "psr-4": {
             "VueFileManager\\Subscription\\": "src",
             "VueFileManager\\Subscription\\Database\\Factories\\": "database/factories"
-        }
+        },
+        "files": [
+            "src/Support/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

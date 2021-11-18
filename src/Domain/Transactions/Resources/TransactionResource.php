@@ -20,6 +20,7 @@ class TransactionResource extends JsonResource
                 'attributes' => [
                     'status'     => $this->status,
                     'plan_name'  => $this->plan_name,
+                    'price'      => format_currency($this),
                     'currency'   => $this->currency,
                     'amount'     => $this->amount,
                     'driver'     => $this->driver,

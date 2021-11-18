@@ -7,7 +7,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 class CreatePlanData extends DataTransferObject
 {
     public string $name;
-    public int $amount;
+    public float $amount;
     public string $currency;
     public string $interval;
     public string $description;

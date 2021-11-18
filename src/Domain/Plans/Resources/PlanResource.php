@@ -19,13 +19,15 @@ class PlanResource extends JsonResource
                 'type'       => 'plans',
                 'attributes' => [
                     'name'        => $this->name,
+                    'price'       => format_currency($this),
                     'amount'      => $this->amount,
+                    'currency'    => $this->currency,
                     'visible'     => $this->visible,
                     'interval'    => $this->interval,
                     'description' => $this->description,
                     'features'    => $this->features->pluck('value', 'key'),
                 ],
-                'meta' => [
+                'meta'       => [
                     'driver_plan_id' => $this->drivers->pluck('driver_plan_id', 'driver'),
                 ],
             ],

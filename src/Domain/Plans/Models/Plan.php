@@ -13,7 +13,7 @@ use VueFileManager\Subscription\Database\Factories\PlanFactory;
  * @property string name
  * @property string description
  * @property string currency
- * @property int amount
+ * @property float amount
  * @property string interval
  * @property bool visible
  */
@@ -26,6 +26,7 @@ class Plan extends Model
     protected $casts = [
         'id'      => 'string',
         'visible' => 'bool',
+        'amount'  => 'float',
     ];
 
     public $incrementing = false;
