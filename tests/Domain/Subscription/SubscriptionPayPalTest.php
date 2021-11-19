@@ -30,10 +30,18 @@ class SubscriptionPayPalTest extends TestCase
 
         $ends_at = now()->addDays(14);
 
-        $api = "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/{$subscription->driverId()}";
+        $api = 'https://api-m.sandbox.paypal.com/v1';
 
         Http::fake([
-            "{$api}"        => Http::response([
+            "{$api}/oauth2/token"                                             => Http::response([
+                'scope'        => 'scope',
+                'access_token' => 'jnjleqngtlq3l34jn6l2346n2l4',
+                'token_type'   => 'Bearer',
+                'app_id'       => 'APP-80W284485P519543T',
+                'expires_in'   => 31349,
+                'nonce'        => 'nonce',
+            ], 204),
+            "{$api}/billing/subscriptions/{$subscription->driverId()}"        => Http::response([
                 'id'                 => 'I-BW452GLLEP1G',
                 'plan_id'            => 'P-5ML4271244454362WXNWU5NQ',
                 'start_time'         => '2019-04-10T07:00:00Z',
@@ -133,7 +141,7 @@ class SubscriptionPayPalTest extends TestCase
                 'status'             => 'ACTIVE',
                 'status_update_time' => '2019-04-09T10:27:27Z',
             ]),
-            "{$api}/cancel" => Http::response([], 204),
+            "{$api}/billing/subscriptions/{$subscription->driverId()}/cancel" => Http::response([], 204),
         ]);
 
         $this
@@ -152,6 +160,8 @@ class SubscriptionPayPalTest extends TestCase
                 'ends_at' => $ends_at,
             ])
             ->assertEquals(true, $subscription->onGracePeriod());
+
+        Http::assertSentCount(3);
     }
 
     /**
@@ -180,6 +190,14 @@ class SubscriptionPayPalTest extends TestCase
             ]);
 
         Http::fake([
+            'https://api-m.sandbox.paypal.com/v1/oauth2/token'                                                                          => Http::response([
+                'scope'        => 'scope',
+                'access_token' => 'jnjleqngtlq3l34jn6l2346n2l4',
+                'token_type'   => 'Bearer',
+                'app_id'       => 'APP-80W284485P519543T',
+                'expires_in'   => 31349,
+                'nonce'        => 'nonce',
+            ], 204),
             "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/{$subscription->driverId()}/revise" => Http::response([
                 'plan_id'         => $planHigher->driverId('paypal'),
                 'plan_overridden' => false,
@@ -220,5 +238,7 @@ class SubscriptionPayPalTest extends TestCase
             ->assertJsonFragment([
                 'plan_id' => $planHigher->driverId('paypal'),
             ]);
+
+        Http::assertSentCount(2);
     }
 }

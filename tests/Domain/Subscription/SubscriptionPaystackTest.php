@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Domain\Subscription;
 
 use Tests\TestCase;
@@ -109,7 +110,7 @@ class SubscriptionPaystackTest extends TestCase
                     'updatedAt'         => '2016-03-30T00:22:58.000Z',
                 ],
             ]),
-            'https://api.paystack.co/subscription/disable'                                         => Http::response([
+            'https://api.paystack.co/subscription/disable'                     => Http::response([
                 'status'  => true,
                 'message' => 'Subscription disabled successfully',
             ]),
@@ -131,6 +132,8 @@ class SubscriptionPaystackTest extends TestCase
                 'ends_at' => $ends_at,
             ])
             ->assertEquals(true, $subscription->onGracePeriod());
+
+        Http::assertSentCount(2);
     }
 
     /**
@@ -232,7 +235,7 @@ class SubscriptionPaystackTest extends TestCase
                     'updatedAt'         => '2016-03-30T00:22:58.000Z',
                 ],
             ]),
-            'https://api.paystack.co/subscription/enable'                                          => Http::response([
+            'https://api.paystack.co/subscription/enable'                      => Http::response([
                 'status'  => true,
                 'message' => 'Subscription enabled successfully',
             ]),
