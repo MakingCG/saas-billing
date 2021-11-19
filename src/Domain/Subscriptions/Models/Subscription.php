@@ -13,9 +13,9 @@ use VueFileManager\Subscription\Domain\Subscriptions\Traits\SubscriptionHelpers;
  * @method static create(array $array)
  * @property string id
  * @property string user_id
+ * @property string plan_id
  * @property string name
  * @property string subscription_id
- * @property string plan_id
  * @property DateTime trial_ends_at
  * @property DateTime ends_at
  */
@@ -28,6 +28,8 @@ class Subscription extends Model
 
     protected $casts = [
         'id'            => 'string',
+        'plan_id'       => 'string',
+        'user_id'       => 'string',
         'ends_at'       => 'datetime',
         'trial_ends_at' => 'datetime',
     ];

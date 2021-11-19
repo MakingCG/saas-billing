@@ -16,7 +16,7 @@ class CreateSubscriptionsTable extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->uuid('id');
             $table->uuid('user_id');
-            $table->string('plan_id');
+            $table->uuid('plan_id');
 
             $table->string('name');
             $table->enum('status', ['active', 'cancelled', 'completed'])->default('active');

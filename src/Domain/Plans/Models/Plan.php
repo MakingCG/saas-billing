@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use VueFileManager\Subscription\Database\Factories\PlanFactory;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 /**
  * @method static create(array $array)
@@ -41,6 +42,11 @@ class Plan extends Model
     public function features(): HasMany
     {
         return $this->hasMany(PlanFeature::class);
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
     }
 
     /**

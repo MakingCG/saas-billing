@@ -41,17 +41,17 @@ class SetupDemoDataCommand extends Command
             ->where('interval', 'month')
             ->first();
 
-        $plan->drivers()->create([
-            'driver'         => 'paypal',
-            'driver_plan_id' => Str::random(),
-        ]);
-
-        $user->subscription()->create([
+        $subscription = $user->subscription()->create([
             'plan_id'    => $plan->id,
             'name'       => $plan->name,
             'status'     => 'active',
             'created_at' => now()->subDays(14),
             'updated_at' => now()->subDays(14),
+        ]);
+
+        $subscription->driver()->create([
+            'driver'                 => 'paypal',
+            'driver_subscription_id' => Str::random(),
         ]);
     }
 
