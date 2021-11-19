@@ -1,7 +1,7 @@
 <?php
 namespace App\Scheduler;
 
-use VueFileManager\Subscription\Support\Events\SubscriptionExpired;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class HaltExpiredSubscriptionsSchedule
@@ -18,7 +18,7 @@ class HaltExpiredSubscriptionsSchedule
                 ]);
 
                 // Dispatch event
-                SubscriptionExpired::dispatch($subscription);
+                SubscriptionWasExpired::dispatch($subscription);
             });
     }
 }

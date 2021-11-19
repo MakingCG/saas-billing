@@ -5,7 +5,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
-class SubscriptionExpired
+class SubscriptionWasExpired
 {
     use Dispatchable, SerializesModels;
 

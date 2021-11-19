@@ -73,4 +73,20 @@ trait SubscriptionHelpers
     {
         return ! is_null($this->ends_at);
     }
+
+    /**
+     * Get all subscription plan features
+     */
+    public function features()
+    {
+        return $this->plan->features()->pluck('value', 'key');
+    }
+
+    /**
+     * Get single subscription plan feature by name
+     */
+    public function feature(string $feature)
+    {
+        return $this->plan->features()->where('key', $feature)->first()->value;
+    }
 }

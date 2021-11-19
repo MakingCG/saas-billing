@@ -1,2 +1,2 @@
 providers:
-  - VueFileManager\\Subscription\SubscriptionServiceProvider
+  - VueFileManager\Subscription\SubscriptionServiceProvider

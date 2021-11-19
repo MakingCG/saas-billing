@@ -22,22 +22,20 @@ php artisan vendor:publish --provider="VueFileManager\\Subscription\Subscription
 
 This is the contents of the published config file:
 
-```php
-return [
-    // Implemented drivers: stripe, paystack
-    'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
-
-    'credentials' => [
-        'stripe' => [
-            'secret' => env('STRIPE_SECRET'),
-        ],
-        'paystack' => [
-            'secret' => env('FLUTTER_WAVE_SECRET'),
-        ],
-    ],
-];
+## Functions
+### Subscription
+Get all active features under plan:
+```bash
+$user->subscription->features();
 ```
-
+Get single feature under plan:
+```bash
+$user->subscription->feature('max_storage_amount');
+```
+Determine if user has subscription
+```bash
+$user->hasSubscription()
+```
 ## Testing
 
 ```bash

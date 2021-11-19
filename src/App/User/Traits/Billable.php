@@ -9,6 +9,11 @@ use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 trait Billable
 {
+    public function hasSubscription(): bool
+    {
+        return $this->subscription && ($this->subscription->active() || $this->subscription->onGracePeriod());
+    }
+
     public function subscription(): HasOne
     {
         return $this->hasOne(Subscription::class);

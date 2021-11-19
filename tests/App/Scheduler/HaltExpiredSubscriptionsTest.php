@@ -4,7 +4,7 @@ namespace Tests\App\Scheduler;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Event;
 use App\Scheduler\HaltExpiredSubscriptionsSchedule;
-use VueFileManager\Subscription\Support\Events\SubscriptionExpired;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class HaltExpiredSubscriptionsTest extends TestCase
@@ -15,7 +15,7 @@ class HaltExpiredSubscriptionsTest extends TestCase
     public function it_halt_expired_subscriptions()
     {
         Event::fake([
-            SubscriptionExpired::class,
+            SubscriptionWasExpired::class,
         ]);
 
         $subscription = Subscription::factory()
@@ -32,6 +32,6 @@ class HaltExpiredSubscriptionsTest extends TestCase
             'status' => 'completed',
         ]);
 
-        Event::assertDispatched(fn (SubscriptionExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 }

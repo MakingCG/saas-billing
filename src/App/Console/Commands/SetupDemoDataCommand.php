@@ -1,7 +1,9 @@
 <?php
 namespace VueFileManager\Subscription\App\Console\Commands;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
 
@@ -23,10 +25,34 @@ class SetupDemoDataCommand extends Command
 
         // To tasks
         $this->create_plans();
+        $this->create_demo_subscription();
 
         $this->after();
 
         $this->info('Everything is done, congratulations! 🥳🥳🥳');
+    }
+
+    public function create_demo_subscription()
+    {
+        $user = config('auth.providers.users.model')::where('email', 'howdy@hi5ve.digital')
+            ->first();
+
+        $plan = Plan::where('name', 'Professional Pack')
+            ->where('interval', 'month')
+            ->first();
+
+        $plan->drivers()->create([
+            'driver'         => 'paypal',
+            'driver_plan_id' => Str::random(),
+        ]);
+
+        $user->subscription()->create([
+            'plan_id'    => $plan->id,
+            'name'       => $plan->name,
+            'status'     => 'active',
+            'created_at' => now()->subDays(14),
+            'updated_at' => now()->subDays(14),
+        ]);
     }
 
     public function create_plans()
