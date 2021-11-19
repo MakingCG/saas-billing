@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Domain\Subscription;
 
 use Tests\TestCase;
