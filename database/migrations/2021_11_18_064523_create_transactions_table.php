@@ -20,7 +20,7 @@ class CreateTransactionsTable extends Migration
             $table->string('plan_name');
             $table->string('driver');
             $table->string('reference');
-            $table->integer('amount');
+            $table->decimal('amount');
             $table->text('currency');
             $table->timestamps();
         });

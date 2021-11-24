@@ -25,7 +25,7 @@ class TransactionResource extends JsonResource
                     'amount'     => $this->amount,
                     'driver'     => $this->driver,
                     'reference'  => $this->reference,
-                    'created_at' => $this->created_at,
+                    'created_at' => $this->created_at->formatLocalized('%d. %b. %Y'),
                     'updated_at' => $this->updated_at,
                 ],
             ],

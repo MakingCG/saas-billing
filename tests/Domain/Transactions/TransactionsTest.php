@@ -9,7 +9,7 @@ class TransactionsTest extends TestCase
     /**
      * @test
      */
-    public function it_get_all_user_transactions()
+    public function it_get_all_my_transactions()
     {
         $user = User::factory()
             ->hasTransactions(2)
@@ -18,6 +18,20 @@ class TransactionsTest extends TestCase
         $this
             ->actingAs($user)
             ->getJson('/api/subscription/transactions')
+            ->assertOk();
+    }
+    /**
+     * @test
+     */
+    public function it_get_all_user_transactions()
+    {
+        $user = User::factory()
+            ->hasTransactions(2)
+            ->create();
+
+        $this
+            ->actingAs($user)
+            ->getJson("/api/subscription/users/{$user->id}/transactions")
             ->assertOk();
     }
 }

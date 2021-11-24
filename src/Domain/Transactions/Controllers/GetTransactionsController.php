@@ -1,5 +1,5 @@
 <?php
-namespace VueFileManager\Subscription\Domain\Transactions;
+namespace VueFileManager\Subscription\Domain\Transactions\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +12,7 @@ class GetTransactionsController extends Controller
         $transactions = Auth::user()
             ->transactions()
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(20);
 
         return new TransactionCollection($transactions);
     }

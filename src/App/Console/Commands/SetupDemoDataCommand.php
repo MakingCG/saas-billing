@@ -49,6 +49,25 @@ class SetupDemoDataCommand extends Command
             'updated_at' => now()->subDays(14),
         ]);
 
+        collect([
+            ['created_at' => now()],
+            ['created_at' => now()->subDays(28)],
+            ['created_at' => now()->subDays(28 * 2)],
+            ['created_at' => now()->subDays(28 * 3)],
+            ['created_at' => now()->subDays(28 * 4)],
+            ['created_at' => now()->subDays(28 * 5)],
+        ])->each(function ($transaction) use ($user) {
+            $user->transactions()->create([
+                'status'     => 'success',
+                'plan_name'  => 'Professional Pack',
+                'currency'   => 'USD',
+                'amount'     => 9.99,
+                'driver'     => 'PayPal',
+                'created_at' => $transaction['created_at'],
+                'reference'  => Str::random(12),
+            ]);
+        });
+
         $subscription->driver()->create([
             'driver'                 => 'paypal',
             'driver_subscription_id' => Str::random(),
