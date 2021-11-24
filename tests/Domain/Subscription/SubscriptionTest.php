@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Domain\Subscription;
 
+use Tests\Models\User;
 use Tests\TestCase;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
@@ -68,5 +69,42 @@ class SubscriptionTest extends TestCase
 
         $this->assertEquals(true, $isEnded->ended());
         $this->assertEquals(false, $isNotEnded->ended());
+    }
+
+    /**
+     * @test
+     */
+    public function it_get_my_subscription()
+    {
+        $user = User::factory()
+            ->hasSubscription()
+            ->create();
+
+        $this
+            ->actingAs($user)
+            ->getJson('/api/subscription/detail')
+            ->assertJsonFragment([
+                'id' => $user->subscription->id,
+            ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_get_user_subscription()
+    {
+        $admin = User::factory()
+            ->create(['role' => 'admin']);
+
+        $user = User::factory()
+            ->hasSubscription()
+            ->create();
+
+        $this
+            ->actingAs($admin)
+            ->getJson("/api/subscription/users/{$user->id}/subscription")
+            ->assertJsonFragment([
+                'id' => $user->subscription->id,
+            ]);
     }
 }

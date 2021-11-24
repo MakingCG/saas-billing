@@ -2,6 +2,7 @@
 namespace VueFileManager\Subscription\Domain\Subscriptions\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use VueFileManager\Subscription\Domain\Plans\Resources\PlanResource;
 
 class SubscriptionResource extends JsonResource
 {
@@ -21,8 +22,14 @@ class SubscriptionResource extends JsonResource
                     'name'          => $this->name,
                     'status'        => $this->status,
                     'trial_ends_at' => $this->trial_ends_at,
-                    'ends_at'       => $this->ends_at,
-                    'created_at'    => $this->created_at,
+                    'created_at'    => $this->created_at->formatLocalized('%d. %b. %Y'),
+                    'renews_at'     => $this->created_at->addDays(28)->formatLocalized('%d. %b. %Y'), // TODO: add renew date
+                    'ends_at'       => $this->ends_at
+                        ? $this->ends_at->formatLocalized('%d. %b. %Y')
+                        : null,
+                ],
+                'relationships' => [
+                    'plan' => new PlanResource($this->plan),
                 ],
             ],
         ];

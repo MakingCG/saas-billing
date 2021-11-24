@@ -2,7 +2,6 @@
 namespace VueFileManager\Subscription\Domain\Transactions\Controllers;
 
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use VueFileManager\Subscription\Domain\Transactions\Resources\TransactionCollection;
 
 class GetUserTransactionsController extends Controller
