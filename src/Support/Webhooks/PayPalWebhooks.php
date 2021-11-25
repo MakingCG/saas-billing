@@ -102,7 +102,7 @@ class PayPalWebhooks
 
         // Store transaction
         $user->transactions()->create([
-            'status'    => 'success',
+            'status'    => 'completed',
             'driver'    => 'paypal',
             'plan_name' => $plan->name,
             'reference' => $request->input('resource.billing_agreement_id'),

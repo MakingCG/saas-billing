@@ -118,7 +118,7 @@ class PayStackWebhooks
             ->first();
 
         $user->transactions()->create([
-            'status'    => 'success',
+            'status'    => 'completed',
             'driver'    => 'paystack',
             'plan_name' => $request->input('data.plan.name'),
             'reference' => $request->input('data.reference'),

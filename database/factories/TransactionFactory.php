@@ -15,7 +15,7 @@ class TransactionFactory extends Factory
         return [
             'id'         => $this->faker->uuid,
             'user_id'    => $this->faker->uuid,
-            'status'     => $this->faker->randomElement(['success', 'failed']),
+            'status'     => $this->faker->randomElement(['completed', 'error', 'cancelled']),
             'plan_name'  => $this->faker->randomElement(['Basic Pack', 'Professional Pack', 'Business Pack']),
             'currency'   => $this->faker->randomElement(['USD', 'EUR']),
             'amount'     => $this->faker->randomElement([100, 200, 500]),

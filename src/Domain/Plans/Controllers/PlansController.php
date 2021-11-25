@@ -19,7 +19,7 @@ class PlansController extends Controller
      */
     public function index(): PlanCollection
     {
-        $plans = Plan::where('visible', true)->paginate(20);
+        $plans = Plan::paginate(20);
 
         return new PlanCollection($plans);
     }

@@ -12,7 +12,7 @@ class PlansTest extends TestCase
     /**
      * @test
      */
-    public function it_get_all_plans()
+    public function it_get_all_visible_plans_for_users()
     {
         $user = User::factory()
             ->create();
@@ -25,6 +25,28 @@ class PlansTest extends TestCase
         $this
             ->actingAs($user)
             ->getJson('/api/subscriptions/plans')
+            ->assertJsonFragment([
+                'id' => $plan->id,
+            ]);
+    }
+    /**
+     * @test
+     */
+    public function it_get_all_plans_for_admin()
+    {
+        $admin = User::factory()
+            ->create(['role' => 'admin']);
+
+        $plan = Plan::factory()
+            ->hasFeatures(1)
+            ->hasDrivers(2)
+            ->create([
+                'visible' => false,
+            ]);
+
+        $this
+            ->actingAs($admin)
+            ->getJson('/api/subscriptions/admin/plans')
             ->assertJsonFragment([
                 'id' => $plan->id,
             ]);

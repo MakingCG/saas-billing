@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
@@ -17,7 +18,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetUserSubscrip
 // System
 Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api']], function () {
     Route::post('/{driver}/webhooks', WebhooksController::class);
-    Route::get('/plans', [PlansController::class, 'index']);
+    Route::get('/plans', GetPlansController::class);
 });
 
 // User
@@ -36,7 +37,7 @@ Route::group(['prefix' => 'api/subscriptions/admin', 'middleware' => ['api', 'au
     // Plans
     Route::get('/plans/{plan}/subscribers', GetPlanSubscribersController::class);
     Route::patch('/plans/{plan}/features', UpdatePlanFeatureAction::class);
-    Route::apiResource('/plans', PlansController::class)->only(['show', 'store', 'update', 'destroy']);
+    Route::apiResource('/plans', PlansController::class);
 
     // User data
     Route::get('/users/{id}/transactions', GetUserTransactionsController::class);

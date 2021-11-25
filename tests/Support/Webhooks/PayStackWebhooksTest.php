@@ -502,7 +502,7 @@ class PayStackWebhooksTest extends TestCase
 
         $this->assertDatabaseHas('transactions', [
             'user_id'   => $user->id,
-            'status'    => 'success',
+            'status'    => 'completed',
             'plan_name' => 'Professional Pack',
             'currency'  => 'ZAR',
             'amount'    => 1000,

@@ -71,22 +71,22 @@ class SetupDemoDataCommand extends Command
             'plan_id'    => $professionalPackPlan->id,
             'name'       => $professionalPackPlan->name,
             'status'     => 'cancelled',
-            'ends_at'    => now()->addDays(19),
-            'created_at' => now()->subDays(9),
-            'updated_at' => now()->subDays(9),
+            'ends_at'    => now()->addDays(18),
+            'created_at' => now()->subDays(8),
+            'updated_at' => now()->subDays(8),
         ]);
 
         collect([
-            ['created_at' => now()],
-            ['created_at' => now()->subDays(28)],
-            ['created_at' => now()->subDays(28 * 2)],
-            ['created_at' => now()->subDays(28 * 3)],
-            ['created_at' => now()->subDays(28 * 4)],
-            ['created_at' => now()->subDays(28 * 5)],
+            ['created_at' => now()->subDays(2)],
+            ['created_at' => now()->subDays(26)],
+            ['created_at' => now()->subDays(26 * 2)],
+            ['created_at' => now()->subDays(26 * 3)],
+            ['created_at' => now()->subDays(26 * 4)],
+            ['created_at' => now()->subDays(26 * 5)],
         ])->each(
             fn ($transaction) =>
             $howdy->transactions()->create([
-                'status'     => 'success',
+                'status'     => 'completed',
                 'plan_name'  => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
                 'amount'     => $professionalPackPlan->amount,
@@ -104,7 +104,7 @@ class SetupDemoDataCommand extends Command
         ])->each(
             fn ($transaction) =>
             $johan->transactions()->create([
-                'status'     => 'success',
+                'status'     => 'completed',
                 'plan_name'  => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
                 'amount'     => $professionalPackPlan->amount,
@@ -123,7 +123,7 @@ class SetupDemoDataCommand extends Command
         ])->each(
             fn ($transaction) =>
             $alice->transactions()->create([
-                'status'     => 'success',
+                'status'     => 'completed',
                 'plan_name'  => $businessPackPlan->name,
                 'currency'   => $businessPackPlan->currency,
                 'amount'     => $businessPackPlan->amount,

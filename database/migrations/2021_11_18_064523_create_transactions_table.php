@@ -16,7 +16,7 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->index();
             $table->uuid('user_id')->index();
-            $table->string('status');
+            $table->enum('status', ['completed', 'error', 'cancelled']);
             $table->string('plan_name');
             $table->string('driver');
             $table->string('reference');
