@@ -117,7 +117,7 @@ class SubscriptionPaystackTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->postJson('/api/subscription/cancel')
+            ->postJson('/api/subscriptions/cancel')
             ->assertOk()
             ->assertJsonFragment([
                 'status' => 'cancelled',
@@ -242,7 +242,7 @@ class SubscriptionPaystackTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->postJson('/api/subscription/resume')
+            ->postJson('/api/subscriptions/resume')
             ->assertOk()
             ->assertJsonFragment([
                 'status' => 'active',

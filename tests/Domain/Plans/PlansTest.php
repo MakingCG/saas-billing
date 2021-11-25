@@ -12,7 +12,7 @@ class PlansTest extends TestCase
     /**
      * @test
      */
-    public function it_get_plans()
+    public function it_get_all_plans()
     {
         $user = User::factory()
             ->create();
@@ -24,7 +24,7 @@ class PlansTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->getJson('/api/subscription/plans')
+            ->getJson('/api/subscriptions/plans')
             ->assertJsonFragment([
                 'id' => $plan->id,
             ]);
@@ -158,7 +158,7 @@ class PlansTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->post('/api/subscription/plans', [
+            ->post('/api/subscriptions/admin/plans', [
                 'name'        => $plan->name,
                 'description' => $plan->description,
                 'interval'    => $plan->interval,
@@ -329,7 +329,7 @@ class PlansTest extends TestCase
         // 1. create plan
         $this
             ->actingAs($user)
-            ->post('/api/subscription/plans', [
+            ->post('/api/subscriptions/admin/plans', [
                 'name'        => $plan->name,
                 'description' => $plan->description,
                 'interval'    => $plan->interval,
@@ -369,7 +369,7 @@ class PlansTest extends TestCase
             ->each(function ($value, $key) use ($user, $plan) {
                 $this
                     ->actingAs($user)
-                    ->put("/api/subscription/plans/{$plan->id}", [
+                    ->put("/api/subscriptions/admin/plans/{$plan->id}", [
                         $key => $value,
                     ])
                     ->assertOk();
@@ -380,7 +380,7 @@ class PlansTest extends TestCase
             ->each(function ($value, $key) use ($user, $plan) {
                 $this
                     ->actingAs($user)
-                    ->put("/api/subscription/plans/$plan->id/features", [
+                    ->patch("/api/subscriptions/admin/plans/$plan->id/features", [
                         $key => $value,
                     ])
                     ->assertOk();
@@ -537,7 +537,7 @@ class PlansTest extends TestCase
         // 1. create plans
         $this
             ->actingAs($user)
-            ->post('/api/subscription/plans', [
+            ->post('/api/subscriptions/admin/plans', [
                 'name'        => $plan->name,
                 'description' => $plan->description,
                 'interval'    => $plan->interval,
@@ -568,7 +568,7 @@ class PlansTest extends TestCase
         // 2. delete plans
         $this
             ->actingAs($user)
-            ->delete("/api/subscription/plans/{$plan->id}")
+            ->delete("/api/subscriptions/admin/plans/{$plan->id}")
             ->assertNoContent();
 
         $this

@@ -146,7 +146,7 @@ class SubscriptionPayPalTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->postJson('/api/subscription/cancel')
+            ->postJson('/api/subscriptions/cancel')
             ->assertOk()
             ->assertJsonFragment([
                 'status' => 'cancelled',
@@ -233,7 +233,7 @@ class SubscriptionPayPalTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->postJson("/api/subscription/swap/{$planHigher->id}")
+            ->postJson("/api/subscriptions/swap/{$planHigher->id}")
             ->assertOk()
             ->assertJsonFragment([
                 'plan_id' => $planHigher->driverId('paypal'),

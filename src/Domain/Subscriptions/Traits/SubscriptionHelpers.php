@@ -43,6 +43,14 @@ trait SubscriptionHelpers
     }
 
     /**
+     * Get gateway subscription id
+     */
+    public function driverName(): string
+    {
+        return $this->driver->driver;
+    }
+
+    /**
      * Check if subscription is on grace period
      */
     public function onGracePeriod(): bool

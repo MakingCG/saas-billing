@@ -34,7 +34,7 @@ class PayPalWebhooksTest extends TestCase
             ->create();
 
         // Send webhook
-        $this->postJson('/api/subscription/paypal/webhooks', [
+        $this->postJson('/api/subscriptions/paypal/webhooks', [
             'id'               => 'WH-8A715371GG332831A-4MM87741Y6956121U',
             'event_version'    => '1.0',
             'create_time'      => '2021-11-10T06:53:31.290Z',
@@ -124,7 +124,7 @@ class PayPalWebhooksTest extends TestCase
             ]);
 
         // Send webhook
-        $this->postJson('/api/subscription/paypal/webhooks', [
+        $this->postJson('/api/subscriptions/paypal/webhooks', [
             'id'               => 'WH-5W900153L71312432-5CW911939G6805917',
             'create_time'      => '2021-11-16T10:50:47.259Z',
             'resource_type'    => 'subscription',
@@ -223,7 +223,7 @@ class PayPalWebhooksTest extends TestCase
             'status'           => 'PENDING',
             'transmissions'    => [
                 [
-                    'webhook_url'      => 'https://internanogalakticky.vuefilemanager.com/api/subscription/paypal/webhooks',
+                    'webhook_url'      => 'https://internanogalakticky.vuefilemanager.com/api/subscriptions/paypal/webhooks',
                     'http_status'      => 500,
                     'reason_phrase'    => 'HTTP/1.1 200 Connection established',
                     'response_headers' => [
@@ -288,7 +288,7 @@ class PayPalWebhooksTest extends TestCase
         $cancelledAt = now()->addDays(14);
 
         // Send webhook
-        $this->postJson('/api/subscription/paypal/webhooks', [
+        $this->postJson('/api/subscriptions/paypal/webhooks', [
             'id'               => 'WH-UY687577TY25889J9-2R6T55435R66168Y6',
             'create_time'      => '2018-19-12T22:20:32.000Z',
             'resource_type'    => 'subscription',
@@ -524,7 +524,7 @@ class PayPalWebhooksTest extends TestCase
             ]),
         ]);
 
-        $this->postJson('/api/subscription/paypal/webhooks', [
+        $this->postJson('/api/subscriptions/paypal/webhooks', [
             'id'            => 'WH-9XV66238KD489590N-2R389597JR522592U',
             'create_time'   => '2021-11-18T07:58:41.727Z',
             'resource_type' => 'sale',
@@ -569,7 +569,7 @@ class PayPalWebhooksTest extends TestCase
             'status'        => 'PENDING',
             'transmissions' => [
                 [
-                    'webhook_url'      => 'https://internanogalakticky.vuefilemanager.com/api/subscription/paypal/webhooks',
+                    'webhook_url'      => 'https://internanogalakticky.vuefilemanager.com/api/subscriptions/paypal/webhooks',
                     'http_status'      => 500,
                     'reason_phrase'    => 'HTTP/1.1 200 Connection established',
                     'response_headers' => [

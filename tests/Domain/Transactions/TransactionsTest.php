@@ -17,7 +17,7 @@ class TransactionsTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->getJson('/api/subscription/transactions')
+            ->getJson('/api/subscriptions/transactions')
             ->assertOk();
     }
     /**
@@ -31,7 +31,10 @@ class TransactionsTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->getJson("/api/subscription/users/{$user->id}/transactions")
-            ->assertOk();
+            ->getJson("/api/subscriptions/admin/users/{$user->id}/transactions")
+            ->assertOk()
+            ->assertJsonFragment([
+                'id' => $user->transactions->pluck('id')[0],
+            ]);
     }
 }

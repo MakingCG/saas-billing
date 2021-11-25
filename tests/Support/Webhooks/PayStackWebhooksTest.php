@@ -36,7 +36,7 @@ class PayStackWebhooksTest extends TestCase
             ->create();
 
         // Send webhook
-        $this->postJson('/api/subscription/paystack/webhooks', [
+        $this->postJson('/api/subscriptions/paystack/webhooks', [
             'event' => 'subscription.create',
             'data'  => [
                 'domain'            => 'test',
@@ -232,7 +232,7 @@ class PayStackWebhooksTest extends TestCase
         ]);
 
         // Send webhook
-        $this->postJson('/api/subscription/paystack/webhooks', [
+        $this->postJson('/api/subscriptions/paystack/webhooks', [
             'event' => 'subscription.create',
             'data'  => [
                 'domain'            => 'test',
@@ -326,7 +326,7 @@ class PayStackWebhooksTest extends TestCase
         $cancelledAt = now()->addDays(30);
 
         // Send webhook
-        $this->postJson('/api/subscription/paystack/webhooks', [
+        $this->postJson('/api/subscriptions/paystack/webhooks', [
             'event' => 'subscription.not_renew',
             'data'  => [
                 'id'                  => 329496,
@@ -404,7 +404,7 @@ class PayStackWebhooksTest extends TestCase
                 'email' => 'howdy@hi5ve.digital',
             ]);
 
-        $this->postJson('/api/subscription/paystack/webhooks', [
+        $this->postJson('/api/subscriptions/paystack/webhooks', [
             'event'         => 'charge.success',
             'data'          => [
                 'id'                   => 1454595684,

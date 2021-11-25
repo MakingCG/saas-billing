@@ -4,6 +4,7 @@ namespace VueFileManager\Subscription\Domain\Transactions\Models;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use VueFileManager\Subscription\Database\Factories\TransactionFactory;
 
@@ -37,6 +38,11 @@ class Transaction extends Model
     protected static function newFactory(): TransactionFactory
     {
         return TransactionFactory::new();
+    }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(config('auth.providers.users.model'), 'id', 'user_id');
     }
 
     protected static function boot()

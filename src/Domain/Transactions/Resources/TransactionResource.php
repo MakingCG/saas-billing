@@ -15,9 +15,9 @@ class TransactionResource extends JsonResource
     {
         return [
             'data' => [
-                'id'         => $this->id,
-                'type'       => 'transactions',
-                'attributes' => [
+                'id'            => $this->id,
+                'type'          => 'transactions',
+                'attributes'    => [
                     'status'     => $this->status,
                     'plan_name'  => $this->plan_name,
                     'price'      => format_currency($this),
@@ -27,6 +27,22 @@ class TransactionResource extends JsonResource
                     'reference'  => $this->reference,
                     'created_at' => $this->created_at->formatLocalized('%d. %b. %Y'),
                     'updated_at' => $this->updated_at,
+                ],
+                'relationships' => [
+                    $this->mergeWhen($this->user && $this->user->settings, fn () => [
+                        'user' => [
+                            'data' => [
+                                'id'         => $this->user->id,
+                                'type'       => 'users',
+                                'attributes' => [
+                                    'avatar' => $this->user->settings->avatar,
+                                    'name'   => $this->user->settings->name,
+                                    'color'  => $this->user->settings->color,
+                                    'email'  => $this->user->email,
+                                ],
+                            ],
+                        ],
+                    ]),
                 ],
             ],
         ];

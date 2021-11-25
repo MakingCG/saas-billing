@@ -19,9 +19,18 @@ class PlansController extends Controller
      */
     public function index(): PlanCollection
     {
-        $plans = Plan::where('visible', true)->get();
+        $plans = Plan::where('visible', true)->paginate(20);
 
         return new PlanCollection($plans);
+    }
+
+    /**
+     * Update only single attribute of subscription plan
+     */
+    public function show(
+        Plan $plan,
+    ): Response {
+        return response(new PlanResource($plan), 200);
     }
 
     /**

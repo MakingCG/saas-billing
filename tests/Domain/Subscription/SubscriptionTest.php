@@ -1,8 +1,9 @@
 <?php
 namespace Tests\Domain\Subscription;
 
-use Tests\Models\User;
 use Tests\TestCase;
+use Tests\Models\User;
+use Illuminate\Testing\Fluent\AssertableJson;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class SubscriptionTest extends TestCase
@@ -74,15 +75,43 @@ class SubscriptionTest extends TestCase
     /**
      * @test
      */
-    public function it_get_my_subscription()
+    public function it_get_all_subscription()
     {
-        $user = User::factory()
-            ->hasSubscription()
+        $admin = User::factory()
+            ->create(['role' => 'admin']);
+
+        $subscription = Subscription::factory()
+            ->count(2)
+            ->hasDriver()
             ->create();
 
         $this
+            ->actingAs($admin)
+            ->getJson('/api/subscriptions/admin')
+            ->assertJson(
+                fn (AssertableJson $json) =>
+                $json
+                    ->where('data.0.data.id', $subscription->pluck('id')[0])
+                    ->where('data.1.data.id', $subscription->pluck('id')[1])
+                    ->etc()
+            );
+    }
+
+    /**
+     * @test
+     */
+    public function it_get_my_subscription()
+    {
+        $user = User::factory()
+            ->create();
+
+        Subscription::factory()
+            ->hasDriver()
+            ->create(['user_id' => $user->id]);
+
+        $this
             ->actingAs($user)
-            ->getJson('/api/subscription/detail')
+            ->getJson('/api/subscriptions/detail')
             ->assertJsonFragment([
                 'id' => $user->subscription->id,
             ]);
@@ -97,12 +126,15 @@ class SubscriptionTest extends TestCase
             ->create(['role' => 'admin']);
 
         $user = User::factory()
-            ->hasSubscription()
             ->create();
+
+        Subscription::factory()
+            ->hasDriver()
+            ->create(['user_id' => $user->id]);
 
         $this
             ->actingAs($admin)
-            ->getJson("/api/subscription/users/{$user->id}/subscription")
+            ->getJson("/api/subscriptions/admin/users/{$user->id}/subscription")
             ->assertJsonFragment([
                 'id' => $user->subscription->id,
             ]);

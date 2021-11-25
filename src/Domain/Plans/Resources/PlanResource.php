@@ -25,6 +25,7 @@ class PlanResource extends JsonResource
                     'visible'     => $this->visible,
                     'interval'    => $this->interval,
                     'description' => $this->description,
+                    'subscribers' => $this->subscriptions->count(),
                     'features'    => $this->features->pluck('value', 'key'),
                 ],
                 'meta'       => [
