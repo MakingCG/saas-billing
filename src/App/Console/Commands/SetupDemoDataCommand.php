@@ -24,7 +24,7 @@ class SetupDemoDataCommand extends Command
         $this->info('Setting up subscription demo data');
 
         // To tasks
-        $this->create_plans();
+        //$this->create_plans();
         $this->create_demo_subscription();
 
         $this->after();
@@ -34,19 +34,46 @@ class SetupDemoDataCommand extends Command
 
     public function create_demo_subscription()
     {
-        $user = config('auth.providers.users.model')::where('email', 'howdy@hi5ve.digital')
+        $howdy = config('auth.providers.users.model')::where('email', 'howdy@hi5ve.digital')
             ->first();
 
-        $plan = Plan::where('name', 'Professional Pack')
+        $alice = config('auth.providers.users.model')::where('email', 'alice@hi5ve.digital')
+            ->first();
+
+        $johan = config('auth.providers.users.model')::where('email', 'johan@hi5ve.digital')
+            ->first();
+
+        $professionalPackPlan = Plan::where('name', 'Professional Pack')
             ->where('interval', 'month')
             ->first();
 
-        $subscription = $user->subscription()->create([
-            'plan_id'    => $plan->id,
-            'name'       => $plan->name,
+        $businessPackPlan = Plan::where('name', 'Business Pack')
+            ->where('interval', 'month')
+            ->first();
+
+        $howdySubscription = $howdy->subscription()->create([
+            'plan_id'    => $professionalPackPlan->id,
+            'name'       => $professionalPackPlan->name,
             'status'     => 'active',
             'created_at' => now()->subDays(14),
             'updated_at' => now()->subDays(14),
+        ]);
+
+        $aliceSubscription = $alice->subscription()->create([
+            'plan_id'    => $businessPackPlan->id,
+            'name'       => $businessPackPlan->name,
+            'status'     => 'active',
+            'created_at' => now()->subDays(9),
+            'updated_at' => now()->subDays(9),
+        ]);
+
+        $johanSubscription = $johan->subscription()->create([
+            'plan_id'    => $professionalPackPlan->id,
+            'name'       => $professionalPackPlan->name,
+            'status'     => 'cancelled',
+            'ends_at'    => now()->addDays(19),
+            'created_at' => now()->subDays(9),
+            'updated_at' => now()->subDays(9),
         ]);
 
         collect([
@@ -56,19 +83,67 @@ class SetupDemoDataCommand extends Command
             ['created_at' => now()->subDays(28 * 3)],
             ['created_at' => now()->subDays(28 * 4)],
             ['created_at' => now()->subDays(28 * 5)],
-        ])->each(function ($transaction) use ($user) {
-            $user->transactions()->create([
+        ])->each(
+            fn ($transaction) =>
+            $howdy->transactions()->create([
                 'status'     => 'success',
-                'plan_name'  => 'Professional Pack',
-                'currency'   => 'USD',
-                'amount'     => 9.99,
+                'plan_name'  => $professionalPackPlan->name,
+                'currency'   => $professionalPackPlan->currency,
+                'amount'     => $professionalPackPlan->amount,
                 'driver'     => 'paypal',
                 'created_at' => $transaction['created_at'],
                 'reference'  => Str::random(12),
-            ]);
-        });
+            ])
+        );
 
-        $subscription->driver()->create([
+        collect([
+            ['created_at' => now()->subDay()],
+            ['created_at' => now()->subDays(29)],
+            ['created_at' => now()->subDays(29 * 2)],
+            ['created_at' => now()->subDays(29 * 3)],
+        ])->each(
+            fn ($transaction) =>
+            $johan->transactions()->create([
+                'status'     => 'success',
+                'plan_name'  => $professionalPackPlan->name,
+                'currency'   => $professionalPackPlan->currency,
+                'amount'     => $professionalPackPlan->amount,
+                'driver'     => 'paypal',
+                'created_at' => $transaction['created_at'],
+                'reference'  => Str::random(12),
+            ])
+        );
+
+        collect([
+            ['created_at' => now()],
+            ['created_at' => now()->subDays(28)],
+            ['created_at' => now()->subDays(28 * 2)],
+            ['created_at' => now()->subDays(28 * 3)],
+            ['created_at' => now()->subDays(28 * 4)],
+        ])->each(
+            fn ($transaction) =>
+            $alice->transactions()->create([
+                'status'     => 'success',
+                'plan_name'  => $businessPackPlan->name,
+                'currency'   => $businessPackPlan->currency,
+                'amount'     => $businessPackPlan->amount,
+                'driver'     => 'paystack',
+                'created_at' => $transaction['created_at'],
+                'reference'  => Str::random(12),
+            ])
+        );
+
+        $howdySubscription->driver()->create([
+            'driver'                 => 'paypal',
+            'driver_subscription_id' => Str::random(),
+        ]);
+
+        $aliceSubscription->driver()->create([
+            'driver'                 => 'paystack',
+            'driver_subscription_id' => Str::random(),
+        ]);
+
+        $johanSubscription->driver()->create([
             'driver'                 => 'paypal',
             'driver_subscription_id' => Str::random(),
         ]);

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetAllSubscriptionsController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
@@ -12,6 +11,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Controllers\SwapSubscriptio
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetAllTransactionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\CancelSubscriptionController;
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetUserTransactionsController;
+use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetAllSubscriptionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetUserSubscriptionController;
 
 // System
