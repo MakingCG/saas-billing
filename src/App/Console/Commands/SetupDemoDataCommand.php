@@ -24,7 +24,7 @@ class SetupDemoDataCommand extends Command
         $this->info('Setting up subscription demo data');
 
         // To tasks
-        //$this->create_plans();
+        $this->create_plans();
         $this->create_demo_subscription();
 
         $this->after();

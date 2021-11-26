@@ -15,6 +15,7 @@ class CreatePlansTable extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->uuid('id')->index();
+            $table->enum('status', ['active', 'archived'])->default('active');
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('amount');

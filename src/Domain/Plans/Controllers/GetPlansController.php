@@ -11,7 +11,8 @@ class GetPlansController extends Controller
     public function __invoke()
     {
         $plans = Plan::where('visible', true)
-            ->paginate(20);
+            ->where('status', 'active')
+            ->get();
 
         return new PlanCollection($plans);
     }

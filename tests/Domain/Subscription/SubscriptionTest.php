@@ -139,4 +139,20 @@ class SubscriptionTest extends TestCase
                 'id' => $user->subscription->id,
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function it_delete_driver_after_subscription_deletion()
+    {
+        $subscription = Subscription::factory()
+            ->hasDriver()
+            ->create();
+
+        $subscription->delete();
+
+        $this->assertDatabaseMissing('subscription_drivers', [
+            'subscription_id' => $subscription->id,
+        ]);
+    }
 }

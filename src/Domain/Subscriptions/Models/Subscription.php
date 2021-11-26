@@ -65,5 +65,9 @@ class Subscription extends Model
         static::creating(function ($subscription) {
             $subscription->id = Str::uuid();
         });
+
+        static::deleting(function ($subscription) {
+            $subscription->driver()->delete();
+        });
     }
 }

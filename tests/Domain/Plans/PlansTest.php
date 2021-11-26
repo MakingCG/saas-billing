@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Domain\Plans;
 
 use Tests\TestCase;
@@ -29,6 +30,7 @@ class PlansTest extends TestCase
                 'id' => $plan->id,
             ]);
     }
+
     /**
      * @test
      */
@@ -198,7 +200,7 @@ class PlansTest extends TestCase
 
         collect(config('subscription.available_drivers'))
             ->each(
-                fn ($driver) => $this
+                fn($driver) => $this
                     ->assertDatabaseHas('plan_drivers', [
                         'driver' => $driver,
                     ])
@@ -209,6 +211,7 @@ class PlansTest extends TestCase
                 'name'        => $plan->name,
                 'description' => $plan->description,
                 'currency'    => 'USD',
+                'status'      => 'active',
             ])
             ->assertDatabaseHas('plan_features', [
                 'key'   => 'max_storage_amount',
@@ -427,7 +430,7 @@ class PlansTest extends TestCase
                 'key'   => 'max_team_members',
                 'value' => 12,
             ])
-            ->assertTrue(! cache()->has('action.synchronize-plans'));
+            ->assertTrue(!cache()->has('action.synchronize-plans'));
     }
 
     /**
@@ -594,9 +597,13 @@ class PlansTest extends TestCase
             ->assertNoContent();
 
         $this
-            ->assertDatabaseCount('plans', 0)
-            ->assertDatabaseCount('plan_features', 0)
-            ->assertDatabaseCount('plan_drivers', 0);
+            ->assertDatabaseCount('plan_features', 2)
+            ->assertDatabaseCount('plan_drivers', 2);
+
+        $this->assertDatabaseHas('plans', [
+            'id'     => $plan->id,
+            'status' => 'archived',
+        ]);
 
         Http::assertSentCount(6);
     }

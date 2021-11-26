@@ -19,7 +19,8 @@ class PlansController extends Controller
      */
     public function index(): PlanCollection
     {
-        $plans = Plan::paginate(20);
+        $plans = Plan::where('status', 'active')
+            ->paginate(20);
 
         return new PlanCollection($plans);
     }
@@ -70,7 +71,9 @@ class PlansController extends Controller
     ): Response {
         $deletePlansFromPaymentService($plan);
 
-        $plan->delete();
+        $plan->update([
+            'status' => 'archived',
+        ]);
 
         return response('Deleted', 204);
     }
