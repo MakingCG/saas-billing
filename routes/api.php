@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
+use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
 use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlanSubscribersController;
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetTransactionsController;

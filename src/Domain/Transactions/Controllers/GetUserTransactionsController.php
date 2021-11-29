@@ -10,7 +10,7 @@ class GetUserTransactionsController extends Controller
     {
         $transactions = config('auth.providers.users.model')::find($id)
             ->transactions()
-            ->orderByDesc('created_at')
+            ->sortable(['created_at' => 'desc'])
             ->paginate(20);
 
         return new TransactionCollection($transactions);

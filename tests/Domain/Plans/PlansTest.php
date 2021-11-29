@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Domain\Plans;
 
 use Tests\TestCase;
@@ -200,7 +199,7 @@ class PlansTest extends TestCase
 
         collect(config('subscription.available_drivers'))
             ->each(
-                fn($driver) => $this
+                fn ($driver) => $this
                     ->assertDatabaseHas('plan_drivers', [
                         'driver' => $driver,
                     ])
@@ -430,7 +429,7 @@ class PlansTest extends TestCase
                 'key'   => 'max_team_members',
                 'value' => 12,
             ])
-            ->assertTrue(!cache()->has('action.synchronize-plans'));
+            ->assertTrue(! cache()->has('action.synchronize-plans'));
     }
 
     /**

@@ -3,6 +3,7 @@ namespace VueFileManager\Subscription\Domain\Transactions\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,6 +25,7 @@ use VueFileManager\Subscription\Database\Factories\TransactionFactory;
 class Transaction extends Model
 {
     use HasFactory;
+    use Sortable;
 
     protected $guarded = [];
 

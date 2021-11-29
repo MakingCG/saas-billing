@@ -2,6 +2,7 @@
 namespace VueFileManager\Subscription\Domain\Plans\Models;
 
 use Illuminate\Support\Str;
+use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 class Plan extends Model
 {
     use HasFactory;
+    use Sortable;
 
     protected $guarded = [];
 

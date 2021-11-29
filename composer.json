@@ -20,6 +20,7 @@
         "friendsofphp/php-cs-fixer": "^3.0",
         "guzzlehttp/guzzle": "^7.4",
         "illuminate/contracts": "^8.37",
+        "kyslik/column-sortable": "^6.4",
         "laravel/sanctum": "^2.11",
         "spatie/data-transfer-object": "^3.6",
         "spatie/laravel-package-tools": "^1.4.3",

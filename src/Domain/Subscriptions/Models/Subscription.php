@@ -2,6 +2,7 @@
 namespace VueFileManager\Subscription\Domain\Subscriptions\Models;
 
 use Illuminate\Support\Str;
+use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Traits\SubscriptionHelpers;
  */
 class Subscription extends Model
 {
+    use Sortable;
     use HasFactory;
     use SubscriptionHelpers;
 

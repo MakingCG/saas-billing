@@ -10,7 +10,9 @@ class GetPlanSubscribersController extends Controller
     public function __invoke(Plan $plan)
     {
         return new SubscriptionCollection(
-            $plan->subscriptions()->paginate(20)
+            $plan->subscriptions()
+                ->sortable(['created_at' => 'desc'])
+                ->paginate(20)
         );
     }
 }

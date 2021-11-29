@@ -11,7 +11,7 @@ class GetTransactionsController extends Controller
     {
         $transactions = Auth::user()
             ->transactions()
-            ->orderByDesc('created_at')
+            ->sortable(['created_at' => 'desc'])
             ->paginate(20);
 
         return new TransactionCollection($transactions);

@@ -9,7 +9,8 @@ class GetAllSubscriptionsController extends Controller
 {
     public function __invoke()
     {
-        $subscriptions = Subscription::paginate(20);
+        $subscriptions = Subscription::sortable(['created_at' => 'desc'])
+            ->paginate(20);
 
         return new SubscriptionCollection($subscriptions);
     }

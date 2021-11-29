@@ -10,7 +10,7 @@ class GetAllTransactionsController extends Controller
     public function __invoke()
     {
         $transactions = Transaction::with('user')
-            ->orderByDesc('created_at')
+            ->sortable(['created_at' => 'desc'])
             ->paginate(20);
 
         return new TransactionCollection($transactions);
