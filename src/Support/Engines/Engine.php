@@ -40,7 +40,7 @@ interface Engine
     public function updateCustomer(array $user): Response;
 
     /**
-     * Get Subscription
+     * Get Subscription details
      */
     public function getSubscription(string $subscriptionId): Response;
 
@@ -55,7 +55,7 @@ interface Engine
     public function cancelSubscription(Subscription $subscription): Response;
 
     /**
-     * Create new subscription
+     * Get webhook
      */
     public function webhook(Request $request): void;
 }

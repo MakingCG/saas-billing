@@ -87,7 +87,7 @@ class SubscriptionTest extends TestCase
 
         $this
             ->actingAs($admin)
-            ->getJson('/api/subscriptions/admin')
+            ->getJson('/api/subscriptions/admin?sort=created_at&direction=ASC')
             ->assertJson(
                 fn (AssertableJson $json) =>
                 $json

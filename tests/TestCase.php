@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use Kyslik\ColumnSortable\ColumnSortableServiceProvider;
 use Tests\Models\User;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -26,6 +27,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            ColumnSortableServiceProvider::class,
             SubscriptionServiceProvider::class,
             SanctumServiceProvider::class,
         ];
