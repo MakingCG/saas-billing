@@ -41,7 +41,7 @@ trait SubscriptionHelpers
     {
         return $this->gateway()
             ->driver($this->driver->driver)
-            ->updateSubscription($this, $this->plan);
+            ->updateSubscription($this, $this->plan ?? null);
     }
 
     /**

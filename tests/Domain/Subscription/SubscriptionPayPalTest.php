@@ -245,7 +245,7 @@ class SubscriptionPayPalTest extends TestCase
     /**
      * @test
      */
-    public function it_edit_paypal_subscription()
+    public function it_generate_update_link_for_paypal_subscription()
     {
         $user = User::factory()
             ->create();

@@ -88,13 +88,12 @@ class SubscriptionTest extends TestCase
         $this
             ->actingAs($admin)
             ->getJson('/api/subscriptions/admin?sort=created_at&direction=ASC')
-            ->assertJson(
-                fn (AssertableJson $json) =>
-                $json
-                    ->where('data.0.data.id', $subscription->pluck('id')[0])
-                    ->where('data.1.data.id', $subscription->pluck('id')[1])
-                    ->etc()
-            );
+            ->assertJsonFragment([
+                'id' => $subscription[0]->id,
+            ])
+            ->assertJsonFragment([
+                'id' => $subscription[1]->id,
+            ]);
     }
 
     /**

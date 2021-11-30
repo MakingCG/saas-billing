@@ -136,7 +136,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_revise
      */
-    public function updateSubscription(Subscription $subscription, Plan $plan): array
+    public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
     {
         $response = $this->api->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
             'plan_id'             => $plan->driverId('paypal'),

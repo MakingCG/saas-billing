@@ -138,6 +138,19 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         //TODO: frontend implementation
     }
 
+    /*
+     * https://paystack.com/docs/api/#subscription-manage-link
+     */
+    public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
+    {
+        $response = $this->api->get("/subscription/{$subscription->driverId()}/manage/link");
+
+        return [
+            'driver' => 'paystack',
+            'url'    => $response->json()['data']['link'],
+        ];
+    }
+
     /**
      * https://paystack.com/docs/api/#subscription-disable
      */

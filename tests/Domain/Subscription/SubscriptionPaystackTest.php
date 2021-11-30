@@ -136,6 +136,45 @@ class SubscriptionPaystackTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function it_generate_update_link_for_paystack_subscription()
+    {
+        $user = User::factory()
+            ->create();
+
+        $subscription = Subscription::factory()
+            ->hasDriver([
+                'driver' => 'paystack',
+            ])
+            ->create([
+                'user_id'    => $user->id,
+                'status'     => 'active',
+            ]);
+
+        Http::fake([
+            "https://api.paystack.co/subscription/{$subscription->driverId()}/manage/link" => Http::response([
+                'status'  => true,
+                'message' => 'Link generated',
+                'data'    => [
+                    'link' => 'https://paystack.com/manage/subscriptions/qlgwhpyq1ts9nsw?subscription_token=ugly-long-token',
+                ],
+            ]),
+        ]);
+
+        $this
+            ->actingAs($user)
+            ->postJson("/api/subscriptions/edit/{$subscription->id}")
+            ->assertCreated()
+            ->assertJsonFragment([
+                'driver' => 'paystack',
+                'url'    => 'https://paystack.com/manage/subscriptions/qlgwhpyq1ts9nsw?subscription_token=ugly-long-token',
+            ]);
+
+        Http::assertSentCount(1);
+    }
+
+    /**
      * TODO: documented but not working on api side
      */
     public function it_resume_paystack_subscription()
