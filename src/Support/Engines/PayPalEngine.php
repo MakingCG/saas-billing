@@ -141,7 +141,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
         $response = $this->api->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
             'plan_id'             => $plan->driverId('paypal'),
             'application_context' => [
-                'url' => url('/user/settings/subscription'),
+                'return_url' => url('/user/settings/subscription'),
             ],
         ]);
 
