@@ -35,6 +35,16 @@ trait SubscriptionHelpers
     }
 
     /**
+     * Generate link for subscription detail update right in payment gateway
+     */
+    public function generateUpdateLink()
+    {
+        return $this->gateway()
+            ->driver($this->driver->driver)
+            ->updateSubscription($this, $this->plan);
+    }
+
+    /**
      * Get gateway subscription id
      */
     public function driverId(): string

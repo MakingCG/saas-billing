@@ -190,7 +190,7 @@ class SubscriptionPayPalTest extends TestCase
             ]);
 
         Http::fake([
-            'https://api-m.sandbox.paypal.com/v1/oauth2/token'                                                                          => Http::response([
+            'https://api-m.sandbox.paypal.com/v1/oauth2/token'                                             => Http::response([
                 'scope'        => 'scope',
                 'access_token' => 'jnjleqngtlq3l34jn6l2346n2l4',
                 'token_type'   => 'Bearer',
@@ -237,6 +237,107 @@ class SubscriptionPayPalTest extends TestCase
             ->assertOk()
             ->assertJsonFragment([
                 'plan_id' => $planHigher->driverId('paypal'),
+            ]);
+
+        Http::assertSentCount(2);
+    }
+
+    /**
+     * @test
+     */
+    public function it_edit_paypal_subscription()
+    {
+        $user = User::factory()
+            ->create();
+
+        $plan = Plan::factory()
+            ->hasDrivers([
+                'driver' => 'paypal',
+            ])
+            ->create();
+
+        $subscription = Subscription::factory()
+            ->hasDriver([
+                'driver' => 'paypal',
+            ])
+            ->create([
+                'plan_id' => $plan->id,
+                'user_id' => $user->id,
+                'status'  => 'active',
+            ]);
+
+        Http::fake([
+            'https://api-m.sandbox.paypal.com/v1/oauth2/token'                                             => Http::response([
+                'scope'        => 'scope',
+                'access_token' => 'jnjleqngtlq3l34jn6l2346n2l4',
+                'token_type'   => 'Bearer',
+                'app_id'       => 'APP-80W284485P519543T',
+                'expires_in'   => 31349,
+                'nonce'        => 'nonce',
+            ], 204),
+            "https://api-m.sandbox.paypal.com/v1/billing/subscriptions/{$subscription->driverId()}/revise" => Http::response([
+                'plan_id'         => $plan->driverId('paypal'),
+                'plan_overridden' => false,
+                'effective_time'  => '2018-11-01T00:00:00Z',
+                'shipping_amount' => [
+                    'currency_code' => 'USD',
+                    'value'         => '10.00',
+                ],
+                'shipping_address' => [
+                    'name' => [
+                        'full_name' => 'John Doe',
+                    ],
+                    'address' => [
+                        'address_line_1' => '2211 N First Street',
+                        'address_line_2' => 'Building 17',
+                        'admin_area_2'   => 'San Jose',
+                        'admin_area_1'   => 'CA',
+                        'postal_code'    => '95131',
+                        'country_code'   => 'US',
+                    ],
+                ],
+                'links' => [
+                    [
+                        'href'   => 'https://www.paypal.com/webapps/billing/subscriptions/update?ba_token=BA-2M539689T3856352J',
+                        'rel'    => 'approve',
+                        'method' => 'GET',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G',
+                        'rel'    => 'edit',
+                        'method' => 'PATCH',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G',
+                        'rel'    => 'self',
+                        'method' => 'GET',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G/cancel',
+                        'rel'    => 'cancel',
+                        'method' => 'POST',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G/suspend',
+                        'rel'    => 'suspend',
+                        'method' => 'POST',
+                    ],
+                    [
+                        'href'   => 'https://api-m.paypal.com/v1/billing/subscriptions/I-BW452GLLEP1G/capture',
+                        'rel'    => 'capture',
+                        'method' => 'POST',
+                    ],
+                ],
+            ]),
+        ]);
+
+        $this
+            ->actingAs($user)
+            ->postJson("/api/subscriptions/edit/{$subscription->id}")
+            ->assertCreated()
+            ->assertJsonFragment([
+                'driver' => 'paypal',
+                'url'    => 'https://www.paypal.com/webapps/billing/subscriptions/update?ba_token=BA-2M539689T3856352J',
             ]);
 
         Http::assertSentCount(2);

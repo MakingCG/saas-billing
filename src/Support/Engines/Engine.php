@@ -50,6 +50,11 @@ interface Engine
     public function swapSubscription(Subscription $subscription, Plan $plan): Response;
 
     /**
+     * Swap subscription plan
+     */
+    public function updateSubscription(Subscription $subscription, Plan $plan): array;
+
+    /**
      * Cancel Subscription
      */
     public function cancelSubscription(Subscription $subscription): Response;

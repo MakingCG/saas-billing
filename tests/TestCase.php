@@ -1,12 +1,12 @@
 <?php
 namespace Tests;
 
-use Kyslik\ColumnSortable\ColumnSortableServiceProvider;
 use Tests\Models\User;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Kyslik\ColumnSortable\ColumnSortableServiceProvider;
 use VueFileManager\Subscription\SubscriptionServiceProvider;
 
 class TestCase extends Orchestra
