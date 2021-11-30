@@ -505,7 +505,7 @@ class PayStackWebhooksTest extends TestCase
             'status'    => 'completed',
             'plan_name' => 'Professional Pack',
             'currency'  => 'ZAR',
-            'amount'    => 1000,
+            'amount'    => 10,
             'driver'    => 'paystack',
             'reference' => 'gD2au4Jyuc',
         ]);

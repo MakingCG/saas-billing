@@ -123,7 +123,7 @@ class PayStackWebhooks
             'plan_name' => $request->input('data.plan.name'),
             'reference' => $request->input('data.reference'),
             'currency'  => $request->input('data.currency'),
-            'amount'    => $request->input('data.amount'),
+            'amount'    => $request->input('data.amount') / 100,
         ]);
     }
 }
