@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
+use Stripe\StripeClient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
@@ -9,6 +10,13 @@ use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeEngine implements Engine
 {
+    public StripeClient $stripe;
+
+    public function __construct()
+    {
+        $this->stripe = new StripeClient(config('subscription.credentials.stripe.secret'));
+    }
+
     public function getPlan(string $planId): Response
     {
         // TODO: Implement getPlan() method.
@@ -16,7 +24,25 @@ class StripeEngine implements Engine
 
     public function createPlan(CreatePlanData $data): array
     {
-        // TODO: Implement createPlan() method.
+        // Create product
+        $product = $this->stripe->products->create([
+            'url'         => url('/'),
+            'name'        => $data->name,
+            'description' => $data->description,
+        ]);
+
+        // Next create subscription plan
+        $plan = $this->stripe->plans->create([
+            'product'  => $product->toArray()['id'],
+            'currency' => strtolower($data->currency),
+            'amount'   => $data->amount * 100,
+            'interval' => $data->interval,
+        ]);
+
+        return [
+            'id'   => $plan->toArray()['id'],
+            'name' => $data->name,
+        ];
     }
 
     public function updatePlan(Plan $plan): Response
