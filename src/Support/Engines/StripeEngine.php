@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Stripe\StripeClient;
@@ -6,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeEngine implements Engine
@@ -25,18 +27,16 @@ class StripeEngine implements Engine
     public function createPlan(CreatePlanData $data): array
     {
         // Create product
-        $product = $this->stripe->products->create([
-            'url'         => url('/'),
-            'name'        => $data->name,
-            'description' => $data->description,
-        ]);
+        $productId = $this->getOrCreateProductId($data);
 
         // Next create subscription plan
-        $plan = $this->stripe->plans->create([
-            'product'  => $product->toArray()['id'],
-            'currency' => strtolower($data->currency),
-            'amount'   => $data->amount * 100,
-            'interval' => $data->interval,
+        $plan = $this->stripe->prices->create([
+            'product'     => $productId,
+            'currency'    => strtolower($data->currency),
+            'unit_amount' => $data->amount * 100,
+            'recurring'   => [
+                'interval' => $data->interval
+            ],
         ]);
 
         return [
@@ -88,5 +88,25 @@ class StripeEngine implements Engine
     public function webhook(Request $request): void
     {
         // TODO: Implement webhook() method.
+    }
+
+    private function getOrCreateProductId(CreatePlanData $data): string
+    {
+        $stripePlan = PlanDriver::where('driver', 'stripe')
+            ->first();
+
+        if ($stripePlan) {
+            $plan = $this->getPlan($stripePlan->driver_plan_id);
+
+            return $plan->toArray()['product'];
+        }
+
+        $response = $this->stripe->products->create([
+            'url'         => url('/'),
+            'name'        => $data->name,
+            'description' => $data->description,
+        ]);
+
+        return $response->toArray()['id'];
     }
 }
