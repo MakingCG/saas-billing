@@ -1,55 +1,62 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
-use Illuminate\Support\Str;
-use Cartalyst\Stripe\Stripe;
 use Illuminate\Http\Request;
+use Illuminate\Http\Client\Response;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
-use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeEngine implements Engine
 {
-    public Stripe $stripe;
-
-    public function __construct()
+    public function getPlan(string $planId): Response
     {
-        $this->stripe = resolve(Stripe::class)
-            ->make(config('subscription.credentials.stripe.secret'), '2020-03-02');
+        // TODO: Implement getPlan() method.
     }
 
     public function createPlan(CreatePlanData $data): array
     {
-        // Create stripe product
-        $product = $this->stripe
-            ->products()
-            ->create([
-                'name'        => $data->name,
-                'description' => $data->description,
-                'metadata'    => [
-                    'amount' => $data->amount,
-                ],
-            ]);
-
-        // Create stripe plan and attach product into it
-        $plan = $this->stripe
-            ->plans()
-            ->create([
-                'id'       => Str::slug($data->name),
-                'amount'   => $data->amount,
-                'interval' => $data->interval,
-                'currency' => 'EUR',
-                'product'  => $product['id'],
-            ]);
-
-        return [
-            'id'   => $plan['id'],
-            'name' => $product['name'],
-        ];
+        // TODO: Implement createPlan() method.
     }
 
-    public function createCustomer(array $user): Customer
+    public function updatePlan(Plan $plan): Response
+    {
+        // TODO: Implement updatePlan() method.
+    }
+
+    public function deletePlan(string $planId): Response
+    {
+        // TODO: Implement deletePlan() method.
+    }
+
+    public function createCustomer(array $user): Response
     {
         // TODO: Implement createCustomer() method.
+    }
+
+    public function updateCustomer(array $user): Response
+    {
+        // TODO: Implement updateCustomer() method.
+    }
+
+    public function getSubscription(string $subscriptionId): Response
+    {
+        // TODO: Implement getSubscription() method.
+    }
+
+    public function swapSubscription(Subscription $subscription, Plan $plan): Response
+    {
+        // TODO: Implement swapSubscription() method.
+    }
+
+    public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
+    {
+        // TODO: Implement updateSubscription() method.
+    }
+
+    public function cancelSubscription(Subscription $subscription): Response
+    {
+        // TODO: Implement cancelSubscription() method.
     }
 
     public function webhook(Request $request): void

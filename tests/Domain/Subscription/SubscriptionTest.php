@@ -3,7 +3,6 @@ namespace Tests\Domain\Subscription;
 
 use Tests\TestCase;
 use Tests\Models\User;
-use Illuminate\Testing\Fluent\AssertableJson;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class SubscriptionTest extends TestCase
