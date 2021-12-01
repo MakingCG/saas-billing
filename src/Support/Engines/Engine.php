@@ -12,7 +12,7 @@ interface Engine
     /**
      * Get subscription plan
      */
-    public function getPlan(string $planId): Response;
+    public function getPlan(string $planId): array;
 
     /**
      * Create new subscription plan
@@ -22,7 +22,7 @@ interface Engine
     /**
      * Update subscription plan
      */
-    public function updatePlan(Plan $plan): Response;
+    public function updatePlan(Plan $plan): array;
 
     /**
      * Delete subscription plan

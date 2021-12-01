@@ -63,9 +63,9 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_patch
      */
-    public function updatePlan(Plan $plan): Response
+    public function updatePlan(Plan $plan): array
     {
-        return $this->api->patch("/billing/plans/{$plan->driverId('paypal')}", [
+        $response = $this->api->patch("/billing/plans/{$plan->driverId('paypal')}", [
             [
                 'op'    => 'replace',
                 'path'  => '/name',
@@ -77,14 +77,16 @@ class PayPalEngine extends PayPalWebhooks implements Engine
                 'value' => $plan->description,
             ],
         ]);
+
+        return $response->json();
     }
 
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_get
      */
-    public function getPlan(string $planId): Response
+    public function getPlan(string $planId): array
     {
-        return $this->api->get("/billing/plans/$planId");
+        return $this->api->get("/billing/plans/$planId")->json();
     }
 
     /**

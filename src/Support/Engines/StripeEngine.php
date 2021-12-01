@@ -1,11 +1,11 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
@@ -18,19 +18,25 @@ class StripeEngine implements Engine
         $this->stripe = new StripeClient(config('subscription.credentials.stripe.secret'));
     }
 
-    public function getPlan(string $planId): Response
+    public function getPlan(string $planId): array
     {
-        // TODO: Implement getPlan() method.
+        $response = $this->stripe->prices->retrieve($planId);
+
+        return $response->toArray();
     }
 
     public function createPlan(CreatePlanData $data): array
     {
         // Create product
-        $productId = $this->getOrCreateProductId($data);
+        $product = $this->stripe->products->create([
+            'url'         => url('/'),
+            'name'        => $data->name,
+            'description' => $data->description,
+        ]);
 
         // Next create subscription plan
         $plan = $this->stripe->prices->create([
-            'product'     => $productId,
+            'product'     => $product->toArray()['id'],
             'currency'    => strtolower($data->currency),
             'unit_amount' => $data->amount * 100,
             'recurring'   => [
@@ -44,9 +50,18 @@ class StripeEngine implements Engine
         ];
     }
 
-    public function updatePlan(Plan $plan): Response
+    public function updatePlan(Plan $plan): array
     {
-        // TODO: Implement updatePlan() method.
+        // Get original stripe plan where is stored product_id
+        $stripePlan = $this->getPlan($plan->driverId('stripe'));
+
+        // Update stripe product where are stored name and description
+        $response = $this->stripe->products->update($stripePlan['product'], [
+            'name'        => $plan->name,
+            'description' => $plan->description,
+        ]);
+
+        return $response->toArray();
     }
 
     public function deletePlan(string $planId): void
@@ -87,25 +102,5 @@ class StripeEngine implements Engine
     public function webhook(Request $request): void
     {
         // TODO: Implement webhook() method.
-    }
-
-    private function getOrCreateProductId(CreatePlanData $data): string
-    {
-        $stripePlan = PlanDriver::where('driver', 'stripe')
-            ->first();
-
-        if ($stripePlan) {
-            $plan = $this->getPlan($stripePlan->driver_plan_id);
-
-            return $plan->toArray()['product'];
-        }
-
-        $response = $this->stripe->products->create([
-            'url'         => url('/'),
-            'name'        => $data->name,
-            'description' => $data->description,
-        ]);
-
-        return $response->toArray()['id'];
     }
 }

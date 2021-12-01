@@ -48,17 +48,19 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     /**
      * https://paystack.com/docs/api/#plan-create
      */
-    public function updatePlan(Plan $plan): Response
+    public function updatePlan(Plan $plan): array
     {
-        return $this->api->put("/plan/{$plan->driverId('paystack')}", [
+        $response =  $this->api->put("/plan/{$plan->driverId('paystack')}", [
             'name' => $plan->name,
         ]);
+
+        return $response->json();
     }
 
     /**
      * https://paystack.com/docs/api/#plan-fetch
      */
-    public function getPlan(string $planId): Response
+    public function getPlan(string $planId): array
     {
         $response = $this->api->get("/plan/$planId");
 
@@ -67,7 +69,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
             throw new NotFoundHttpException($response->json()['message']);
         }
 
-        return $response;
+        return $response->json();
     }
 
     /**
