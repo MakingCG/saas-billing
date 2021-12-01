@@ -73,9 +73,9 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     /**
      * Not documented, but it's working
      */
-    public function deletePlan(string $planId): Response
+    public function deletePlan(string $planId): void
     {
-        return $this->api->delete("/plan/$planId");
+        $this->api->delete("/plan/$planId");
     }
 
     /**

@@ -90,9 +90,9 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_deactivate
      */
-    public function deletePlan(string $planId): Response
+    public function deletePlan(string $planId): void
     {
-        return $this->api->post("/billing/plans/{$planId}/deactivate", []);
+        $this->api->post("/billing/plans/{$planId}/deactivate", []);
     }
 
     /**

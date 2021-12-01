@@ -1,13 +1,12 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeEngine implements Engine
@@ -35,7 +34,7 @@ class StripeEngine implements Engine
             'currency'    => strtolower($data->currency),
             'unit_amount' => $data->amount * 100,
             'recurring'   => [
-                'interval' => $data->interval
+                'interval' => $data->interval,
             ],
         ]);
 
@@ -50,9 +49,9 @@ class StripeEngine implements Engine
         // TODO: Implement updatePlan() method.
     }
 
-    public function deletePlan(string $planId): Response
+    public function deletePlan(string $planId): void
     {
-        // TODO: Implement deletePlan() method.
+        $this->stripe->plans->delete($planId);
     }
 
     public function createCustomer(array $user): Response

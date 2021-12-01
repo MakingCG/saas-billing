@@ -27,7 +27,7 @@ interface Engine
     /**
      * Delete subscription plan
      */
-    public function deletePlan(string $planId): Response;
+    public function deletePlan(string $planId): void;
 
     /**
      * Create new customer for service
