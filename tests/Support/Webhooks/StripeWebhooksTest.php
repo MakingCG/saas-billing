@@ -234,6 +234,220 @@ class StripeWebhooksTest extends TestCase
     /**
      * @test
      */
+    public function stripe_webhook_cancel_subscription()
+    {
+        Event::fake([
+            SubscriptionWasCancelled::class,
+        ]);
+
+        $user = User::factory()
+            ->create();
+
+        $subscription = Subscription::factory()
+            ->hasDriver([
+                'driver'                 => 'stripe',
+                'driver_subscription_id' => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
+            ])
+            ->create([
+                'user_id'    => $user->id,
+                'status'     => 'active',
+                'ends_at'    => null,
+                'created_at' => now()->subDays(14),
+            ]);
+
+        $cancelledAt = now()->addDays(14);
+
+        // Send webhook
+        $this->postJson('/api/subscriptions/stripe/webhooks', [
+            'id'               => 'evt_1K2BE4B9m4sTKy1qd8N60DtV',
+            'object'           => 'event',
+            'api_version'      => '2020-08-27',
+            'created'          => 1638435911,
+            'data'             =>
+                [
+                    'object'              =>
+                        [
+                            'id'                                => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
+                            'object'                            => 'subscription',
+                            'application_fee_percent'           => NULL,
+                            'automatic_tax'                     =>
+                                [
+                                    'enabled' => false,
+                                ],
+                            'billing_cycle_anchor'              => 1638435908,
+                            'billing_thresholds'                => NULL,
+                            'cancel_at'                         => NULL,
+                            'cancel_at_period_end'              => true,
+                            'canceled_at'                       => NULL,
+                            'collection_method'                 => 'charge_automatically',
+                            'created'                           => 1638435908,
+                            'current_period_end'                => $cancelledAt->timestamp,
+                            'current_period_start'              => 1638435908,
+                            'customer'                          => 'cus_KhaOUge4a5x8hm',
+                            'days_until_due'                    => NULL,
+                            'default_payment_method'            => NULL,
+                            'default_source'                    => NULL,
+                            'default_tax_rates'                 =>
+                                [
+                                ],
+                            'discount'                          => NULL,
+                            'ended_at'                          => NULL,
+                            'items'                             =>
+                                [
+                                    'object'      => 'list',
+                                    'data'        =>
+                                        [
+                                            0 =>
+                                                [
+                                                    'id'                 => 'si_KhaOoyIprhNoTc',
+                                                    'object'             => 'subscription_item',
+                                                    'billing_thresholds' => NULL,
+                                                    'created'            => 1638435908,
+                                                    'metadata'           =>
+                                                        [
+                                                        ],
+                                                    'plan'               =>
+                                                        [
+                                                            'id'                => 'plan_KhaOxXzYP2Nova',
+                                                            'object'            => 'plan',
+                                                            'active'            => true,
+                                                            'aggregate_usage'   => NULL,
+                                                            'amount'            => 2000,
+                                                            'amount_decimal'    => '2000',
+                                                            'billing_scheme'    => 'per_unit',
+                                                            'created'           => 1638435907,
+                                                            'currency'          => 'usd',
+                                                            'interval'          => 'month',
+                                                            'interval_count'    => 1,
+                                                            'livemode'          => false,
+                                                            'metadata'          =>
+                                                                [
+                                                                ],
+                                                            'nickname'          => NULL,
+                                                            'product'           => 'prod_KhaO4s6RUDhOWF',
+                                                            'tiers_mode'        => NULL,
+                                                            'transform_usage'   => NULL,
+                                                            'trial_period_days' => NULL,
+                                                            'usage_type'        => 'licensed',
+                                                        ],
+                                                    'price'              =>
+                                                        [
+                                                            'id'                  => 'plan_KhaOxXzYP2Nova',
+                                                            'object'              => 'price',
+                                                            'active'              => true,
+                                                            'billing_scheme'      => 'per_unit',
+                                                            'created'             => 1638435907,
+                                                            'currency'            => 'usd',
+                                                            'livemode'            => false,
+                                                            'lookup_key'          => NULL,
+                                                            'metadata'            =>
+                                                                [
+                                                                ],
+                                                            'nickname'            => NULL,
+                                                            'product'             => 'prod_KhaO4s6RUDhOWF',
+                                                            'recurring'           =>
+                                                                [
+                                                                    'aggregate_usage'   => NULL,
+                                                                    'interval'          => 'month',
+                                                                    'interval_count'    => 1,
+                                                                    'trial_period_days' => NULL,
+                                                                    'usage_type'        => 'licensed',
+                                                                ],
+                                                            'tax_behavior'        => 'unspecified',
+                                                            'tiers_mode'          => NULL,
+                                                            'transform_quantity'  => NULL,
+                                                            'type'                => 'recurring',
+                                                            'unit_amount'         => 2000,
+                                                            'unit_amount_decimal' => '2000',
+                                                        ],
+                                                    'quantity'           => 1,
+                                                    'subscription'       => 'sub_1K2BE0B9m4sTKy1qJDq7pt1o',
+                                                    'tax_rates'          =>
+                                                        [
+                                                        ],
+                                                ],
+                                        ],
+                                    'has_more'    => false,
+                                    'total_count' => 1,
+                                    'url'         => '/v1/subscription_items?subscription=sub_1K2BE0B9m4sTKy1qJDq7pt1o',
+                                ],
+                            'latest_invoice'                    => 'in_1K2BE0B9m4sTKy1qiscPsYFt',
+                            'livemode'                          => false,
+                            'metadata'                          =>
+                                [
+                                    'foo' => 'bar',
+                                ],
+                            'next_pending_invoice_item_invoice' => NULL,
+                            'pause_collection'                  => NULL,
+                            'payment_settings'                  =>
+                                [
+                                    'payment_method_options' => NULL,
+                                    'payment_method_types'   => NULL,
+                                ],
+                            'pending_invoice_item_interval'     => NULL,
+                            'pending_setup_intent'              => NULL,
+                            'pending_update'                    => NULL,
+                            'plan'                              =>
+                                [
+                                    'id'                => 'plan_KhaOxXzYP2Nova',
+                                    'object'            => 'plan',
+                                    'active'            => true,
+                                    'aggregate_usage'   => NULL,
+                                    'amount'            => 2000,
+                                    'amount_decimal'    => '2000',
+                                    'billing_scheme'    => 'per_unit',
+                                    'created'           => 1638435907,
+                                    'currency'          => 'usd',
+                                    'interval'          => 'month',
+                                    'interval_count'    => 1,
+                                    'livemode'          => false,
+                                    'metadata'          =>
+                                        [
+                                        ],
+                                    'nickname'          => NULL,
+                                    'product'           => 'prod_KhaO4s6RUDhOWF',
+                                    'tiers_mode'        => NULL,
+                                    'transform_usage'   => NULL,
+                                    'trial_period_days' => NULL,
+                                    'usage_type'        => 'licensed',
+                                ],
+                            'quantity'                          => 1,
+                            'schedule'                          => NULL,
+                            'start_date'                        => 1638435908,
+                            'status'                            => 'active',
+                            'transfer_data'                     => NULL,
+                            'trial_end'                         => NULL,
+                            'trial_start'                       => NULL,
+                        ],
+                    'previous_attributes' =>
+                        [
+                            'metadata' =>
+                                [
+                                    'foo' => NULL,
+                                ],
+                        ],
+                ],
+            'livemode'         => false,
+            'pending_webhooks' => 2,
+            'request'          =>
+                [
+                    'id'              => 'req_QlWcOYveSlsar5',
+                    'idempotency_key' => '34faedb2-9b1b-4bc0-a3a6-701c437efc81',
+                ],
+            'type'             => 'customer.subscription.updated',
+        ]);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'status'  => 'cancelled',
+            'ends_at' => $cancelledAt,
+        ]);
+
+        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+    }
+
+    /**
+     * @test
+     */
     public function stripe_webhook_deleted_subscription()
     {
         Event::fake([
@@ -245,7 +459,7 @@ class StripeWebhooksTest extends TestCase
 
         $subscription = Subscription::factory()
             ->hasDriver([
-                'driver'         => 'stripe',
+                'driver'                 => 'stripe',
                 'driver_subscription_id' => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
             ])
             ->create([

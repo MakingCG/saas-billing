@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Webhooks;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\EngineManager;
@@ -44,6 +45,25 @@ class StripeWebhooks
 
         // Emit SubscriptionWasCreated
         SubscriptionWasCreated::dispatch($subscription);
+    }
+
+    public function handleCustomerSubscriptionUpdated(Request $request): void
+    {
+        $subscriptionCode = $request->input('data.object.id');
+        $currentPeriodEndsAt = $request->input('data.object.current_period_end');
+        $cancelAtPeriodEnd = $request->input('data.object.cancel_at_period_end');
+
+        $driver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first();
+
+        if ($cancelAtPeriodEnd) {
+            $driver->subscription->update([
+                'status'  => 'cancelled',
+                'ends_at' => Carbon::createFromTimestamp($currentPeriodEndsAt),
+            ]);
+
+            SubscriptionWasCancelled::dispatch($driver->subscription);
+        }
     }
 
     public function handleCustomerSubscriptionDeleted(Request $request): void
