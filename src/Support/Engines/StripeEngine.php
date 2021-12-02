@@ -1,8 +1,8 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Tests\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
@@ -10,8 +10,9 @@ use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Services\StripeHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Support\Webhooks\StripeWebhooks;
 
-class StripeEngine implements Engine
+class StripeEngine extends StripeWebhooks implements Engine
 {
     public StripeHttpService $api;
 
@@ -80,6 +81,9 @@ class StripeEngine implements Engine
         $this->api->delete("/plans/{$planId}");
     }
 
+    /*
+     * https://stripe.com/docs/api/customers/create
+     */
     public function createCustomer(array $user): Response
     {
         $response = $this->api->post('/customers', [
@@ -101,6 +105,9 @@ class StripeEngine implements Engine
         return $response;
     }
 
+    /*
+     * https://stripe.com/docs/api/customers/update
+     */
     public function updateCustomer(array $user): Response
     {
         // Get stripe customer id
@@ -136,6 +143,10 @@ class StripeEngine implements Engine
 
     public function webhook(Request $request): void
     {
-        // TODO: Implement webhook() method.
+        $method = 'handle' . Str::studly(str_replace('.', '_', $request->input('type')));
+
+        if (method_exists($this, $method)) {
+            $this->{$method}($request);
+        }
     }
 }
