@@ -52,6 +52,7 @@ class StripeWebhooks
         $subscriptionCode = $request->input('data.object.id');
         $currentPeriodEndsAt = $request->input('data.object.current_period_end');
         $cancelAtPeriodEnd = $request->input('data.object.cancel_at_period_end');
+        $planCode = $request->input('data.object.plan.id');
         $status = $request->input('data.object.status');
 
         $driver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
@@ -75,6 +76,22 @@ class StripeWebhooks
             ]);
 
             SubscriptionWasExpired::dispatch($driver->subscription);
+        }
+
+        // Swap plan subscription
+        if ($driver->subscription->plan->driverId('stripe') !== $planCode) {
+            if ($driver->subscription->active() || $driver->subscription->onGracePeriod()) {
+
+                $planDriver = PlanDriver::where('driver_plan_id', $request->input('data.object.plan.id'))
+                    ->first();
+
+                $driver->subscription->update([
+                    'name'    => $planDriver->plan->name,
+                    'plan_id' => $planDriver->plan->id,
+                ]);
+
+                SubscriptionWasUpdated::dispatch($driver->subscription);
+            }
         }
     }
 
