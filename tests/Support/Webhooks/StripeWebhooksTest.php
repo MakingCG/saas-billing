@@ -238,12 +238,19 @@ class StripeWebhooksTest extends TestCase
             SubscriptionWasCancelled::class,
         ]);
 
+        $plan = Plan::factory()
+            ->hasDrivers([
+                'driver' => 'stripe',
+            ])
+            ->create();
+
         $subscription = Subscription::factory()
             ->hasDriver([
                 'driver'                 => 'stripe',
                 'driver_subscription_id' => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
             ])
             ->create([
+                'plan_id'    => $plan->id,
                 'status'     => 'active',
                 'ends_at'    => null,
                 'created_at' => now()->subDays(14),
@@ -383,7 +390,7 @@ class StripeWebhooksTest extends TestCase
                             'pending_update'                    => NULL,
                             'plan'                              =>
                                 [
-                                    'id'                => 'plan_KhaOxXzYP2Nova',
+                                    'id'                => $plan->driverId('stripe'),
                                     'object'            => 'plan',
                                     'active'            => true,
                                     'aggregate_usage'   => NULL,
@@ -448,12 +455,19 @@ class StripeWebhooksTest extends TestCase
             SubscriptionWasExpired::class,
         ]);
 
+        $plan = Plan::factory()
+            ->hasDrivers([
+                'driver' => 'stripe',
+            ])
+            ->create();
+
         $subscription = Subscription::factory()
             ->hasDriver([
                 'driver'                 => 'stripe',
                 'driver_subscription_id' => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
             ])
             ->create([
+                'plan_id'    => $plan->id,
                 'status'     => 'active',
                 'ends_at'    => null,
                 'created_at' => now()->subDays(14),
@@ -593,7 +607,7 @@ class StripeWebhooksTest extends TestCase
                             'pending_update'                    => NULL,
                             'plan'                              =>
                                 [
-                                    'id'                => 'plan_KhaOxXzYP2Nova',
+                                    'id'                => $plan->driverId('stripe'),
                                     'object'            => 'plan',
                                     'active'            => true,
                                     'aggregate_usage'   => NULL,

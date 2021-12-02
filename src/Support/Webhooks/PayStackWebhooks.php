@@ -31,13 +31,11 @@ class PayStackWebhooks
                 ->first();
 
             // Store customer id to the database
-            $user->customer()
+            $customer = $user->customers()
                 ->create([
                     'driver_user_id' => $customerCode,
                     'driver'         => 'paystack',
                 ]);
-
-            $customer = $user->customer;
         }
 
         $planDriver = PlanDriver::where('driver_plan_id', $planCode)
