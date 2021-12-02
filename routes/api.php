@@ -8,6 +8,7 @@ use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlanSubscribersController;
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetTransactionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetSubscriptionController;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\CreateStripeSessionController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\EditSubscriptionController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\SwapSubscriptionController;
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetAllTransactionsController;
@@ -20,6 +21,8 @@ use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetUserSubscrip
 Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api']], function () {
     Route::post('/{driver}/webhooks', WebhooksController::class);
     Route::get('/plans', GetPlansController::class);
+
+    Route::post('/stripe/checkout', CreateStripeSessionController::class);
 });
 
 // User

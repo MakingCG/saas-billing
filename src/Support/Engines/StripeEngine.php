@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Support\Webhooks\StripeWebhooks;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Services\StripeHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
-use VueFileManager\Subscription\Support\Webhooks\StripeWebhooks;
 
 class StripeEngine extends StripeWebhooks implements Engine
 {
@@ -148,5 +148,9 @@ class StripeEngine extends StripeWebhooks implements Engine
         if (method_exists($this, $method)) {
             $this->{$method}($request);
         }
+    }
+
+    private function createSession(): void
+    {
     }
 }

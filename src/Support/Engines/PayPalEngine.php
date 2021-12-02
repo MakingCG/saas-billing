@@ -86,7 +86,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function getPlan(string $planId): Response
     {
-        return $this->api->get("/billing/plans/$planId")->json();
+        return $this->api->get("/billing/plans/$planId");
     }
 
     /**

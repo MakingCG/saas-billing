@@ -80,7 +80,6 @@ class StripeWebhooks
         // Swap plan subscription
         if ($driver->subscription->plan->driverId('stripe') !== $planCode) {
             if ($driver->subscription->active() || $driver->subscription->onGracePeriod()) {
-
                 $planDriver = PlanDriver::where('driver_plan_id', $request->input('data.object.plan.id'))
                     ->first();
 
@@ -131,4 +130,9 @@ class StripeWebhooks
             'amount'    => $request->input('data.object.amount_paid') / 100,
         ]);
     }
+
+    /*
+     * TODO: invoice.payment_failed
+     * https://stripe.com/docs/billing/subscriptions/build-subscription?ui=checkout#provision-and-monitor
+    */
 }

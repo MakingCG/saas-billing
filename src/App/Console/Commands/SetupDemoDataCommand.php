@@ -108,7 +108,7 @@ class SetupDemoDataCommand extends Command
                 'plan_name'  => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
                 'amount'     => $professionalPackPlan->amount,
-                'driver'     => 'paypal',
+                'driver'     => 'stripe',
                 'created_at' => $transaction['created_at'],
                 'reference'  => Str::random(12),
             ])
