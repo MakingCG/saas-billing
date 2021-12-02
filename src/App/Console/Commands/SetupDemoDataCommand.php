@@ -144,7 +144,7 @@ class SetupDemoDataCommand extends Command
         ]);
 
         $johanSubscription->driver()->create([
-            'driver'                 => 'paypal',
+            'driver'                 => 'stripe',
             'driver_subscription_id' => Str::random(),
         ]);
     }

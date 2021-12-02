@@ -1078,4 +1078,250 @@ class StripeWebhooksTest extends TestCase
         Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
+    /**
+     * @test
+     */
+    public function stripe_webhook_invoice_payment_succeeded()
+    {
+        $user = User::factory()
+            ->create();
+
+        Customer::create([
+            'user_id'        => $user->id,
+            'driver_user_id' => 'cus_KhYcsbpXlseQU0',
+            'driver'         => 'stripe',
+        ]);
+
+        $subscription = Subscription::factory()
+            ->hasDriver([
+                'driver'                 => 'stripe',
+            ])
+            ->create([
+                'user_id'    => $user->id,
+                'status'     => 'active',
+                'ends_at'    => null,
+                'created_at' => now()->subDays(14),
+            ]);
+
+        $this->postJson('/api/subscriptions/stripe/webhooks', [
+            'id'               => 'evt_1K2BE3B9m4sTKy1qyZYi7bGJ',
+            'object'           => 'event',
+            'api_version'      => '2020-08-27',
+            'created'          => 1638435910,
+            'data'             =>
+                [
+                    'object' =>
+                        [
+                            'id'                               => 'in_1K2BE0B9m4sTKy1qiscPsYFt',
+                            'object'                           => 'invoice',
+                            'account_country'                  => 'SK',
+                            'account_name'                     => 'VueFileManager V2',
+                            'account_tax_ids'                  => NULL,
+                            'amount_due'                       => 2000,
+                            'amount_paid'                      => 2000,
+                            'amount_remaining'                 => 0,
+                            'application_fee_amount'           => NULL,
+                            'attempt_count'                    => 1,
+                            'attempted'                        => true,
+                            'auto_advance'                     => false,
+                            'automatic_tax'                    =>
+                                [
+                                    'enabled' => false,
+                                    'status'  => NULL,
+                                ],
+                            'billing_reason'                   => 'subscription_create',
+                            'charge'                           => 'ch_3K2BE0B9m4sTKy1q0QzCoA7r',
+                            'collection_method'                => 'charge_automatically',
+                            'created'                          => 1638435908,
+                            'currency'                         => 'usd',
+                            'custom_fields'                    => NULL,
+                            'customer'                         => 'cus_KhYcsbpXlseQU0',
+                            'customer_address'                 => NULL,
+                            'customer_email'                   => NULL,
+                            'customer_name'                    => NULL,
+                            'customer_phone'                   => NULL,
+                            'customer_shipping'                => NULL,
+                            'customer_tax_exempt'              => 'none',
+                            'customer_tax_ids'                 =>
+                                [
+                                ],
+                            'default_payment_method'           => NULL,
+                            'default_source'                   => NULL,
+                            'default_tax_rates'                =>
+                                [
+                                ],
+                            'description'                      => NULL,
+                            'discount'                         => NULL,
+                            'discounts'                        =>
+                                [
+                                ],
+                            'due_date'                         => NULL,
+                            'ending_balance'                   => 0,
+                            'footer'                           => NULL,
+                            'hosted_invoice_url'               => 'https://invoice.stripe.com/i/acct_1K1tczB9m4sTKy1q/test_YWNjdF8xSzF0Y3pCOW00c1RLeTFxLF9LaGFPTG55QWVhUUdPUExlQ1FTMUZSUnZXY3NqNkNu0100xdMvZ4rk',
+                            'invoice_pdf'                      => 'https://pay.stripe.com/invoice/acct_1K1tczB9m4sTKy1q/test_YWNjdF8xSzF0Y3pCOW00c1RLeTFxLF9LaGFPTG55QWVhUUdPUExlQ1FTMUZSUnZXY3NqNkNu0100xdMvZ4rk/pdf',
+                            'last_finalization_error'          => NULL,
+                            'lines'                            =>
+                                [
+                                    'object'      => 'list',
+                                    'data'        =>
+                                        [
+                                            0 =>
+                                                [
+                                                    'id'                => 'il_1K2BE0B9m4sTKy1qIulIv0wb',
+                                                    'object'            => 'line_item',
+                                                    'amount'            => 2000,
+                                                    'currency'          => 'usd',
+                                                    'description'       => '1 × myproduct (at $20.00 / month)',
+                                                    'discount_amounts'  =>
+                                                        [
+                                                        ],
+                                                    'discountable'      => true,
+                                                    'discounts'         =>
+                                                        [
+                                                        ],
+                                                    'livemode'          => false,
+                                                    'metadata'          =>
+                                                        [
+                                                        ],
+                                                    'period'            =>
+                                                        [
+                                                            'end'   => 1641114308,
+                                                            'start' => 1638435908,
+                                                        ],
+                                                    'plan'              =>
+                                                        [
+                                                            'id'                => 'plan_KhaOxXzYP2Nova',
+                                                            'object'            => 'plan',
+                                                            'active'            => true,
+                                                            'aggregate_usage'   => NULL,
+                                                            'amount'            => 2000,
+                                                            'amount_decimal'    => '2000',
+                                                            'billing_scheme'    => 'per_unit',
+                                                            'created'           => 1638435907,
+                                                            'currency'          => 'usd',
+                                                            'interval'          => 'month',
+                                                            'interval_count'    => 1,
+                                                            'livemode'          => false,
+                                                            'metadata'          =>
+                                                                [
+                                                                ],
+                                                            'nickname'          => NULL,
+                                                            'product'           => 'prod_KhaO4s6RUDhOWF',
+                                                            'tiers_mode'        => NULL,
+                                                            'transform_usage'   => NULL,
+                                                            'trial_period_days' => NULL,
+                                                            'usage_type'        => 'licensed',
+                                                        ],
+                                                    'price'             =>
+                                                        [
+                                                            'id'                  => 'plan_KhaOxXzYP2Nova',
+                                                            'object'              => 'price',
+                                                            'active'              => true,
+                                                            'billing_scheme'      => 'per_unit',
+                                                            'created'             => 1638435907,
+                                                            'currency'            => 'usd',
+                                                            'livemode'            => false,
+                                                            'lookup_key'          => NULL,
+                                                            'metadata'            =>
+                                                                [
+                                                                ],
+                                                            'nickname'            => NULL,
+                                                            'product'             => 'prod_KhaO4s6RUDhOWF',
+                                                            'recurring'           =>
+                                                                [
+                                                                    'aggregate_usage'   => NULL,
+                                                                    'interval'          => 'month',
+                                                                    'interval_count'    => 1,
+                                                                    'trial_period_days' => NULL,
+                                                                    'usage_type'        => 'licensed',
+                                                                ],
+                                                            'tax_behavior'        => 'unspecified',
+                                                            'tiers_mode'          => NULL,
+                                                            'transform_quantity'  => NULL,
+                                                            'type'                => 'recurring',
+                                                            'unit_amount'         => 2000,
+                                                            'unit_amount_decimal' => '2000',
+                                                        ],
+                                                    'proration'         => false,
+                                                    'quantity'          => 1,
+                                                    'subscription'      => 'sub_1K2BE0B9m4sTKy1qJDq7pt1o',
+                                                    'subscription_item' => 'si_KhaOoyIprhNoTc',
+                                                    'tax_amounts'       =>
+                                                        [
+                                                        ],
+                                                    'tax_rates'         =>
+                                                        [
+                                                        ],
+                                                    'type'              => 'subscription',
+                                                ],
+                                        ],
+                                    'has_more'    => false,
+                                    'total_count' => 1,
+                                    'url'         => '/v1/invoices/in_1K2BE0B9m4sTKy1qiscPsYFt/lines',
+                                ],
+                            'livemode'                         => false,
+                            'metadata'                         =>
+                                [
+                                ],
+                            'next_payment_attempt'             => NULL,
+                            'number'                           => 'D587892A-0004',
+                            'on_behalf_of'                     => NULL,
+                            'paid'                             => true,
+                            'payment_intent'                   => 'pi_3K2BE0B9m4sTKy1q0lVmO6zL',
+                            'payment_settings'                 =>
+                                [
+                                    'payment_method_options' => NULL,
+                                    'payment_method_types'   => NULL,
+                                ],
+                            'period_end'                       => 1638435908,
+                            'period_start'                     => 1638435908,
+                            'post_payment_credit_notes_amount' => 0,
+                            'pre_payment_credit_notes_amount'  => 0,
+                            'quote'                            => NULL,
+                            'receipt_number'                   => NULL,
+                            'starting_balance'                 => 0,
+                            'statement_descriptor'             => NULL,
+                            'status'                           => 'paid',
+                            'status_transitions'               =>
+                                [
+                                    'finalized_at'            => 1638435908,
+                                    'marked_uncollectible_at' => NULL,
+                                    'paid_at'                 => 1638435908,
+                                    'voided_at'               => NULL,
+                                ],
+                            'subscription'                     => $subscription->driverId(),
+                            'subtotal'                         => 2000,
+                            'tax'                              => NULL,
+                            'total'                            => 2000,
+                            'total_discount_amounts'           =>
+                                [
+                                ],
+                            'total_tax_amounts'                =>
+                                [
+                                ],
+                            'transfer_data'                    => NULL,
+                            'webhooks_delivered_at'            => NULL,
+                        ],
+                ],
+            'livemode'         => false,
+            'pending_webhooks' => 2,
+            'request'          =>
+                [
+                    'id'              => 'req_Zsggsww04wUoXv',
+                    'idempotency_key' => 'ef9ba391-b6b4-40bc-95ec-3a9373ffd0e7',
+                ],
+            'type'             => 'invoice.payment_succeeded',
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'user_id'   => $user->id,
+            'status'    => 'completed',
+            'plan_name' => $subscription->name,
+            'currency'  => 'usd',
+            'amount'    => 20,
+            'driver'    => 'stripe',
+            'reference' => 'in_1K2BE0B9m4sTKy1qiscPsYFt',
+        ]);
+    }
 }

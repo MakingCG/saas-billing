@@ -3,9 +3,8 @@ namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use VueFileManager\Subscription\Domain\Customers\Models\Customer;
-use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
+use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
@@ -110,5 +109,26 @@ class StripeWebhooks
 
             SubscriptionWasExpired::dispatch($driver->subscription);
         }
+    }
+
+    public function handleInvoicePaymentSucceeded(Request $request): void
+    {
+        $subscriptionCode = $request->input('data.object.subscription');
+        $customerCode = $request->input('data.object.customer');
+
+        $customer = Customer::where('driver_user_id', $customerCode)
+            ->first();
+
+        $subscriptionDriver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first();
+
+        $customer->user->transactions()->create([
+            'status'    => 'completed',
+            'driver'    => 'stripe',
+            'plan_name' => $subscriptionDriver->subscription->name,
+            'reference' => $request->input('data.object.id'),
+            'currency'  => $request->input('data.object.currency'),
+            'amount'    => $request->input('data.object.amount_paid') / 100,
+        ]);
     }
 }
