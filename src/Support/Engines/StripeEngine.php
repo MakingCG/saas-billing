@@ -1,10 +1,13 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Engines;
 
+use Tests\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Services\StripeHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
@@ -79,12 +82,36 @@ class StripeEngine implements Engine
 
     public function createCustomer(array $user): Response
     {
-        // TODO: Implement createCustomer() method.
+        $response = $this->api->post('/customers', [
+            'metadata' => [
+                'id' => $user['id'],
+            ],
+            'email'    => $user['email'],
+            'name'     => $user['name'] . ' ' . $user['surname'],
+            'phone'    => $user['phone'] ?? null,
+        ]);
+
+        // Store customer id to the database
+        Customer::create([
+            'user_id'        => $user['id'],
+            'driver_user_id' => $response->json()['id'],
+            'driver'         => 'stripe',
+        ]);
+
+        return $response;
     }
 
     public function updateCustomer(array $user): Response
     {
-        // TODO: Implement updateCustomer() method.
+        // Get stripe customer id
+        $customer = User::find($user['id']);
+
+        // Update customer request
+        return $this->api->post("/customers/{$customer->customerDriverId('stripe')}", [
+            'email' => $user['email'],
+            'name'  => $user['name'] . ' ' . $user['surname'],
+            'phone' => $user['phone'] ?? null,
+        ]);
     }
 
     public function getSubscription(string $subscriptionId): Response

@@ -19,13 +19,24 @@ trait Billable
         return $this->hasOne(Subscription::class);
     }
 
-    public function customer(): HasOne
-    {
-        return $this->hasOne(Customer::class, 'user_id', 'id');
-    }
-
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get original gateway customer id
+     */
+    public function customerDriverId(string $driver)
+    {
+        return $this->customers()
+            ->where('driver', $driver)
+            ->first()
+            ->driver_user_id;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
+use Tests\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
@@ -108,11 +109,9 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     public function updateCustomer(array $user): Response
     {
         // Get paystack customer id
-        $customer = Customer::where('user_id', $user['id'])
-            ->where('driver', 'paystack')
-            ->first();
+        $customer = User::find($user['id']);
 
-        return $this->api->put("/customer/{$customer->driver_user_id}", [
+        return $this->api->put("/customer/{$customer->customerDriverId('paystack')}", [
             'email'      => $user['email'],
             'first_name' => $user['name'],
             'last_name'  => $user['surname'],

@@ -32,12 +32,12 @@ interface Engine
     /**
      * Create new customer for service
      */
-    public function createCustomer(array $user): Response;
+    public function createCustomer(array $user): null|Response;
 
     /**
      * Update customer for service
      */
-    public function updateCustomer(array $user): Response;
+    public function updateCustomer(array $user): null|Response;
 
     /**
      * Get Subscription details

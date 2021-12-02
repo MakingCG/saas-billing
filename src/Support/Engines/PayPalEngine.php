@@ -100,17 +100,17 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     /**
      * Method is not provided by PayPal api
      */
-    public function createCustomer(array $user): Response
+    public function createCustomer(array $user): null|Response
     {
-        // ...
+        return null;
     }
 
     /**
      * Method is not provided by PayPal api
      */
-    public function updateCustomer(array $user): Response
+    public function updateCustomer(array $user): null|Response
     {
-        // ...
+        return null;
     }
 
     /**
