@@ -52,10 +52,12 @@ class StripeWebhooks
         $subscriptionCode = $request->input('data.object.id');
         $currentPeriodEndsAt = $request->input('data.object.current_period_end');
         $cancelAtPeriodEnd = $request->input('data.object.cancel_at_period_end');
+        $status = $request->input('data.object.status');
 
         $driver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
             ->first();
 
+        // Plan cancellation
         if ($cancelAtPeriodEnd) {
             $driver->subscription->update([
                 'status'  => 'cancelled',
@@ -63,6 +65,16 @@ class StripeWebhooks
             ]);
 
             SubscriptionWasCancelled::dispatch($driver->subscription);
+        }
+
+        // Plan payment expired
+        if ($status === 'incomplete_expired') {
+            $driver->subscription->update([
+                'status'  => 'completed',
+                'ends_at' => now(),
+            ]);
+
+            SubscriptionWasExpired::dispatch($driver->subscription);
         }
     }
 
