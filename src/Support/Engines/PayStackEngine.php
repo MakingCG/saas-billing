@@ -5,20 +5,20 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Support\Services\PayStackHttp;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
+use VueFileManager\Subscription\Support\Services\PayStackHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class PayStackEngine extends PayStackWebhooks implements Engine
 {
-    public PayStackHttp $api;
+    public PayStackHttpService $api;
 
     public function __construct()
     {
-        $this->api = resolve(PayStackHttp::class);
+        $this->api = resolve(PayStackHttpService::class);
     }
 
     /**
@@ -48,19 +48,19 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     /**
      * https://paystack.com/docs/api/#plan-create
      */
-    public function updatePlan(Plan $plan): array
+    public function updatePlan(Plan $plan): Response
     {
-        $response =  $this->api->put("/plan/{$plan->driverId('paystack')}", [
+        $response = $this->api->put("/plan/{$plan->driverId('paystack')}", [
             'name' => $plan->name,
         ]);
 
-        return $response->json();
+        return $response;
     }
 
     /**
      * https://paystack.com/docs/api/#plan-fetch
      */
-    public function getPlan(string $planId): array
+    public function getPlan(string $planId): Response
     {
         $response = $this->api->get("/plan/$planId");
 

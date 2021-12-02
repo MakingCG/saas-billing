@@ -1,42 +1,46 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Engines;
 
-use Stripe\StripeClient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Support\Services\StripeHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeEngine implements Engine
 {
-    public StripeClient $stripe;
+    public StripeHttpService $api;
 
     public function __construct()
     {
-        $this->stripe = new StripeClient(config('subscription.credentials.stripe.secret'));
+        $this->api = resolve(StripeHttpService::class);
     }
 
-    public function getPlan(string $planId): array
+    /*
+     * https://stripe.com/docs/api/prices/retrieve?lang=php
+     */
+    public function getPlan(string $planId): Response
     {
-        $response = $this->stripe->prices->retrieve($planId);
-
-        return $response->toArray();
+        return $this->api->get("/prices/$planId");
     }
 
+    /*
+     * https://stripe.com/docs/api/products/create?lang=php
+     * https://stripe.com/docs/api/prices/create?lang=php
+     */
     public function createPlan(CreatePlanData $data): array
     {
         // Create product
-        $product = $this->stripe->products->create([
+        $product = $this->api->post('/products', [
             'url'         => url('/'),
             'name'        => $data->name,
             'description' => $data->description,
         ]);
 
         // Next create subscription plan
-        $plan = $this->stripe->prices->create([
-            'product'     => $product->toArray()['id'],
+        $plan = $this->api->post('/prices', [
+            'product'     => $product->json()['id'],
             'currency'    => strtolower($data->currency),
             'unit_amount' => $data->amount * 100,
             'recurring'   => [
@@ -45,28 +49,32 @@ class StripeEngine implements Engine
         ]);
 
         return [
-            'id'   => $plan->toArray()['id'],
+            'id'   => $plan->json()['id'],
             'name' => $data->name,
         ];
     }
 
-    public function updatePlan(Plan $plan): array
+    /*
+     * https://stripe.com/docs/api/products/update?lang=php
+     */
+    public function updatePlan(Plan $plan): Response
     {
         // Get original stripe plan where is stored product_id
         $stripePlan = $this->getPlan($plan->driverId('stripe'));
 
         // Update stripe product where are stored name and description
-        $response = $this->stripe->products->update($stripePlan['product'], [
+        return $this->api->post("/products/{$stripePlan['product']}", [
             'name'        => $plan->name,
             'description' => $plan->description,
         ]);
-
-        return $response->toArray();
     }
 
+    /*
+     * https://stripe.com/docs/api/plans/delete?lang=php
+     */
     public function deletePlan(string $planId): void
     {
-        $this->stripe->plans->delete($planId);
+        $this->api->delete("/plans/{$planId}");
     }
 
     public function createCustomer(array $user): Response

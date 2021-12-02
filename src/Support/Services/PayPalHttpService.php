@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Promise\PromiseInterface;
 
-class PayPalHttp
+class PayPalHttpService
 {
     private string $id;
     private string $secret;

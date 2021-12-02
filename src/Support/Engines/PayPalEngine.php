@@ -5,19 +5,19 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Support\Services\PayPalHttp;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
+use VueFileManager\Subscription\Support\Services\PayPalHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class PayPalEngine extends PayPalWebhooks implements Engine
 {
-    public PayPalHttp $api;
+    public PayPalHttpService $api;
 
     public function __construct()
     {
-        $this->api = resolve(PayPalHttp::class);
+        $this->api = resolve(PayPalHttpService::class);
     }
 
     /**
@@ -63,7 +63,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_patch
      */
-    public function updatePlan(Plan $plan): array
+    public function updatePlan(Plan $plan): Response
     {
         $response = $this->api->patch("/billing/plans/{$plan->driverId('paypal')}", [
             [
@@ -78,13 +78,13 @@ class PayPalEngine extends PayPalWebhooks implements Engine
             ],
         ]);
 
-        return $response->json();
+        return $response;
     }
 
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_get
      */
-    public function getPlan(string $planId): array
+    public function getPlan(string $planId): Response
     {
         return $this->api->get("/billing/plans/$planId")->json();
     }
