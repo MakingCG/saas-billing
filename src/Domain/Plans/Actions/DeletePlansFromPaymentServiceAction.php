@@ -18,15 +18,10 @@ class DeletePlansFromPaymentServiceAction
     {
         // Delete plan from all available payment gateways
         collect(config('subscription.available_drivers'))
-            ->each(function ($driver) use ($plan) {
-                $planDriver = $plan
-                    ->drivers()
-                    ->where('driver', $driver)
-                    ->first();
-
-                $this->subscription
+            ->each(
+                fn ($driver) => $this->subscription
                     ->driver($driver)
-                    ->deletePlan($planDriver->driver_plan_id);
-            });
+                    ->deletePlan($plan->driverId($driver))
+            );
     }
 }

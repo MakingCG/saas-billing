@@ -19,10 +19,7 @@ class CreatePlansViaDriversAPIAction
         CreatePlanData $data,
         Plan $plan,
     ) {
-        // Get available driver/s
-        $availableDrivers = config('subscription.available_drivers');
-
-        collect($availableDrivers)
+        collect(config('subscription.available_drivers'))
             ->each(function ($driver) use ($data, $plan) {
                 // Create plan via gateway api
                 $driverPlan = $this->subscription

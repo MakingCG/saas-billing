@@ -1,18 +1,13 @@
 <?php
 
 return [
-    // Implemented drivers: stripe, paystack
-    'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
-
-    'default_currency' => env('SUBSCRIPTION_DEFAULT_CURRENCY', 'USD'),
-
+    'driver'            => env('SUBSCRIPTION_DRIVER', 'stripe'),
     'available_drivers' => [
         'paystack',
         'paypal',
         'stripe',
     ],
-
-    'credentials' => [
+    'credentials'       => [
         'stripe'   => [
             'secret'     => env('STRIPE_SECRET_KEY'),
             'public_key' => env('STRIPE_PUBLIC_KEY'),
