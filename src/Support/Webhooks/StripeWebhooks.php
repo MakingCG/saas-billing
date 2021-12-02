@@ -6,6 +6,7 @@ use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
+use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
@@ -43,5 +44,22 @@ class StripeWebhooks
 
         // Emit SubscriptionWasCreated
         SubscriptionWasCreated::dispatch($subscription);
+    }
+
+    public function handleCustomerSubscriptionDeleted(Request $request): void
+    {
+        $subscriptionCode = $request->input('data.object.id');
+
+        $driver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first();
+
+        if ($driver->subscription->active() || $driver->subscription->onGracePeriod()) {
+            $driver->subscription->update([
+                'status'  => 'completed',
+                'ends_at' => now(),
+            ]);
+
+            SubscriptionWasExpired::dispatch($driver->subscription);
+        }
     }
 }
