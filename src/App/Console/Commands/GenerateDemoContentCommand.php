@@ -1,11 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\App\Console\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
-use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
 
 class GenerateDemoContentCommand extends Command
 {

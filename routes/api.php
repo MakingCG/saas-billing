@@ -8,7 +8,6 @@ use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlanSubscribersController;
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetTransactionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetSubscriptionController;
-use VueFileManager\Subscription\Support\Miscellaneous\Stripe\CreateStripeSessionController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\EditSubscriptionController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\SwapSubscriptionController;
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetAllTransactionsController;
@@ -16,6 +15,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Controllers\CancelSubscript
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetUserTransactionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetAllSubscriptionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetUserSubscriptionController;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\CreateStripeSessionController;
 
 // System
 Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api']], function () {

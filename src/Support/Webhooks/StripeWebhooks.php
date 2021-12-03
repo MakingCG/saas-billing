@@ -11,6 +11,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePayment;
 
 class StripeWebhooks
 {
@@ -139,8 +140,17 @@ class StripeWebhooks
         ]);
     }
 
-    /*
-     * TODO: invoice.payment_failed
-     * https://stripe.com/docs/billing/subscriptions/build-subscription?ui=checkout#provision-and-monitor
-    */
+    public function handleInvoicePaymentActionRequired(Request $request): void
+    {
+        $customer = Customer::where('driver_user_id', $request->input('data.object.customer'))
+            ->first();
+
+        $customer->user->notify(new ConfirmStripePayment([
+            'url'    => $request->input('data.object.hosted_invoice_url'),
+            'amount' => format_currency(
+                amount: $request->input('data.object.amount_remaining') / 100,
+                currency: $request->input('data.object.currency')
+            ),
+        ]));
+    }
 }

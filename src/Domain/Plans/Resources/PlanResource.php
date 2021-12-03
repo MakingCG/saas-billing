@@ -19,7 +19,7 @@ class PlanResource extends JsonResource
                 'type'       => 'plans',
                 'attributes' => [
                     'name'        => $this->name,
-                    'price'       => format_currency($this),
+                    'price'       => format_currency($this->amount, $this->currency),
                     'amount'      => $this->amount,
                     'currency'    => $this->currency,
                     'visible'     => $this->visible,

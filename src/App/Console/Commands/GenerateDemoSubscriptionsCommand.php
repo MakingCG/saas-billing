@@ -4,20 +4,12 @@ namespace VueFileManager\Subscription\App\Console\Commands;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
-use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
 
 class GenerateDemoSubscriptionsCommand extends Command
 {
     public $signature = 'subscription:demo-subscriptions';
 
     public $description = 'Generate demo subscriptions with their transactions';
-
-    public function __construct(
-        private StorePlanForPaymentServiceAction $storePlanForPaymentService,
-    ) {
-        parent::__construct();
-    }
 
     public function handle()
     {

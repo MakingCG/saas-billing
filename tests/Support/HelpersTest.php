@@ -16,6 +16,6 @@ class HelpersTest extends TestCase
         $item->amount = 22.99;
         $item->currency = 'USD';
 
-        $this->assertEquals('$22.99', format_currency($item));
+        $this->assertEquals('$22.99', format_currency($item->amount, $item->currency));
     }
 }

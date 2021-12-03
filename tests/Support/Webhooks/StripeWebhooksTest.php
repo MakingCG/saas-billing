@@ -4,6 +4,7 @@ namespace Tests\Support\Webhooks;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
@@ -11,6 +12,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePayment;
 
 class StripeWebhooksTest extends TestCase
 {
@@ -687,9 +689,9 @@ class StripeWebhooksTest extends TestCase
                 'driver_subscription_id' => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
             ])
             ->create([
-                'plan_id'    => $plan->id,
-                'status'     => 'inactive',
-                'ends_at'    => null,
+                'plan_id' => $plan->id,
+                'status'  => 'inactive',
+                'ends_at' => null,
             ]);
 
         // Send webhook
@@ -873,7 +875,7 @@ class StripeWebhooksTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
-            'status'  => 'active',
+            'status' => 'active',
         ]);
 
         Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
@@ -1310,7 +1312,7 @@ class StripeWebhooksTest extends TestCase
 
         $subscription = Subscription::factory()
             ->hasDriver([
-                'driver'                 => 'stripe',
+                'driver' => 'stripe',
             ])
             ->create([
                 'user_id'    => $user->id,
@@ -1539,5 +1541,193 @@ class StripeWebhooksTest extends TestCase
             'driver'    => 'stripe',
             'reference' => 'in_1K2BE0B9m4sTKy1qiscPsYFt',
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function stripe_webhook_payment_intent_payment_failed()
+    {
+        Notification::fake();
+
+        $user = User::factory()
+            ->create();
+
+        Customer::create([
+            'user_id'        => $user->id,
+            'driver_user_id' => 'cus_Khwr2RAte5Xhkf',
+            'driver'         => 'stripe',
+        ]);
+
+        $this->postJson('/api/subscriptions/stripe/webhooks', [
+            'id'               => 'evt_1K2Wy7B9m4sTKy1qGnhJdnMB',
+            'object'           => 'event',
+            'api_version'      => '2020-08-27',
+            'created'          => 1638519490,
+            'data'             =>
+                [
+                    'object' =>
+                        [
+                            'id'                               => 'in_1K2Wy0B9m4sTKy1qjxX0hq75',
+                            'object'                           => 'invoice',
+                            'account_country'                  => 'SK',
+                            'account_name'                     => 'VueFileManager V2',
+                            'account_tax_ids'                  => null,
+                            'amount_due'                       => 2000,
+                            'amount_paid'                      => 0,
+                            'amount_remaining'                 => 2000,
+                            'application_fee_amount'           => null,
+                            'attempt_count'                    => 1,
+                            'attempted'                        => true,
+                            'auto_advance'                     => true,
+                            'automatic_tax'                    =>
+                                [
+                                    'enabled' => false,
+                                    'status'  => null,
+                                ],
+                            'billing_reason'                   => 'manual',
+                            'charge'                           => 'ch_3K2Wy4B9m4sTKy1q0CP77rwq',
+                            'collection_method'                => 'charge_automatically',
+                            'created'                          => 1638519484,
+                            'currency'                         => 'usd',
+                            'custom_fields'                    => null,
+                            'customer'                         => 'cus_Khwr2RAte5Xhkf',
+                            'customer_address'                 => null,
+                            'customer_email'                   => null,
+                            'customer_name'                    => null,
+                            'customer_phone'                   => null,
+                            'customer_shipping'                => null,
+                            'customer_tax_exempt'              => 'none',
+                            'customer_tax_ids'                 =>
+                                [],
+                            'default_payment_method'           => null,
+                            'default_source'                   => null,
+                            'default_tax_rates'                =>
+                                [],
+                            'description'                      => '(created by Stripe CLI)',
+                            'discount'                         => null,
+                            'discounts'                        =>
+                                [],
+                            'due_date'                         => null,
+                            'ending_balance'                   => 0,
+                            'footer'                           => null,
+                            'hosted_invoice_url'               => 'https://invoice.stripe.com/i/acct_1K1tczB9m4sTKy1q/test_YWNjdF8xSzF0Y3pCOW00c1RLeTFxLF9LaHdyMnlFb1QwUHd5dmN1UXF1T2VNWTRqallyT0Uy01009O1m7XuZ',
+                            'invoice_pdf'                      => 'https://pay.stripe.com/invoice/acct_1K1tczB9m4sTKy1q/test_YWNjdF8xSzF0Y3pCOW00c1RLeTFxLF9LaHdyMnlFb1QwUHd5dmN1UXF1T2VNWTRqallyT0Uy01009O1m7XuZ/pdf',
+                            'last_finalization_error'          => null,
+                            'lines'                            =>
+                                [
+                                    'object'      => 'list',
+                                    'data'        =>
+                                        [
+                                            0 =>
+                                                [
+                                                    'id'               => 'il_1K2WxzB9m4sTKy1qsEvuturI',
+                                                    'object'           => 'line_item',
+                                                    'amount'           => 2000,
+                                                    'currency'         => 'usd',
+                                                    'description'      => '(created by Stripe CLI)',
+                                                    'discount_amounts' =>
+                                                        [],
+                                                    'discountable'     => true,
+                                                    'discounts'        =>
+                                                        [],
+                                                    'invoice_item'     => 'ii_1K2WxzB9m4sTKy1qMC7pzti4',
+                                                    'livemode'         => false,
+                                                    'metadata'         =>
+                                                        [],
+                                                    'period'           =>
+                                                        [
+                                                            'end'   => 1638519483,
+                                                            'start' => 1638519483,
+                                                        ],
+                                                    'plan'             => null,
+                                                    'price'            =>
+                                                        [
+                                                            'id'                  => 'price_1K2WxzB9m4sTKy1qQi66XWt1',
+                                                            'object'              => 'price',
+                                                            'active'              => false,
+                                                            'billing_scheme'      => 'per_unit',
+                                                            'created'             => 1638519483,
+                                                            'currency'            => 'usd',
+                                                            'livemode'            => false,
+                                                            'lookup_key'          => null,
+                                                            'metadata'            =>
+                                                                [],
+                                                            'nickname'            => null,
+                                                            'product'             => 'prod_Khwrczl0xm0c2y',
+                                                            'recurring'           => null,
+                                                            'tax_behavior'        => 'unspecified',
+                                                            'tiers_mode'          => null,
+                                                            'transform_quantity'  => null,
+                                                            'type'                => 'one_time',
+                                                            'unit_amount'         => 2000,
+                                                            'unit_amount_decimal' => '2000',
+                                                        ],
+                                                    'proration'        => false,
+                                                    'quantity'         => 1,
+                                                    'subscription'     => null,
+                                                    'tax_amounts'      =>
+                                                        [],
+                                                    'tax_rates'        =>
+                                                        [],
+                                                    'type'             => 'invoiceitem',
+                                                ],
+                                        ],
+                                    'has_more'    => false,
+                                    'total_count' => 1,
+                                    'url'         => '/v1/invoices/in_1K2Wy0B9m4sTKy1qjxX0hq75/lines',
+                                ],
+                            'livemode'                         => false,
+                            'metadata'                         =>
+                                [],
+                            'next_payment_attempt'             => null,
+                            'number'                           => 'D587892A-0020',
+                            'on_behalf_of'                     => null,
+                            'paid'                             => false,
+                            'payment_intent'                   => 'pi_3K2Wy4B9m4sTKy1q07b3xI2o',
+                            'payment_settings'                 =>
+                                [
+                                    'payment_method_options' => null,
+                                    'payment_method_types'   => null,
+                                ],
+                            'period_end'                       => 1638519484,
+                            'period_start'                     => 1638519484,
+                            'post_payment_credit_notes_amount' => 0,
+                            'pre_payment_credit_notes_amount'  => 0,
+                            'quote'                            => null,
+                            'receipt_number'                   => null,
+                            'starting_balance'                 => 0,
+                            'statement_descriptor'             => null,
+                            'status'                           => 'open',
+                            'status_transitions'               =>
+                                [
+                                    'finalized_at'            => 1638519488,
+                                    'marked_uncollectible_at' => null,
+                                    'paid_at'                 => null,
+                                    'voided_at'               => null,
+                                ],
+                            'subscription'                     => null,
+                            'subtotal'                         => 2000,
+                            'tax'                              => null,
+                            'total'                            => 2000,
+                            'total_discount_amounts'           =>
+                                [],
+                            'total_tax_amounts'                =>
+                                [],
+                            'transfer_data'                    => null,
+                            'webhooks_delivered_at'            => 1638519485,
+                        ],
+                ],
+            'livemode'         => false,
+            'pending_webhooks' => 2,
+            'request'          =>
+                [
+                    'id'              => 'req_EsVcw3nL3ntpl9',
+                    'idempotency_key' => '6b9a32b7-1a76-48c1-8a29-39ec741a7d5e',
+                ],
+            'type'             => 'invoice.payment_action_required',
+        ]);
+
+        Notification::assertSentTo($user, ConfirmStripePayment::class);
     }
 }

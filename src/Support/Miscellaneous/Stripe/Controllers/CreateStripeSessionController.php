@@ -1,5 +1,5 @@
 <?php
-namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe;
+namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
