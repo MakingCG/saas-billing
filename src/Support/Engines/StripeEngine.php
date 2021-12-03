@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
+use Carbon\Carbon;
 use Tests\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -138,7 +139,16 @@ class StripeEngine extends StripeWebhooks implements Engine
 
     public function cancelSubscription(Subscription $subscription): Response
     {
-        // TODO: Implement cancelSubscription() method.
+        // Send cancel subscription request
+        $response = $this->api->delete("/subscriptions/{$subscription->driverId()}");
+
+        // Store end_at period and update status as cancelled
+        $subscription->update([
+            'status'  => 'cancelled',
+            'ends_at' => Carbon::createFromTimestamp($response->json()['current_period_end']),
+        ]);
+
+        return $response;
     }
 
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
