@@ -130,9 +130,21 @@ class StripeEngine extends StripeWebhooks implements Engine
         return $this->api->get("/subscriptions/$subscriptionId");
     }
 
+    /*
+     * https://stripe.com/docs/api/subscriptions/update?lang=php
+     */
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
-        // TODO: Implement swapSubscription() method.
+        $stripeSubscription = $this->getSubscription($subscription->driverId());
+
+        return $this->api->post("/subscriptions/{$subscription->driverId()}", [
+            'items' => [
+                [
+                    'id'    => $stripeSubscription->json()['items']['data'][0]['id'],
+                    'price' => $plan->driverId('stripe'),
+                ]
+            ]
+        ]);
     }
 
     public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
@@ -157,6 +169,9 @@ class StripeEngine extends StripeWebhooks implements Engine
         return $response;
     }
 
+    /*
+     * https://stripe.com/docs/webhooks
+     */
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $method = 'handle' . Str::studly(str_replace('.', '_', $request->input('type')));
