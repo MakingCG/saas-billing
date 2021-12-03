@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Domain\Subscription;
 
 use Carbon\Carbon;
@@ -34,13 +33,13 @@ class SubscriptionStripeTest extends TestCase
             "https://api.stripe.com/v1/subscriptions/{$subscription->driverId()}" => Http::response([
                 'id'                                => 'sub_1K2XDAJDPzmN3vrvWtvQLNYT',
                 'object'                            => 'subscription',
-                'application_fee_percent'           => NULL,
+                'application_fee_percent'           => null,
                 'automatic_tax'                     => [
                     'enabled' => false,
                 ],
                 'billing_cycle_anchor'              => 1638520424,
-                'billing_thresholds'                => NULL,
-                'cancel_at'                         => NULL,
+                'billing_thresholds'                => null,
+                'cancel_at'                         => null,
                 'cancel_at_period_end'              => false,
                 'canceled_at'                       => 1638520426,
                 'collection_method'                 => 'charge_automatically',
@@ -48,20 +47,20 @@ class SubscriptionStripeTest extends TestCase
                 'current_period_end'                => 1641198824,
                 'current_period_start'              => 1638520424,
                 'customer'                          => 'cus_Khx75aZbZBpSrn',
-                'days_until_due'                    => NULL,
-                'default_payment_method'            => NULL,
-                'default_source'                    => NULL,
+                'days_until_due'                    => null,
+                'default_payment_method'            => null,
+                'default_source'                    => null,
                 'default_tax_rates'                 => [
                 ],
-                'discount'                          => NULL,
-                'ended_at'                          => NULL,
+                'discount'                          => null,
+                'ended_at'                          => null,
                 'items'                             => [
                     'object'   => 'list',
                     'data'     => [
                         [
                             'id'                 => 'si_Khx7WgescRFpRF',
                             'object'             => 'subscription_item',
-                            'billing_thresholds' => NULL,
+                            'billing_thresholds' => null,
                             'created'            => 1638520425,
                             'metadata'           => [
                             ],
@@ -73,20 +72,20 @@ class SubscriptionStripeTest extends TestCase
                                 'created'             => 1590175305,
                                 'currency'            => 'eur',
                                 'livemode'            => false,
-                                'lookup_key'          => NULL,
+                                'lookup_key'          => null,
                                 'metadata'            => [
                                 ],
-                                'nickname'            => NULL,
+                                'nickname'            => null,
                                 'product'             => 'prod_HKL7vHEYRSC4Ur',
                                 'recurring'           => [
-                                    'aggregate_usage' => NULL,
+                                    'aggregate_usage' => null,
                                     'interval'        => 'month',
                                     'interval_count'  => 1,
                                     'usage_type'      => 'licensed',
                                 ],
                                 'tax_behavior'        => 'unspecified',
-                                'tiers_mode'          => NULL,
-                                'transform_quantity'  => NULL,
+                                'tiers_mode'          => null,
+                                'transform_quantity'  => null,
                                 'type'                => 'recurring',
                                 'unit_amount'         => 2000,
                                 'unit_amount_decimal' => '2000',
@@ -100,25 +99,25 @@ class SubscriptionStripeTest extends TestCase
                     'has_more' => false,
                     'url'      => '/v1/subscription_items?subscription=sub_1K2XDAJDPzmN3vrvWtvQLNYT',
                 ],
-                'latest_invoice'                    => NULL,
+                'latest_invoice'                    => null,
                 'livemode'                          => false,
                 'metadata'                          => [
                 ],
-                'next_pending_invoice_item_invoice' => NULL,
-                'pause_collection'                  => NULL,
+                'next_pending_invoice_item_invoice' => null,
+                'pause_collection'                  => null,
                 'payment_settings'                  => [
-                    'payment_method_options' => NULL,
-                    'payment_method_types'   => NULL,
+                    'payment_method_options' => null,
+                    'payment_method_types'   => null,
                 ],
-                'pending_invoice_item_interval'     => NULL,
-                'pending_setup_intent'              => NULL,
-                'pending_update'                    => NULL,
-                'schedule'                          => NULL,
+                'pending_invoice_item_interval'     => null,
+                'pending_setup_intent'              => null,
+                'pending_update'                    => null,
+                'schedule'                          => null,
                 'start_date'                        => 1638520424,
                 'status'                            => 'canceled',
-                'transfer_data'                     => NULL,
-                'trial_end'                         => NULL,
-                'trial_start'                       => NULL,
+                'transfer_data'                     => null,
+                'trial_end'                         => null,
+                'trial_start'                       => null,
             ]),
         ]);
 

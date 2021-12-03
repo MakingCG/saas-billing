@@ -122,9 +122,12 @@ class StripeEngine extends StripeWebhooks implements Engine
         ]);
     }
 
+    /*
+     * https://stripe.com/docs/api/subscriptions/retrieve?lang=curl
+     */
     public function getSubscription(string $subscriptionId): Response
     {
-        // TODO: Implement getSubscription() method.
+        return $this->api->get("/subscriptions/$subscriptionId");
     }
 
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
@@ -137,6 +140,9 @@ class StripeEngine extends StripeWebhooks implements Engine
         // TODO: Implement updateSubscription() method.
     }
 
+    /*
+     * https://stripe.com/docs/api/subscriptions/retrieve?lang=curl
+     */
     public function cancelSubscription(Subscription $subscription): Response
     {
         // Send cancel subscription request

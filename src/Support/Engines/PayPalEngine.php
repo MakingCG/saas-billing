@@ -123,10 +123,10 @@ class PayPalEngine extends PayPalWebhooks implements Engine
 
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_revise
+     * TODO: confirm subscription change on frontend
      */
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
-        // TODO: 1. perform frontend part to approve swapped subscription
         return $this->api->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
             'plan_id'             => $plan->driverId('paypal'),
             'application_context' => [
