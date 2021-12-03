@@ -149,8 +149,4 @@ class StripeEngine extends StripeWebhooks implements Engine
             $this->{$method}($request);
         }
     }
-
-    private function createSession(): void
-    {
-    }
 }

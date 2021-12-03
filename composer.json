@@ -42,7 +42,8 @@
             "VueFileManager\\Subscription\\Database\\Factories\\": "database/factories"
         },
         "files": [
-            "src/Support/helpers.php"
+            "src/Support/helpers.php",
+            "src/Support/StripeHelpers.php"
         ]
     },
     "autoload-dev": {

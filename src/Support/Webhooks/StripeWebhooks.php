@@ -29,6 +29,7 @@ class StripeWebhooks
             ->first();
 
         $subscription = Subscription::create([
+            'status'  => 'inactive',
             'plan_id' => $planDriver->plan->id,
             'user_id' => $customer->user_id,
             'name'    => $planDriver->plan->name,
@@ -41,9 +42,6 @@ class StripeWebhooks
                 'driver'                 => 'stripe',
                 'driver_subscription_id' => $subscriptionCode,
             ]);
-
-        // Emit SubscriptionWasCreated
-        SubscriptionWasCreated::dispatch($subscription);
     }
 
     public function handleCustomerSubscriptionUpdated(Request $request): void
@@ -56,6 +54,16 @@ class StripeWebhooks
 
         $driver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
             ->first();
+
+        // Update Status
+        if ($driver->subscription->status === 'inactive' && $status === 'active') {
+            $driver->subscription->update([
+                'status' => mapStripeStatus($status),
+            ]);
+
+            // Emit SubscriptionWasCreated
+            SubscriptionWasCreated::dispatch($driver->subscription);
+        }
 
         // Plan cancellation
         if ($cancelAtPeriodEnd) {
