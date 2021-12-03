@@ -182,13 +182,15 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     /**
      * https://paystack.com/docs/payments/webhooks
      */
-    public function webhook(Request $request): void
+    public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $method = 'handle' . Str::studly(str_replace('.', '_', $request->input('event')));
 
         if (method_exists($this, $method)) {
             $this->{$method}($request);
         }
+
+        return new \Symfony\Component\HttpFoundation\Response('Webhook Handled', 200);
     }
 
     /**

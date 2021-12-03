@@ -62,5 +62,5 @@ interface Engine
     /**
      * Get webhook
      */
-    public function webhook(Request $request): void;
+    public function webhook(Request $request);
 }

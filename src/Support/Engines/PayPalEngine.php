@@ -178,13 +178,15 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     /**
      * https://developer.paypal.com/docs/api/webhooks/v1/
      */
-    public function webhook(Request $request): void
+    public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $method = 'handle' . Str::studly(str_replace('.', '_', strtolower($request->input('event_type'))));
 
         if (method_exists($this, $method)) {
             $this->{$method}($request);
         }
+
+        return new \Symfony\Component\HttpFoundation\Response('Webhook Handled', 200);
     }
 
     /**

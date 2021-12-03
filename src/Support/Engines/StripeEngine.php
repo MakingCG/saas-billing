@@ -141,12 +141,14 @@ class StripeEngine extends StripeWebhooks implements Engine
         // TODO: Implement cancelSubscription() method.
     }
 
-    public function webhook(Request $request): void
+    public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $method = 'handle' . Str::studly(str_replace('.', '_', $request->input('type')));
 
         if (method_exists($this, $method)) {
             $this->{$method}($request);
         }
+
+        return new \Symfony\Component\HttpFoundation\Response('Webhook Handled', 200);
     }
 }
