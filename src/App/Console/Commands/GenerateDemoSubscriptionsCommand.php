@@ -7,11 +7,11 @@ use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
 
-class SetupDemoDataCommand extends Command
+class GenerateDemoSubscriptionsCommand extends Command
 {
-    public $signature = 'subscription:demo';
+    public $signature = 'subscription:demo-subscriptions';
 
-    public $description = 'Generate subscription demo data';
+    public $description = 'Generate demo subscriptions with their transactions';
 
     public function __construct(
         private StorePlanForPaymentServiceAction $storePlanForPaymentService,
@@ -21,10 +21,9 @@ class SetupDemoDataCommand extends Command
 
     public function handle()
     {
-        $this->info('Setting up subscription demo data');
+        $this->info('Setting up new subscriptions data...');
 
         // To tasks
-        $this->create_plans();
         $this->create_demo_subscription();
 
         $this->after();
@@ -51,6 +50,8 @@ class SetupDemoDataCommand extends Command
             ->where('interval', 'month')
             ->first();
 
+        $this->info("Storing {$professionalPackPlan->name} for {$howdy->email} ...");
+
         $howdySubscription = $howdy->subscription()->create([
             'plan_id'    => $professionalPackPlan->id,
             'name'       => $professionalPackPlan->name,
@@ -58,6 +59,8 @@ class SetupDemoDataCommand extends Command
             'created_at' => now()->subDays(14),
             'updated_at' => now()->subDays(14),
         ]);
+
+        $this->info("Storing {$businessPackPlan->name} for {$alice->email} ...");
 
         $aliceSubscription = $alice->subscription()->create([
             'plan_id'    => $businessPackPlan->id,
@@ -67,6 +70,8 @@ class SetupDemoDataCommand extends Command
             'updated_at' => now()->subDays(9),
         ]);
 
+        $this->info("Storing {$professionalPackPlan->name} for {$johan->email} ...");
+
         $johanSubscription = $johan->subscription()->create([
             'plan_id'    => $professionalPackPlan->id,
             'name'       => $professionalPackPlan->name,
@@ -75,6 +80,8 @@ class SetupDemoDataCommand extends Command
             'created_at' => now()->subDays(8),
             'updated_at' => now()->subDays(8),
         ]);
+
+        $this->info("Storing transactions for {$howdy->email} ...");
 
         collect([
             ['created_at' => now()->subDays(2)],
@@ -96,6 +103,8 @@ class SetupDemoDataCommand extends Command
             ])
         );
 
+        $this->info("Storing transactions for {$johan->email} ...");
+
         collect([
             ['created_at' => now()->subDay()],
             ['created_at' => now()->subDays(29)],
@@ -113,6 +122,8 @@ class SetupDemoDataCommand extends Command
                 'reference'  => Str::random(12),
             ])
         );
+
+        $this->info("Storing transactions for {$alice->email} ...");
 
         collect([
             ['created_at' => now()],
@@ -147,89 +158,6 @@ class SetupDemoDataCommand extends Command
             'driver'                 => 'stripe',
             'driver_subscription_id' => Str::random(),
         ]);
-    }
-
-    public function create_plans()
-    {
-        // Define plans
-        $plans = [
-            [
-                'name'        => 'Professional Pack',
-                'description' => 'Best for all professionals',
-                'currency'    => 'USD',
-                'features'    => [
-                    'max_storage_amount' => 200,
-                    'max_team_members'   => 20,
-                ],
-                'intervals' => [
-                    [
-                        'interval'    => 'month',
-                        'amount'      => 9.99,
-                    ],
-                    [
-                        'interval'    => 'year',
-                        'amount'      => 99.49,
-                    ],
-                ],
-            ],
-            [
-                'name'        => 'Business Pack',
-                'description' => 'Best for business needs',
-                'currency'    => 'USD',
-                'features'    => [
-                    'max_storage_amount' => 500,
-                    'max_team_members'   => 50,
-                ],
-                'intervals' => [
-                    [
-                        'interval'    => 'month',
-                        'amount'      => 29.99,
-                    ],
-                    [
-                        'interval'    => 'year',
-                        'amount'      => 189.99,
-                    ],
-                ],
-            ],
-            [
-                'name'        => 'Elite Pack',
-                'description' => 'Best for all your needs',
-                'currency'    => 'USD',
-                'features'    => [
-                    'max_storage_amount' => 2000,
-                    'max_team_members'   => -1,
-                ],
-                'intervals' => [
-                    [
-                        'interval'    => 'month',
-                        'amount'      => 59.99,
-                    ],
-                    [
-                        'interval'    => 'year',
-                        'amount'      => 349.99,
-                    ],
-                ],
-            ],
-        ];
-
-        // Create plans
-        foreach ($plans as $plan) {
-            foreach ($plan['intervals'] as $interval) {
-                $data = CreatePlanData::fromArray([
-                    'name'        => $plan['name'],
-                    'description' => $plan['description'],
-                    'features'    => $plan['features'],
-                    'currency'    => $plan['currency'],
-                    'amount'      => $interval['amount'],
-                    'interval'    => $interval['interval'],
-                ]);
-
-                $this->info("Creating plan with name: {$plan['name']} and interval: {$interval['interval']}");
-
-                // Store plans to the database and gateway
-                ($this->storePlanForPaymentService)($data);
-            }
-        }
     }
 
     public function after()

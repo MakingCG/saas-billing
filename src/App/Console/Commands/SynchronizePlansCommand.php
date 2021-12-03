@@ -41,6 +41,7 @@ class SynchronizePlansCommand extends Command
         $availableDrivers = config('subscription.available_drivers');
 
         // Update plan via gateways api
+        // TODO: check if there some uncreated plans
         collect($availableDrivers)
             ->each(function ($driver) {
                 Plan::all()

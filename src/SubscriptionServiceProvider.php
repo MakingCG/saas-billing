@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use VueFileManager\Subscription\App\Console\Commands\GenerateDemoContentCommand;
+use VueFileManager\Subscription\App\Console\Commands\GenerateDemoPlansCommand;
+use VueFileManager\Subscription\App\Console\Commands\GenerateDemoSubscriptionsCommand;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\App\Console\Commands\SetupDemoDataCommand;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
@@ -24,7 +27,9 @@ class SubscriptionServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasCommands([
-                SetupDemoDataCommand::class,
+                GenerateDemoSubscriptionsCommand::class,
+                GenerateDemoContentCommand::class,
+                GenerateDemoPlansCommand::class,
                 SynchronizePlansCommand::class,
             ])
             ->hasRoutes([
