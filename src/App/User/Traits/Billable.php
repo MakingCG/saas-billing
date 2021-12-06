@@ -37,6 +37,6 @@ trait Billable
         return $this->customers()
             ->where('driver', $driver)
             ->first()
-            ->driver_user_id;
+            ->driver_user_id ?? null;
     }
 }

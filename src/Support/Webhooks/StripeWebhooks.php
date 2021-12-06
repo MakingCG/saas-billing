@@ -111,8 +111,7 @@ class StripeWebhooks
 
         if ($driver->subscription->active() || $driver->subscription->onGracePeriod()) {
             $driver->subscription->update([
-                'status'  => 'completed',
-                'ends_at' => now(),
+                'status'  => 'cancelled',
             ]);
 
             SubscriptionWasExpired::dispatch($driver->subscription);
