@@ -2,6 +2,7 @@
 namespace Tests\Support\Webhooks;
 
 use Carbon\Carbon;
+use Stripe\WebhookSignature;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Event;
@@ -44,8 +45,7 @@ class StripeWebhooksTest extends TestCase
             ->hasFeatures(2)
             ->create();
 
-        // Send webhook
-        $this->postJson('/api/subscriptions/stripe/webhooks', [
+        $payload = [
             'id'               => 'evt_1K2AJ6B9m4sTKy1qS04uRoOf',
             'object'           => 'event',
             'api_version'      => '2020-08-27',
@@ -214,7 +214,12 @@ class StripeWebhooksTest extends TestCase
                     'idempotency_key' => 'a26d8d85-67a3-47f8-a3a6-be8a945bf25a',
                 ],
             'type'             => 'customer.subscription.created',
-        ]);
+        ];
+
+        // Send webhook
+        $this
+            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
 
         // Check if subscription was created
         $subscription = Subscription::first();
@@ -264,8 +269,7 @@ class StripeWebhooksTest extends TestCase
 
         $cancelledAt = now()->addDays(14);
 
-        // Send webhook
-        $this->postJson('/api/subscriptions/stripe/webhooks', [
+        $payload = [
             'id'               => 'evt_1K2BE4B9m4sTKy1qd8N60DtV',
             'object'           => 'event',
             'api_version'      => '2020-08-27',
@@ -442,7 +446,12 @@ class StripeWebhooksTest extends TestCase
                     'idempotency_key' => '34faedb2-9b1b-4bc0-a3a6-701c437efc81',
                 ],
             'type'             => 'customer.subscription.updated',
-        ]);
+        ];
+
+        // Send webhook
+        $this
+            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
 
         $this->assertDatabaseHas('subscriptions', [
             'status'  => 'cancelled',
@@ -481,8 +490,7 @@ class StripeWebhooksTest extends TestCase
 
         $cancelledAt = now()->addDays(14);
 
-        // Send webhook
-        $this->postJson('/api/subscriptions/stripe/webhooks', [
+        $payload = [
             'id'               => 'evt_1K2BE4B9m4sTKy1qd8N60DtV',
             'object'           => 'event',
             'api_version'      => '2020-08-27',
@@ -659,7 +667,12 @@ class StripeWebhooksTest extends TestCase
                     'idempotency_key' => '34faedb2-9b1b-4bc0-a3a6-701c437efc81',
                 ],
             'type'             => 'customer.subscription.updated',
-        ]);
+        ];
+
+        // Send webhook
+        $this
+            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
 
         $this->assertDatabaseHas('subscriptions', [
             'status'  => 'completed',
@@ -695,8 +708,7 @@ class StripeWebhooksTest extends TestCase
                 'ends_at' => null,
             ]);
 
-        // Send webhook
-        $this->postJson('/api/subscriptions/stripe/webhooks', [
+        $payload = [
             'id'               => 'evt_1K2BE4B9m4sTKy1qd8N60DtV',
             'object'           => 'event',
             'api_version'      => '2020-08-27',
@@ -873,7 +885,12 @@ class StripeWebhooksTest extends TestCase
                     'idempotency_key' => '34faedb2-9b1b-4bc0-a3a6-701c437efc81',
                 ],
             'type'             => 'customer.subscription.updated',
-        ]);
+        ];
+
+        // Send webhook
+        $this
+            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
 
         $this->assertDatabaseHas('subscriptions', [
             'status' => 'active',
@@ -909,8 +926,7 @@ class StripeWebhooksTest extends TestCase
                 'status'  => 'active',
             ]);
 
-        // Send webhook
-        $this->postJson('/api/subscriptions/stripe/webhooks', [
+        $payload = [
             'id'               => 'evt_1K2BE4B9m4sTKy1qd8N60DtV',
             'object'           => 'event',
             'api_version'      => '2020-08-27',
@@ -1087,7 +1103,12 @@ class StripeWebhooksTest extends TestCase
                     'idempotency_key' => '34faedb2-9b1b-4bc0-a3a6-701c437efc81',
                 ],
             'type'             => 'customer.subscription.updated',
-        ]);
+        ];
+
+        // Send webhook
+        $this
+            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
 
         $this->assertDatabaseHas('subscriptions', [
             'plan_id' => $planHigher->id,
@@ -1117,8 +1138,7 @@ class StripeWebhooksTest extends TestCase
                 'created_at' => now()->subDays(14),
             ]);
 
-        // Send webhook
-        $this->postJson('/api/subscriptions/stripe/webhooks', [
+        $payload = [
             'id'               => 'evt_1K2AynB9m4sTKy1qEf5UDV6W',
             'object'           => 'event',
             'api_version'      => '2020-08-27',
@@ -1287,7 +1307,12 @@ class StripeWebhooksTest extends TestCase
                     'idempotency_key' => null,
                 ],
             'type'             => 'customer.subscription.deleted',
-        ]);
+        ];
+
+        // Send webhook
+        $this
+            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
 
         $this->assertDatabaseHas('subscriptions', [
             'status'  => 'cancelled',
@@ -1322,7 +1347,7 @@ class StripeWebhooksTest extends TestCase
                 'created_at' => now()->subDays(14),
             ]);
 
-        $this->postJson('/api/subscriptions/stripe/webhooks', [
+        $payload = [
             'id'               => 'evt_1K2BE3B9m4sTKy1qyZYi7bGJ',
             'object'           => 'event',
             'api_version'      => '2020-08-27',
@@ -1531,7 +1556,11 @@ class StripeWebhooksTest extends TestCase
                     'idempotency_key' => 'ef9ba391-b6b4-40bc-95ec-3a9373ffd0e7',
                 ],
             'type'             => 'invoice.payment_succeeded',
-        ]);
+        ];
+
+        $this
+            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
 
         $this->assertDatabaseHas('transactions', [
             'user_id'   => $user->id,
@@ -1560,7 +1589,7 @@ class StripeWebhooksTest extends TestCase
             'driver'         => 'stripe',
         ]);
 
-        $this->postJson('/api/subscriptions/stripe/webhooks', [
+        $payload = [
             'id'               => 'evt_1K2Wy7B9m4sTKy1qGnhJdnMB',
             'object'           => 'event',
             'api_version'      => '2020-08-27',
@@ -1727,8 +1756,27 @@ class StripeWebhooksTest extends TestCase
                     'idempotency_key' => '6b9a32b7-1a76-48c1-8a29-39ec741a7d5e',
                 ],
             'type'             => 'invoice.payment_action_required',
-        ]);
+        ];
+
+        $this
+            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
 
         Notification::assertSentTo($user, ConfirmStripePayment::class);
+    }
+
+
+    /**
+     * Generate Stripe signature for test purpose
+     */
+    private function generateTestSignature(array $payload): string
+    {
+        $timestamp = \time();
+        $scheme = WebhookSignature::EXPECTED_SCHEME;
+
+        $signedPayload = $timestamp . '.' . json_encode($payload);
+        $signature = \hash_hmac('sha256', $signedPayload, config('subscription.credentials.stripe.secret'));
+
+        return "t={$timestamp},{$scheme}={$signature}";
     }
 }

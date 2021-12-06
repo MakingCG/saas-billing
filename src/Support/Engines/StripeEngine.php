@@ -2,6 +2,9 @@
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Carbon\Carbon;
+use Stripe\Exception\SignatureVerificationException;
+use Stripe\WebhookSignature;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Tests\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -174,6 +177,19 @@ class StripeEngine extends StripeWebhooks implements Engine
      */
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
+        // Verify signature
+        try {
+            WebhookSignature::verifyHeader(
+                $request->getContent(),
+                $request->header('Stripe-Signature'),
+                config('subscription.credentials.stripe.secret'),
+                300
+            );
+        } catch (SignatureVerificationException $exception) {
+            throw new AccessDeniedHttpException($exception->getMessage(), $exception);
+        }
+
+        // Extract method name
         $method = 'handle' . Str::studly(str_replace('.', '_', $request->input('type')));
 
         if (method_exists($this, $method)) {
