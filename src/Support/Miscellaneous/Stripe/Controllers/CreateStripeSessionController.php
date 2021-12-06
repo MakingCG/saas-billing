@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers;
 
 use Illuminate\Http\Request;
@@ -12,8 +11,9 @@ class CreateStripeSessionController
 {
     public function __construct(
         private StripeHttpService $api,
-        private EngineManager     $engine,
-    ) {}
+        private EngineManager $engine,
+    ) {
+    }
 
     public function __invoke(Request $request): Response
     {

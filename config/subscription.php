@@ -21,4 +21,9 @@ return [
             'secret' => env('PAYPAL_CLIENT_SECRET'),
         ],
     ],
+    'paystack' => [
+        'allowed_ips' => [
+            '52.31.139.75', '52.49.173.169', '52.214.14.220',
+        ],
+    ],
 ];

@@ -2,9 +2,9 @@
 namespace Tests\Support\Webhooks;
 
 use Carbon\Carbon;
-use Stripe\WebhookSignature;
 use Tests\TestCase;
 use Tests\Models\User;
+use Stripe\WebhookSignature;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
@@ -1764,7 +1764,6 @@ class StripeWebhooksTest extends TestCase
 
         Notification::assertSentTo($user, ConfirmStripePayment::class);
     }
-
 
     /**
      * Generate Stripe signature for test purpose

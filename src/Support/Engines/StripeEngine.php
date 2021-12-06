@@ -2,18 +2,18 @@
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Carbon\Carbon;
-use Stripe\Exception\SignatureVerificationException;
-use Stripe\WebhookSignature;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Tests\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Stripe\WebhookSignature;
 use Illuminate\Http\Client\Response;
+use Stripe\Exception\SignatureVerificationException;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Support\Webhooks\StripeWebhooks;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Services\StripeHttpService;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeEngine extends StripeWebhooks implements Engine
@@ -145,8 +145,8 @@ class StripeEngine extends StripeWebhooks implements Engine
                 [
                     'id'    => $stripeSubscription->json()['items']['data'][0]['id'],
                     'price' => $plan->driverId('stripe'),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 

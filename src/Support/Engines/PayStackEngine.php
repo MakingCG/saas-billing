@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
+use Exception;
 use Tests\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
 use VueFileManager\Subscription\Support\Services\PayStackHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 
 class PayStackEngine extends PayStackWebhooks implements Engine
 {
@@ -181,9 +183,15 @@ class PayStackEngine extends PayStackWebhooks implements Engine
 
     /**
      * https://paystack.com/docs/payments/webhooks
+     * @throws Exception
      */
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
+        // Verify webhook
+        if (! in_array($request->ip(), config('subscription.paystack.allowed_ips'))) {
+            throw new SuspiciousOperationException('This request is counterfeit.', 401);
+        }
+
         $method = 'handle' . Str::studly(str_replace('.', '_', $request->input('event')));
 
         if (method_exists($this, $method)) {
