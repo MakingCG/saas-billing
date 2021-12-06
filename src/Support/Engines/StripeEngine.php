@@ -115,7 +115,7 @@ class StripeEngine extends StripeWebhooks implements Engine
         $customer = User::find($user['id']);
 
         // Update customer request
-        return $this->api->post("/customers/{$customer->customerDriverId('stripe')}", [
+        return $this->api->post("/customers/{$customer->customerId('stripe')}", [
             'email' => $user['email'],
             'name'  => $user['name'] . ' ' . $user['surname'],
             'phone' => $user['phone'] ?? null,

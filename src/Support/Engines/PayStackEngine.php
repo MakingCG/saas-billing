@@ -111,7 +111,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         // Get paystack customer id
         $customer = User::find($user['id']);
 
-        return $this->api->put("/customer/{$customer->customerDriverId('paystack')}", [
+        return $this->api->put("/customer/{$customer->customerId('paystack')}", [
             'email'      => $user['email'],
             'first_name' => $user['name'],
             'last_name'  => $user['surname'],

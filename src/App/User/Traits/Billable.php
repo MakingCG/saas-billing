@@ -32,7 +32,7 @@ trait Billable
     /**
      * Get original gateway customer id
      */
-    public function customerDriverId(string $driver)
+    public function customerId(string $driver)
     {
         return $this->customers()
             ->where('driver', $driver)

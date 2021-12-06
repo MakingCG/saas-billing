@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers;
 
 use Illuminate\Http\Request;
@@ -11,23 +12,15 @@ class CreateStripeSessionController
 {
     public function __construct(
         private StripeHttpService $api,
-        private EngineManager $engine,
-    ) {
-    }
+        private EngineManager     $engine,
+    ) {}
 
     public function __invoke(Request $request): Response
     {
         $user = Auth::user();
 
         // Create a customer
-        $customer = $this->engine
-            ->driver('stripe')
-            ->createCustomer([
-                'id'      => $user->id,
-                'email'   => $user->email,
-                'name'    => $user->settings->name ?? null,
-                'surname' => $user->settings->name ?? null,
-            ]);
+        $customerId = $user->customerId('stripe') ?? $this->createCustomer($user);
 
         $session = $this->api->post('/checkout/sessions', [
             'success_url' => url('/platform/files'),
@@ -39,12 +32,26 @@ class CreateStripeSessionController
                 ],
             ],
             'mode'        => 'subscription',
-            'customer'    => $customer->json()['id'],
+            'customer'    => $customerId,
         ]);
 
         // Return stripe checkout url
         return response([
             'url' => $session->json()['url'],
         ], 201);
+    }
+
+    private function createCustomer($user)
+    {
+        $customer = $this->engine
+            ->driver('stripe')
+            ->createCustomer([
+                'id'      => $user->id,
+                'email'   => $user->email,
+                'name'    => $user->settings->name ?? null,
+                'surname' => $user->settings->name ?? null,
+            ]);
+
+        return $customer->json()['id'];
     }
 }
