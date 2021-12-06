@@ -10,6 +10,7 @@ use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
 use VueFileManager\Subscription\Support\Services\PayPalHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 
 class PayPalEngine extends PayPalWebhooks implements Engine
 {
@@ -180,6 +181,23 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
+        // Verify PayPal webhook
+        $response = $this->api->post('/notifications/verify-webhook-signature', [
+            'auth_algo'         => $request->header('PAYPAL-AUTH-ALGO'),
+            'cert_url'          => $request->header('PAYPAL-CERT-URL'),
+            'transmission_id'   => $request->header('PAYPAL-TRANSMISSION-ID'),
+            'transmission_sig'  => $request->header('PAYPAL-TRANSMISSION-SIG'),
+            'transmission_time' => $request->header('PAYPAL-TRANSMISSION-TIME'),
+            'webhook_id'        => config('subscription.credentials.paypal.webhook_id'),
+            'webhook_event'     => $request->all(),
+        ]);
+
+        // Check response
+        if ($response->json()['verification_status'] !== 'SUCCESS') {
+            throw new SuspiciousOperationException('This request is counterfeit.', 401);
+        }
+
+        // Extract method name
         $method = 'handle' . Str::studly(str_replace('.', '_', strtolower($request->input('event_type'))));
 
         if (method_exists($this, $method)) {

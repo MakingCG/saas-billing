@@ -219,7 +219,8 @@ class StripeWebhooksTest extends TestCase
         // Send webhook
         $this
             ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
 
         // Check if subscription was created
         $subscription = Subscription::first();
@@ -451,7 +452,8 @@ class StripeWebhooksTest extends TestCase
         // Send webhook
         $this
             ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
 
         $this->assertDatabaseHas('subscriptions', [
             'status'  => 'cancelled',
@@ -672,7 +674,8 @@ class StripeWebhooksTest extends TestCase
         // Send webhook
         $this
             ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
 
         $this->assertDatabaseHas('subscriptions', [
             'status'  => 'completed',
@@ -890,7 +893,8 @@ class StripeWebhooksTest extends TestCase
         // Send webhook
         $this
             ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
 
         $this->assertDatabaseHas('subscriptions', [
             'status' => 'active',
@@ -1108,7 +1112,8 @@ class StripeWebhooksTest extends TestCase
         // Send webhook
         $this
             ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
 
         $this->assertDatabaseHas('subscriptions', [
             'plan_id' => $planHigher->id,
@@ -1312,7 +1317,8 @@ class StripeWebhooksTest extends TestCase
         // Send webhook
         $this
             ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
 
         $this->assertDatabaseHas('subscriptions', [
             'status'  => 'cancelled',
@@ -1560,7 +1566,8 @@ class StripeWebhooksTest extends TestCase
 
         $this
             ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
 
         $this->assertDatabaseHas('transactions', [
             'user_id'   => $user->id,
@@ -1760,7 +1767,8 @@ class StripeWebhooksTest extends TestCase
 
         $this
             ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload);
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
 
         Notification::assertSentTo($user, ConfirmStripePayment::class);
     }

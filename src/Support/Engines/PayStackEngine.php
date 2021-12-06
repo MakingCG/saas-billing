@@ -192,6 +192,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
             throw new SuspiciousOperationException('This request is counterfeit.', 401);
         }
 
+        // Extract method name
         $method = 'handle' . Str::studly(str_replace('.', '_', $request->input('event')));
 
         if (method_exists($this, $method)) {

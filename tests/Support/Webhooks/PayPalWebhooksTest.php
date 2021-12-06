@@ -5,6 +5,7 @@ use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Event;
+use Tests\Mocking\PayPal\VerifyWebhookPayPalMocksClass;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
@@ -33,55 +34,59 @@ class PayPalWebhooksTest extends TestCase
             ->hasFeatures(2)
             ->create();
 
+        resolve(VerifyWebhookPayPalMocksClass::class)();
+
         // Send webhook
-        $this->postJson('/api/subscriptions/paypal/webhooks', [
-            'id'               => 'WH-8A715371GG332831A-4MM87741Y6956121U',
-            'event_version'    => '1.0',
-            'create_time'      => '2021-11-10T06:53:31.290Z',
-            'resource_type'    => 'subscription',
-            'resource_version' => '2.0',
-            'event_type'       => 'BILLING.SUBSCRIPTION.CREATED',
-            'summary'          => 'Subscription created',
-            'resource'         => [
-                'start_time'      => '2021-11-10T06:53:31Z',
-                'quantity'        => '1',
-                'create_time'     => '2021-11-10T06:53:31Z',
-                'custom_id'       => $user->id,
-                'links'           => [
-                    [
-                        'href'   => 'https://www.sandbox.paypal.com/webapps/billing/subscriptions?ba_token=BA-88260049KY7916255',
-                        'rel'    => 'approve',
-                        'method' => 'GET',
+        $this
+            ->postJson('/api/subscriptions/paypal/webhooks', [
+                'id'               => 'WH-8A715371GG332831A-4MM87741Y6956121U',
+                'event_version'    => '1.0',
+                'create_time'      => '2021-11-10T06:53:31.290Z',
+                'resource_type'    => 'subscription',
+                'resource_version' => '2.0',
+                'event_type'       => 'BILLING.SUBSCRIPTION.CREATED',
+                'summary'          => 'Subscription created',
+                'resource'         => [
+                    'start_time'      => '2021-11-10T06:53:31Z',
+                    'quantity'        => '1',
+                    'create_time'     => '2021-11-10T06:53:31Z',
+                    'custom_id'       => $user->id,
+                    'links'           => [
+                        [
+                            'href'   => 'https://www.sandbox.paypal.com/webapps/billing/subscriptions?ba_token=BA-88260049KY7916255',
+                            'rel'    => 'approve',
+                            'method' => 'GET',
+                        ],
+                        [
+                            'href'   => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-KHY6B042F1YA',
+                            'rel'    => 'edit',
+                            'method' => 'PATCH',
+                        ],
+                        [
+                            'href'   => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-KHY6B042F1YA',
+                            'rel'    => 'self',
+                            'method' => 'GET',
+                        ],
                     ],
+                    'id'              => 'I-KHY6B042F1YA',
+                    'plan_overridden' => false,
+                    'plan_id'         => $plan->driverId('paypal'),
+                    'status'          => 'APPROVAL_PENDING',
+                ],
+                'links'            => [
                     [
-                        'href'   => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-KHY6B042F1YA',
-                        'rel'    => 'edit',
-                        'method' => 'PATCH',
-                    ],
-                    [
-                        'href'   => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-KHY6B042F1YA',
+                        'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-8A715371GG332831A-4MM87741Y6956121U',
                         'rel'    => 'self',
                         'method' => 'GET',
                     ],
+                    [
+                        'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-8A715371GG332831A-4MM87741Y6956121U/resend',
+                        'rel'    => 'resend',
+                        'method' => 'POST',
+                    ],
                 ],
-                'id'              => 'I-KHY6B042F1YA',
-                'plan_overridden' => false,
-                'plan_id'         => $plan->driverId('paypal'),
-                'status'          => 'APPROVAL_PENDING',
-            ],
-            'links'            => [
-                [
-                    'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-8A715371GG332831A-4MM87741Y6956121U',
-                    'rel'    => 'self',
-                    'method' => 'GET',
-                ],
-                [
-                    'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-8A715371GG332831A-4MM87741Y6956121U/resend',
-                    'rel'    => 'resend',
-                    'method' => 'POST',
-                ],
-            ],
-        ]);
+            ])
+            ->assertOk();
 
         // Check if subscription was created
         $subscription = Subscription::first();
@@ -122,6 +127,8 @@ class PayPalWebhooksTest extends TestCase
                 'name'    => $plan->name,
                 'status'  => 'active',
             ]);
+
+        resolve(VerifyWebhookPayPalMocksClass::class)();
 
         // Send webhook
         $this->postJson('/api/subscriptions/paypal/webhooks', [
@@ -256,7 +263,8 @@ class PayPalWebhooksTest extends TestCase
             ],
             'event_version'    => '1.0',
             'resource_version' => '2.0',
-        ]);
+        ])
+            ->assertOk();
 
         $this->assertDatabaseHas('subscriptions', [
             'plan_id' => $planHigher->id,
@@ -286,6 +294,8 @@ class PayPalWebhooksTest extends TestCase
             ]);
 
         $cancelledAt = now()->addDays(14);
+
+        resolve(VerifyWebhookPayPalMocksClass::class)();
 
         // Send webhook
         $this->postJson('/api/subscriptions/paypal/webhooks', [
@@ -389,7 +399,8 @@ class PayPalWebhooksTest extends TestCase
             ],
             'event_version'    => '1.0',
             'resource_version' => '2.0',
-        ]);
+        ])
+            ->assertOk();
 
         $this->assertDatabaseHas('subscriptions', [
             'status'  => 'cancelled',
@@ -414,7 +425,7 @@ class PayPalWebhooksTest extends TestCase
             ->create();
 
         Http::fake([
-            'https://api-m.sandbox.paypal.com/v1/oauth2/token'                                             => Http::response([
+            'https://api-m.sandbox.paypal.com/v1/oauth2/token'            => Http::response([
                 'scope'        => 'scope',
                 'access_token' => 'jnjleqngtlq3l34jn6l2346n2l4',
                 'token_type'   => 'Bearer',
@@ -524,6 +535,8 @@ class PayPalWebhooksTest extends TestCase
             ]),
         ]);
 
+        resolve(VerifyWebhookPayPalMocksClass::class)();
+
         $this->postJson('/api/subscriptions/paypal/webhooks', [
             'id'            => 'WH-9XV66238KD489590N-2R389597JR522592U',
             'create_time'   => '2021-11-18T07:58:41.727Z',
@@ -601,7 +614,8 @@ class PayPalWebhooksTest extends TestCase
                 ],
             ],
             'event_version' => '1.0',
-        ]);
+        ])
+            ->assertOk();
 
         $this->assertDatabaseHas('transactions', [
             'user_id'   => $user->id,

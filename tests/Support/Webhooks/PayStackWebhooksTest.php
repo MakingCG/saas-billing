@@ -85,7 +85,8 @@ class PayStackWebhooksTest extends TestCase
                     ],
                     'created_at'        => '2016-10-01T10:59:59.000Z',
                 ],
-            ]);
+            ])
+            ->assertOk();
 
         // Check if subscription was created
         $subscription = Subscription::first();
@@ -285,7 +286,8 @@ class PayStackWebhooksTest extends TestCase
                     ],
                     'created_at'        => '2016-10-01T10:59:59.000Z',
                 ],
-            ]);
+            ])
+            ->assertOk();
 
         $this
             ->assertDatabaseHas('subscription_drivers', [
@@ -396,7 +398,8 @@ class PayStackWebhooksTest extends TestCase
                     'most_recent_invoice' => null,
                     'created_at'          => '2021-11-15T11:00:09.000Z',
                 ],
-            ]);
+            ])
+            ->assertOk();
 
         $this->assertDatabaseHas('subscriptions', [
             'status'  => 'cancelled',
@@ -514,7 +517,8 @@ class PayStackWebhooksTest extends TestCase
                 ],
                 'order'         => null,
                 'business_name' => 'VueFileManager',
-            ]);
+            ])
+            ->assertOk();
 
         $this->assertDatabaseHas('transactions', [
             'user_id'   => $user->id,
