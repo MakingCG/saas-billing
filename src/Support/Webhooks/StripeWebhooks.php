@@ -112,6 +112,7 @@ class StripeWebhooks
         if ($driver->subscription->active() || $driver->subscription->onGracePeriod()) {
             $driver->subscription->update([
                 'status'  => 'cancelled',
+                'ends_at' => Carbon::createFromTimestamp($request->input('data.object.current_period_end')),
             ]);
 
             SubscriptionWasExpired::dispatch($driver->subscription);

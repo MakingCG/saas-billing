@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Support\Webhooks;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Event;
@@ -1289,8 +1290,8 @@ class StripeWebhooksTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
-            'status'  => 'completed',
-            'ends_at' => now(),
+            'status'  => 'cancelled',
+            'ends_at' => Carbon::createFromTimestamp(1641113362),
         ]);
 
         Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
