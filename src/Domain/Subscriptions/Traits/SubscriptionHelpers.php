@@ -95,17 +95,17 @@ trait SubscriptionHelpers
     /**
      * Get all subscription plan features
      */
-    public function fixedItems()
+    public function fixedFeatures()
     {
-        return $this->plan->fixedItems()->pluck('value', 'key');
+        return $this->plan->fixedFeatures()->pluck('value', 'key');
     }
 
     /**
      * Get single subscription plan feature by name
      */
-    public function feature(string $feature)
+    public function fixedFeature(string $feature)
     {
-        return $this->plan->fixedItems()->where('key', $feature)->first()->value;
+        return $this->plan->fixedFeatures()->where('key', $feature)->first()->value;
     }
 
     /**
@@ -114,12 +114,12 @@ trait SubscriptionHelpers
     public function recordUsage($key, $quantity): void
     {
         $meteredItem = $this->plan
-            ->meteredItems()
+            ->meteredFeatures()
             ->where('key', $key)
             ->first();
 
         $this->usages()->create([
-            'plan_metered_item_id' => $meteredItem->id,
+            'plan_metered_feature_id' => $meteredItem->id,
             'quantity'             => $quantity,
         ]);
     }

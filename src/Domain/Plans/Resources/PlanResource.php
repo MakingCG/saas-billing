@@ -33,13 +33,13 @@ class PlanResource extends JsonResource
                     'fixed'          => $this->when($this->type === 'fixed', fn () => [
                         'price'    => format_currency($this->amount, $this->currency),
                         'amount'   => $this->amount,
-                        'features' => $this->fixedItems->pluck('value', 'key'),
+                        'features' => $this->fixedFeatures->pluck('value', 'key'),
                         'interval' => $this->interval,
                     ]),
 
                     // Get metered plan attributes
                     'metered'        => $this->when($this->type === 'metered', fn () => [
-                        'prices' => $this->meteredItems->map(fn ($price) => [
+                        'prices' => $this->meteredFeatures->map(fn ($price) => [
                             'key'       => $price['key'],
                             'charge_by' => $price['charge_by'],
                             'tiers'     => $price['tiers'],

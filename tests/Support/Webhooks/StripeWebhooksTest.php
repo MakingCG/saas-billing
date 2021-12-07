@@ -42,7 +42,7 @@ class StripeWebhooksTest extends TestCase
                 'driver'         => 'stripe',
                 'driver_plan_id' => 'price_1K1vL5B9m4sTKy1qrkbJ7QEF',
             ])
-            ->hasFixedItems(2)
+            ->hasFixedFeatures(2)
             ->create();
 
         $payload = [

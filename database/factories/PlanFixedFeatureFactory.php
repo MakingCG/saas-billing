@@ -3,11 +3,11 @@
 namespace VueFileManager\Subscription\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use VueFileManager\Subscription\Domain\Plans\Models\PlanFixedItem;
+use VueFileManager\Subscription\Domain\Plans\Models\PlanFixedFeature;
 
-class PlanFixedItemFactory extends Factory
+class PlanFixedFeatureFactory extends Factory
 {
-    protected $model = PlanFixedItem::class;
+    protected $model = PlanFixedFeature::class;
 
     public function definition(): array
     {

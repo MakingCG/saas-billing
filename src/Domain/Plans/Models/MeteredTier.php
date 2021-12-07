@@ -3,17 +3,17 @@ namespace VueFileManager\Subscription\Domain\Plans\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use VueFileManager\Subscription\Database\Factories\PlanMeteredTierFactory;
+use VueFileManager\Subscription\Database\Factories\MeteredTierFactory;
 
 /**
  * @method static create(array $array)
- * @property string plan_metered_item_id
+ * @property string plan_metered_feature_id
  * @property int first_unit
  * @property int last_unit
  * @property float per_unit
  * @property float flat_fee
  */
-class PlanMeteredTier extends Model
+class MeteredTier extends Model
 {
     use HasFactory;
 
@@ -30,8 +30,8 @@ class PlanMeteredTier extends Model
 
     public $timestamps = false;
 
-    protected static function newFactory(): PlanMeteredTierFactory
+    protected static function newFactory(): MeteredTierFactory
     {
-        return PlanMeteredTierFactory::new();
+        return MeteredTierFactory::new();
     }
 }

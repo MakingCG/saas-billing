@@ -18,7 +18,7 @@ class UsageTest extends TestCase
 
         $plan = Plan::factory()
             ->hasDrivers()
-            ->hasMeteredItems([
+            ->hasMeteredFeatures([
                 'key' => 'bandwidth',
             ])
             ->create([
@@ -38,7 +38,7 @@ class UsageTest extends TestCase
         $subscription->recordUsage('bandwidth', 0.12);
 
         $this->assertDatabaseHas('usages', [
-            'plan_metered_item_id' => $plan->meteredItems()->first()->id,
+            'plan_metered_feature_id' => $plan->meteredFeatures()->first()->id,
             'subscription_id'      => $subscription->id,
             'quantity'             => 0.12,
         ]);

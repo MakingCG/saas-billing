@@ -13,7 +13,7 @@ class UsageFactory extends Factory
     public function definition(): array
     {
         return [
-            'plan_metered_item_id' => $this->faker->uuid,
+            'plan_metered_feature_id' => $this->faker->uuid,
             'subscription_id'      => $this->faker->uuid,
             'quantity'             => random_int(1, 20),
             'created_at'           => $this->faker->dateTimeBetween('-36 months'),

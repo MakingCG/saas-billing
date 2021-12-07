@@ -24,7 +24,7 @@ class StoreFixedPlanAction
 
         // Create features
         foreach ($data->features as $feature => $value) {
-            $plan->fixedItems()->create([
+            $plan->fixedFeatures()->create([
                 'key'   => $feature,
                 'value' => $value,
             ]);

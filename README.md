@@ -26,7 +26,7 @@ This is the contents of the published config file:
 ### Subscription
 Get all active features under plan:
 ```bash
-$subscription->fixedItems();
+$subscription->fixedFeatures();
 ```
 Get single feature under plan:
 ```bash

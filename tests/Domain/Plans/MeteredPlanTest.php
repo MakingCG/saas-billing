@@ -62,21 +62,21 @@ class MeteredPlanTest extends TestCase
                 'currency'    => 'USD',
                 'status'      => 'active',
             ])
-            ->assertDatabaseHas('plan_metered_items', [
+            ->assertDatabaseHas('plan_metered_features', [
                 'key'       => 'bandwidth',
                 'charge_by' => 'sum_of_usage',
             ])
-            ->assertDatabaseHas('plan_metered_items', [
+            ->assertDatabaseHas('plan_metered_features', [
                 'key'       => 'storage',
                 'charge_by' => 'maximum_usage',
             ])
-            ->assertDatabaseHas('plan_metered_tiers', [
+            ->assertDatabaseHas('metered_tiers', [
                 'first_unit' => 1,
                 'last_unit'  => null,
                 'per_unit'   => 0.019,
                 'flat_fee'   => 2.49,
             ])
-            ->assertDatabaseHas('plan_metered_tiers', [
+            ->assertDatabaseHas('metered_tiers', [
                 'first_unit' => 1,
                 'last_unit'  => null,
                 'per_unit'   => 0.09,

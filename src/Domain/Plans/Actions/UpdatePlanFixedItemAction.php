@@ -12,7 +12,7 @@ class UpdatePlanFixedItemAction
     {
         // Get validation rules
         $rules = $plan
-            ->fixedItems()
+            ->fixedFeatures()
             ->pluck('key')
             ->map(fn ($key) => [$key => 'sometimes|string_or_integer'])
             ->collapse()
@@ -29,7 +29,7 @@ class UpdatePlanFixedItemAction
         // Update data
         foreach ($request->all() as $key => $value) {
             $plan
-                ->fixedItems()
+                ->fixedFeatures()
                 ->where('key', $key)
                 ->update([
                     'key'   => $key,

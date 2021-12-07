@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use VueFileManager\Subscription\Database\Factories\PlanMeteredItemFactory;
+use VueFileManager\Subscription\Database\Factories\PlanMeteredFeatureFactory;
 
 /**
  * @method static create(array $array)
@@ -14,7 +14,7 @@ use VueFileManager\Subscription\Database\Factories\PlanMeteredItemFactory;
  * @property string key
  * @property string charge_by
  */
-class PlanMeteredItem extends Model
+class PlanMeteredFeature extends Model
 {
     use HasFactory;
 
@@ -33,12 +33,12 @@ class PlanMeteredItem extends Model
 
     public function tiers(): HasMany
     {
-        return $this->hasMany(PlanMeteredTier::class, 'plan_metered_item_id', 'id');
+        return $this->hasMany(MeteredTier::class, 'plan_metered_feature_id', 'id');
     }
 
-    protected static function newFactory(): PlanMeteredItemFactory
+    protected static function newFactory(): PlanMeteredFeatureFactory
     {
-        return PlanMeteredItemFactory::new();
+        return PlanMeteredFeatureFactory::new();
     }
 
     protected static function boot()

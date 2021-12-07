@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlanFixedItemsTable extends Migration
+class CreatePlanFixedFeaturesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePlanFixedItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('plan_fixed_items', function (Blueprint $table) {
+        Schema::create('plan_fixed_features', function (Blueprint $table) {
             $table->uuid('plan_id')->index();
             $table->text('key');
             $table->text('value');
@@ -27,6 +27,6 @@ class CreatePlanFixedItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_fixed_items');
+        Schema::dropIfExists('plan_fixed_features');
     }
 }

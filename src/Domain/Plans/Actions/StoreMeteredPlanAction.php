@@ -18,7 +18,7 @@ class StoreMeteredPlanAction
 
         foreach ($meteredPlanData->meters as $meter) {
             // Store metered item
-            $price = $plan->meteredItems()->create([
+            $price = $plan->meteredFeatures()->create([
                 'key'       => $meter['key'],
                 'charge_by' => $meter['charge_by'],
             ]);

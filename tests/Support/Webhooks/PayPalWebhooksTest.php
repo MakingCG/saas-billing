@@ -31,7 +31,7 @@ class PayPalWebhooksTest extends TestCase
             ->hasDrivers([
                 'driver' => 'paypal',
             ])
-            ->hasFixedItems(2)
+            ->hasFixedFeatures(2)
             ->create();
 
         resolve(VerifyWebhookPayPalMocksClass::class)();

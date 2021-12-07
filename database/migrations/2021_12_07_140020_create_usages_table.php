@@ -14,7 +14,7 @@ class CreateUsagesTable extends Migration
     public function up()
     {
         Schema::create('usages', function (Blueprint $table) {
-            $table->uuid('plan_metered_item_id');
+            $table->uuid('plan_metered_feature_id');
             $table->uuid('subscription_id');
             $table->uuid('quantity');
             $table->timestamps();
