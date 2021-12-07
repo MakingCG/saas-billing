@@ -16,7 +16,7 @@ class CreatePlanMeteredItemsTable extends Migration
         Schema::create('plan_metered_items', function (Blueprint $table) {
             $table->uuid('id')->index();
             $table->uuid('plan_id')->index();
-            $table->text('label');
+            $table->text('key');
             $table->enum('charge_by', ['sum_of_usage', 'maximum_usage']);
         });
     }

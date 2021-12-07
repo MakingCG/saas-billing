@@ -107,4 +107,23 @@ trait SubscriptionHelpers
     {
         return $this->plan->fixedItems()->where('key', $feature)->first()->value;
     }
+
+    /**
+     * Store subscription usage
+     */
+    public function recordUsage($key, $quantity): void
+    {
+        $meteredItem = $this->plan
+            ->meteredItems()
+            ->where('key', $key)
+            ->first();
+
+        $this->usages()->create([
+            'plan_metered_item_id' => $meteredItem->id,
+            'quantity'             => $quantity,
+        ]);
+    }
+
+    // TODO: Get current period usages
+    // $subscription->usage('bandwidth');
 }

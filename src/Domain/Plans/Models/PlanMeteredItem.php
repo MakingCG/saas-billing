@@ -11,7 +11,7 @@ use VueFileManager\Subscription\Database\Factories\PlanMeteredItemFactory;
  * @method static create(array $array)
  * @property string id
  * @property string plan_id
- * @property string label
+ * @property string key
  * @property string charge_by
  */
 class PlanMeteredItem extends Model

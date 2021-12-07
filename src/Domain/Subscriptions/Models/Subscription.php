@@ -5,8 +5,10 @@ use Illuminate\Support\Str;
 use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Usage\Models\Usage;
 use VueFileManager\Subscription\Database\Factories\SubscriptionFactory;
 use VueFileManager\Subscription\Domain\Subscriptions\Traits\SubscriptionHelpers;
 
@@ -53,6 +55,11 @@ class Subscription extends Model
     public function plan(): HasOne
     {
         return $this->hasOne(Plan::class, 'id', 'plan_id');
+    }
+
+    public function usages(): HasMany
+    {
+        return $this->hasMany(Usage::class, 'subscription_id', 'id');
     }
 
     public function driver(): hasOne

@@ -17,13 +17,13 @@ class MeteredPlanTest extends TestCase
         $this
             ->actingAs($user)
             ->post('/api/subscriptions/admin/plans', [
-                'type'         => 'metered',
-                'name'         => 'Basic Plan',
-                'description'  => 'Pay as you go is the best fit',
-                'currency'     => 'USD',
-                'meters'       => [
+                'type'        => 'metered',
+                'name'        => 'Basic Plan',
+                'description' => 'Pay as you go is the best fit',
+                'currency'    => 'USD',
+                'meters'      => [
                     [
-                        'label'     => 'Bandwidth',
+                        'key'       => 'bandwidth',
                         'charge_by' => 'sum_of_usage',
                         'tiers'     => [
                             [
@@ -35,7 +35,7 @@ class MeteredPlanTest extends TestCase
                         ],
                     ],
                     [
-                        'label'     => 'Storage',
+                        'key'       => 'storage',
                         'charge_by' => 'maximum_usage',
                         'tiers'     => [
                             [
@@ -63,11 +63,11 @@ class MeteredPlanTest extends TestCase
                 'status'      => 'active',
             ])
             ->assertDatabaseHas('plan_metered_items', [
-                'label'     => 'Bandwidth',
+                'key'       => 'bandwidth',
                 'charge_by' => 'sum_of_usage',
             ])
             ->assertDatabaseHas('plan_metered_items', [
-                'label'     => 'Storage',
+                'key'       => 'storage',
                 'charge_by' => 'maximum_usage',
             ])
             ->assertDatabaseHas('plan_metered_tiers', [

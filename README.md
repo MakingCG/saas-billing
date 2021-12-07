@@ -26,15 +26,19 @@ This is the contents of the published config file:
 ### Subscription
 Get all active features under plan:
 ```bash
-$user->subscription->fixedItems();
+$subscription->fixedItems();
 ```
 Get single feature under plan:
 ```bash
-$user->subscription->feature('max_storage_amount');
+$subscription->feature('max_storage_amount');
 ```
 Determine if user has subscription
 ```bash
 $user->hasSubscription()
+```
+Record usage
+```bash
+$subscription->recordUsage('bandwidth', 2342);
 ```
 ## Testing
 

@@ -40,7 +40,7 @@ class PlanResource extends JsonResource
                     // Get metered plan attributes
                     'metered'        => $this->when($this->type === 'metered', fn () => [
                         'prices' => $this->meteredItems->map(fn ($price) => [
-                            'label'     => $price['label'],
+                            'key'       => $price['key'],
                             'charge_by' => $price['charge_by'],
                             'tiers'     => $price['tiers'],
                         ]),

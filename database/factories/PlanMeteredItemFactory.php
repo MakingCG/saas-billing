@@ -15,7 +15,7 @@ class PlanMeteredItemFactory extends Factory
             'id'        => $this->faker->uuid,
             'plan_id'   => $this->faker->uuid,
             'charge_by' => $this->faker->randomElement(['sum_of_usage', 'maximum_usage']),
-            'label'     => $this->faker->randomElement(['Bandwidth', 'Storage', 'Members']),
+            'key'     => $this->faker->randomElement(['bandwidth', 'storage', 'members']),
         ];
     }
 }
