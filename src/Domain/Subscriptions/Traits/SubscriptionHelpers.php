@@ -119,7 +119,7 @@ trait SubscriptionHelpers
             ->first();
 
         $this->usages()->create([
-            'metered_feature_id' => $meteredItem->id,
+            'metered_feature_id'   => $meteredItem->id,
             'quantity'             => $quantity,
         ]);
     }
