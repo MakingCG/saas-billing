@@ -6,6 +6,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class CreatePlanData extends DataTransferObject
 {
+    public string $type;
     public string $name;
     public float $amount;
     public string $currency;
@@ -16,6 +17,7 @@ class CreatePlanData extends DataTransferObject
     public static function fromRequest($request): self
     {
         return new self([
+            'type'        => $request->input('type'),
             'name'        => $request->input('name'),
             'amount'      => $request->input('amount'),
             'currency'    => $request->input('currency'),
@@ -28,6 +30,7 @@ class CreatePlanData extends DataTransferObject
     public static function fromArray(array $array): self
     {
         return new self([
+            'type'        => $array['type'],
             'name'        => $array['name'],
             'amount'      => $array['amount'],
             'currency'    => $array['currency'],

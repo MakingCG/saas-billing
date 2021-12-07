@@ -14,6 +14,7 @@ class PlanFactory extends Factory
     {
         return [
             'id'          => $this->faker->uuid,
+            'type'        => 'fixed',
             'name'        => $this->faker->randomElement(['Basic', 'Professional', 'Business']) . ' Pack - ' . Str::random(8),
             'description' => $this->faker->realText(40),
             'currency'    => $this->faker->randomElement(['USD', 'EUR']),

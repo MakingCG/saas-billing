@@ -83,6 +83,7 @@ class FixedPlansTest extends TestCase
         $this
             ->actingAs($user)
             ->post('/api/subscriptions/admin/plans', [
+                'type'        => $plan->type,
                 'name'        => $plan->name,
                 'description' => $plan->description,
                 'interval'    => $plan->interval,
@@ -108,6 +109,7 @@ class FixedPlansTest extends TestCase
 
         $this
             ->assertDatabaseHas('plans', [
+                'type'        => 'fixed',
                 'name'        => $plan->name,
                 'description' => $plan->description,
                 'currency'    => 'USD',
@@ -205,6 +207,7 @@ class FixedPlansTest extends TestCase
         // Check updated results
         $this
             ->assertDatabaseHas('plans', [
+                'type'        => 'fixed',
                 'visible'     => false,
                 'name'        => 'New name',
                 'description' => 'New description',
@@ -258,6 +261,7 @@ class FixedPlansTest extends TestCase
             ->assertDatabaseCount('plan_drivers', 2);*/
 
         $this->assertDatabaseHas('plans', [
+            'type'        => 'fixed',
             'id'     => $plan->id,
             'status' => 'archived',
         ]);

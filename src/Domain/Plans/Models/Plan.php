@@ -12,6 +12,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 /**
  * @method static create(array $array)
  * @property string id
+ * @property string type
  * @property string name
  * @property string description
  * @property string currency

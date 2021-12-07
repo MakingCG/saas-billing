@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -13,7 +14,8 @@ class GenerateDemoPlansCommand extends Command
 
     public function __construct(
         private StorePlanForPaymentServiceAction $storePlanForPaymentService,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -34,6 +36,7 @@ class GenerateDemoPlansCommand extends Command
         // Define plans
         $plans = [
             [
+                'type'        => 'fixed',
                 'name'        => 'Professional Pack',
                 'description' => 'Best for all professionals',
                 'currency'    => 'USD',
@@ -41,18 +44,19 @@ class GenerateDemoPlansCommand extends Command
                     'max_storage_amount' => 200,
                     'max_team_members'   => 20,
                 ],
-                'intervals' => [
+                'intervals'   => [
                     [
-                        'interval'    => 'month',
-                        'amount'      => 9.99,
+                        'interval' => 'month',
+                        'amount'   => 9.99,
                     ],
                     [
-                        'interval'    => 'year',
-                        'amount'      => 99.49,
+                        'interval' => 'year',
+                        'amount'   => 99.49,
                     ],
                 ],
             ],
             [
+                'type'        => 'fixed',
                 'name'        => 'Business Pack',
                 'description' => 'Best for business needs',
                 'currency'    => 'USD',
@@ -60,18 +64,19 @@ class GenerateDemoPlansCommand extends Command
                     'max_storage_amount' => 500,
                     'max_team_members'   => 50,
                 ],
-                'intervals' => [
+                'intervals'   => [
                     [
-                        'interval'    => 'month',
-                        'amount'      => 29.99,
+                        'interval' => 'month',
+                        'amount'   => 29.99,
                     ],
                     [
-                        'interval'    => 'year',
-                        'amount'      => 189.99,
+                        'interval' => 'year',
+                        'amount'   => 189.99,
                     ],
                 ],
             ],
             [
+                'type'        => 'fixed',
                 'name'        => 'Elite Pack',
                 'description' => 'Best for all your needs',
                 'currency'    => 'USD',
@@ -79,14 +84,14 @@ class GenerateDemoPlansCommand extends Command
                     'max_storage_amount' => 2000,
                     'max_team_members'   => -1,
                 ],
-                'intervals' => [
+                'intervals'   => [
                     [
-                        'interval'    => 'month',
-                        'amount'      => 59.99,
+                        'interval' => 'month',
+                        'amount'   => 59.99,
                     ],
                     [
-                        'interval'    => 'year',
-                        'amount'      => 349.99,
+                        'interval' => 'year',
+                        'amount'   => 349.99,
                     ],
                 ],
             ],
@@ -96,6 +101,7 @@ class GenerateDemoPlansCommand extends Command
         foreach ($plans as $plan) {
             foreach ($plan['intervals'] as $interval) {
                 $data = CreatePlanData::fromArray([
+                    'type'        => $plan['type'],
                     'name'        => $plan['name'],
                     'description' => $plan['description'],
                     'features'    => $plan['features'],
