@@ -17,7 +17,7 @@ interface Engine
     /**
      * Create new subscription plan
      */
-    public function createPlan(CreatePlanData $data): array;
+    public function createFixedPlan(CreatePlanData $data): array;
 
     /**
      * Update subscription plan

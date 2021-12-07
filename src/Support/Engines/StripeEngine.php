@@ -37,7 +37,7 @@ class StripeEngine extends StripeWebhooks implements Engine
      * https://stripe.com/docs/api/products/create?lang=php
      * https://stripe.com/docs/api/prices/create?lang=php
      */
-    public function createPlan(CreatePlanData $data): array
+    public function createFixedPlan(CreatePlanData $data): array
     {
         // Create product
         $product = $this->api->post('/products', [

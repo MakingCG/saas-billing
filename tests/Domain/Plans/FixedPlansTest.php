@@ -18,7 +18,7 @@ use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanFeature;
 
-class PlansTest extends TestCase
+class FixedPlansTest extends TestCase
 {
     /**
      * @test

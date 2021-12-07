@@ -24,7 +24,7 @@ class CreatePlansViaDriversAPIAction
                 // Create plan via gateway api
                 $driverPlan = $this->subscription
                     ->driver($driver)
-                    ->createPlan($data);
+                    ->createFixedPlan($data);
 
                 // Attach driver plan id into internal plan record
                 $plan

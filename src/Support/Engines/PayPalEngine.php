@@ -24,7 +24,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create
      */
-    public function createPlan(CreatePlanData $data): array
+    public function createFixedPlan(CreatePlanData $data): array
     {
         $productId = $this->getOrCreateProductId();
 

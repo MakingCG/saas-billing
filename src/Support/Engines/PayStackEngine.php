@@ -27,7 +27,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     /**
      * https://paystack.com/docs/api/#plan-create
      */
-    public function createPlan(CreatePlanData $data): array
+    public function createFixedPlan(CreatePlanData $data): array
     {
         // Get supported currency by paystack
         $supportedCurrencies = ['ZAR'];

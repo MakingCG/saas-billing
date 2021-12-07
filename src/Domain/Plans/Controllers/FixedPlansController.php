@@ -12,7 +12,7 @@ use VueFileManager\Subscription\Domain\Plans\Requests\UpdatePlanRequest;
 use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
 use VueFileManager\Subscription\Domain\Plans\Actions\DeletePlansFromPaymentServiceAction;
 
-class PlansController extends Controller
+class FixedPlansController extends Controller
 {
     /**
      * Show all visible subscription plans

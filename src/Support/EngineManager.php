@@ -10,7 +10,7 @@ use VueFileManager\Subscription\Support\Engines\PayStackEngine;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 
 /**
- * @method createPlan(CreatePlanData $data)
+ * @method createFixedPlan(CreatePlanData $data)
  * @method createCustomer(array $user)
  * @method webhook(Request $request)
  */
