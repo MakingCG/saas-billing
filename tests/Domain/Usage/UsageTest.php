@@ -1,8 +1,8 @@
 <?php
+
 namespace Tests\Domain\Usage;
 
 use Tests\TestCase;
-use Tests\Models\User;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
@@ -13,11 +13,7 @@ class UsageTest extends TestCase
      */
     public function it_store_usage()
     {
-        $user = User::factory()
-            ->create();
-
         $plan = Plan::factory()
-            ->hasDrivers()
             ->hasMeteredFeatures([
                 'key' => 'bandwidth',
             ])
@@ -26,21 +22,16 @@ class UsageTest extends TestCase
             ]);
 
         $subscription = Subscription::factory()
-            ->hasDriver([
-                'driver' => 'paypal',
-            ])
             ->create([
                 'plan_id' => $plan->id,
-                'user_id' => $user->id,
-                'status'  => 'active',
             ]);
 
-        $subscription->recordUsage('bandwidth', 0.12);
+        $subscription->recordUsage('bandwidth', 0.12345);
 
         $this->assertDatabaseHas('usages', [
-            'plan_metered_feature_id' => $plan->meteredFeatures()->first()->id,
-            'subscription_id'      => $subscription->id,
-            'quantity'             => 0.12,
+            'metered_feature_id' => $plan->meteredFeatures()->first()->id,
+            'subscription_id'    => $subscription->id,
+            'quantity'           => 0.12345,
         ]);
     }
 }

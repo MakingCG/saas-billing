@@ -109,7 +109,7 @@ trait SubscriptionHelpers
     }
 
     /**
-     * Store subscription usage
+     * Store subscription feature usage
      */
     public function recordUsage($key, $quantity): void
     {
@@ -119,11 +119,8 @@ trait SubscriptionHelpers
             ->first();
 
         $this->usages()->create([
-            'plan_metered_feature_id' => $meteredItem->id,
+            'metered_feature_id' => $meteredItem->id,
             'quantity'             => $quantity,
         ]);
     }
-
-    // TODO: Get current period usages
-    // $subscription->usage('bandwidth');
 }

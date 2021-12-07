@@ -12,7 +12,7 @@ class MeteredTierFactory extends Factory
     public function definition(): array
     {
         return [
-            'plan_metered_feature_id' => $this->faker->uuid,
+            'metered_feature_id' => $this->faker->uuid,
             'first_unit'           => 1,
             'last_unit'            => $this->faker->randomElement([10, 50, 100]),
             'per_unit'             => $this->faker->randomElement([0.19, 0.49, 2.00, 3.49]),

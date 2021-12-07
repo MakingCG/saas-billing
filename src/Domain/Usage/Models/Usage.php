@@ -8,7 +8,7 @@ use VueFileManager\Subscription\Database\Factories\UsageFactory;
 
 /**
  * @method static create(array $array)
- * @property string plan_metered_feature_id
+ * @property string metered_feature_id
  * @property string subscription_id
  * @property float quantity
  * @property Carbon created_at

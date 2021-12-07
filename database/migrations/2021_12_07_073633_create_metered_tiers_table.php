@@ -14,7 +14,7 @@ class CreateMeteredTiersTable extends Migration
     public function up()
     {
         Schema::create('metered_tiers', function (Blueprint $table) {
-            $table->uuid('plan_metered_feature_id')->index();
+            $table->uuid('metered_feature_id')->index();
             $table->integer('first_unit')->default(1);
             $table->integer('last_unit')->nullable();
             $table->decimal('per_unit');

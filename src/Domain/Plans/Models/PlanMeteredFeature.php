@@ -33,7 +33,7 @@ class PlanMeteredFeature extends Model
 
     public function tiers(): HasMany
     {
-        return $this->hasMany(MeteredTier::class, 'plan_metered_feature_id', 'id');
+        return $this->hasMany(MeteredTier::class, 'metered_feature_id', 'id');
     }
 
     protected static function newFactory(): PlanMeteredFeatureFactory

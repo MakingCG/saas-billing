@@ -7,7 +7,7 @@ use VueFileManager\Subscription\Database\Factories\MeteredTierFactory;
 
 /**
  * @method static create(array $array)
- * @property string plan_metered_feature_id
+ * @property string metered_feature_id
  * @property int first_unit
  * @property int last_unit
  * @property float per_unit
