@@ -5,7 +5,7 @@ namespace VueFileManager\Subscription\Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
-use VueFileManager\Subscription\Domain\Plans\Models\PlanFeature;
+use VueFileManager\Subscription\Domain\Plans\Models\PlanFixedItem;
 
 class PlanDriverFactory extends Factory
 {

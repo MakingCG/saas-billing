@@ -25,7 +25,7 @@ class StorePlanForPaymentServiceAction
         // Create features
         foreach ($data->features as $feature => $value) {
             $plan
-                ->features()
+                ->fixedItems()
                 ->create([
                     'key'   => $feature,
                     'value' => $value,

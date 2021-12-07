@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Validator;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanResource;
 
-class UpdatePlanFeatureAction
+class UpdatePlanFixedItemAction
 {
     public function __invoke(Request $request, Plan $plan)
     {
         // Get validation rules
         $rules = $plan
-            ->features()
+            ->fixedItems()
             ->pluck('key')
             ->map(fn ($key) => [$key => 'sometimes|string_or_integer'])
             ->collapse()
@@ -29,7 +29,7 @@ class UpdatePlanFeatureAction
         // Update data
         foreach ($request->all() as $key => $value) {
             $plan
-                ->features()
+                ->fixedItems()
                 ->where('key', $key)
                 ->update([
                     'key'   => $key,

@@ -32,7 +32,7 @@ class PayStackWebhooksTest extends TestCase
             ->hasDrivers([
                 'driver' => 'paystack',
             ])
-            ->hasFeatures(2)
+            ->hasFixedItems(2)
             ->create();
 
         // Send webhook

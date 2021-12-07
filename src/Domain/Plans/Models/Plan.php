@@ -42,14 +42,19 @@ class Plan extends Model
         return $this->hasMany(PlanDriver::class);
     }
 
-    public function features(): HasMany
-    {
-        return $this->hasMany(PlanFeature::class);
-    }
-
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function fixedItems(): HasMany
+    {
+        return $this->hasMany(PlanFixedItem::class);
+    }
+
+    public function meteredItems(): HasMany
+    {
+        return $this->hasMany(PlanMeteredItem::class);
     }
 
     /**
@@ -81,7 +86,8 @@ class Plan extends Model
         });
 
         static::deleting(function ($plan) {
-            $plan->features()->delete();
+            $plan->fixedItems()->delete();
+            $plan->meteredItems()->delete();
             $plan->drivers()->delete();
         });
     }

@@ -95,9 +95,9 @@ trait SubscriptionHelpers
     /**
      * Get all subscription plan features
      */
-    public function features()
+    public function fixedItems()
     {
-        return $this->plan->features()->pluck('value', 'key');
+        return $this->plan->fixedItems()->pluck('value', 'key');
     }
 
     /**
@@ -105,6 +105,6 @@ trait SubscriptionHelpers
      */
     public function feature(string $feature)
     {
-        return $this->plan->features()->where('key', $feature)->first()->value;
+        return $this->plan->fixedItems()->where('key', $feature)->first()->value;
     }
 }

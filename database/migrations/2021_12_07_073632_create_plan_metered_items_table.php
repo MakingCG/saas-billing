@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlanFeaturesTable extends Migration
+class CreatePlanMeteredItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreatePlanFeaturesTable extends Migration
      */
     public function up()
     {
-        Schema::create('plan_features', function (Blueprint $table) {
+        Schema::create('plan_metered_items', function (Blueprint $table) {
+            $table->uuid('id')->index();
             $table->uuid('plan_id')->index();
-            $table->text('key');
-            $table->text('value');
+            $table->text('label');
+            $table->enum('charge_by', ['sum_of_usage', 'maximum_usage']);
         });
     }
 
@@ -27,6 +28,6 @@ class CreatePlanFeaturesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_features');
+        Schema::dropIfExists('plan_metered_items');
     }
 }

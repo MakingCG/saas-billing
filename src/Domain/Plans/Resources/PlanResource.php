@@ -26,7 +26,7 @@ class PlanResource extends JsonResource
                     'interval'    => $this->interval,
                     'description' => $this->description,
                     'subscribers' => $this->subscriptions->count(),
-                    'features'    => $this->features->pluck('value', 'key'),
+                    'features'    => $this->fixedItems->pluck('value', 'key'),
                 ],
                 'meta'       => [
                     'driver_plan_id' => $this->drivers->pluck('driver_plan_id', 'driver'),

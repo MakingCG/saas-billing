@@ -3,7 +3,7 @@ namespace VueFileManager\Subscription\Domain\Plans\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use VueFileManager\Subscription\Database\Factories\PlanFeatureFactory;
+use VueFileManager\Subscription\Database\Factories\PlanFixedItemFactory;
 
 /**
  * @method static create(array $array)
@@ -11,7 +11,7 @@ use VueFileManager\Subscription\Database\Factories\PlanFeatureFactory;
  * @property string key
  * @property string value
  */
-class PlanFeature extends Model
+class PlanFixedItem extends Model
 {
     use HasFactory;
 
@@ -28,8 +28,8 @@ class PlanFeature extends Model
 
     public $timestamps = false;
 
-    protected static function newFactory(): PlanFeatureFactory
+    protected static function newFactory(): PlanFixedItemFactory
     {
-        return PlanFeatureFactory::new();
+        return PlanFixedItemFactory::new();
     }
 }

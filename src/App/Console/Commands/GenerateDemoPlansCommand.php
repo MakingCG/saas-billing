@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -14,8 +13,7 @@ class GenerateDemoPlansCommand extends Command
 
     public function __construct(
         private StorePlanForPaymentServiceAction $storePlanForPaymentService,
-    )
-    {
+    ) {
         parent::__construct();
     }
 

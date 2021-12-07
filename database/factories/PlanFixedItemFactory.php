@@ -3,17 +3,19 @@
 namespace VueFileManager\Subscription\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use VueFileManager\Subscription\Domain\Plans\Models\PlanFeature;
+use VueFileManager\Subscription\Domain\Plans\Models\PlanFixedItem;
 
-class PlanFeatureFactory extends Factory
+class PlanFixedItemFactory extends Factory
 {
-    protected $model = PlanFeature::class;
+    protected $model = PlanFixedItem::class;
 
     public function definition(): array
     {
         return [
             'plan_id' => $this->faker->uuid,
-            'key'     => $this->faker->randomElement(['max_storage_amount', 'max_team_members', 'max_upload_size']),
+            'key'     => $this->faker->randomElement([
+                'max_storage_amount', 'max_team_members', 'max_upload_size'
+            ]),
             'value'   => $this->faker->randomElement([5, 10, 50, 100, 200]),
         ];
     }

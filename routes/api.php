@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
-use VueFileManager\Subscription\Domain\Plans\Controllers\FixedPlansController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
-use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFeatureAction;
+use VueFileManager\Subscription\Domain\Plans\Controllers\FixedPlansController;
+use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFixedItemAction;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlanSubscribersController;
 use VueFileManager\Subscription\Domain\Transactions\Controllers\GetTransactionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetSubscriptionController;
@@ -41,7 +41,7 @@ Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api', 'auth:san
 Route::group(['prefix' => 'api/subscriptions/admin', 'middleware' => ['api', 'auth:sanctum']], function () {
     // Plans
     Route::get('/plans/{plan}/subscribers', GetPlanSubscribersController::class);
-    Route::patch('/plans/{plan}/features', UpdatePlanFeatureAction::class);
+    Route::patch('/plans/{plan}/features', UpdatePlanFixedItemAction::class);
     Route::apiResource('/plans', FixedPlansController::class);
 
     // User data

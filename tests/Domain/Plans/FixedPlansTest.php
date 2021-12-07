@@ -16,7 +16,7 @@ use Tests\Mocking\PayStack\DeletePlanPaystackMocksClass;
 use Tests\Mocking\PayStack\UpdatePlanPaystackMocksClass;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
-use VueFileManager\Subscription\Domain\Plans\Models\PlanFeature;
+use VueFileManager\Subscription\Domain\Plans\Models\PlanFixedItem;
 
 class FixedPlansTest extends TestCase
 {
@@ -29,7 +29,7 @@ class FixedPlansTest extends TestCase
             ->create();
 
         $plan = Plan::factory()
-            ->hasFeatures(1)
+            ->hasFixedItems(1)
             ->hasDrivers(2)
             ->create();
 
@@ -50,7 +50,7 @@ class FixedPlansTest extends TestCase
             ->create(['role' => 'admin']);
 
         $plan = Plan::factory()
-            ->hasFeatures(1)
+            ->hasFixedItems(1)
             ->hasDrivers(2)
             ->create([
                 'visible' => false,
@@ -115,11 +115,11 @@ class FixedPlansTest extends TestCase
                 'currency'    => 'USD',
                 'status'      => 'active',
             ])
-            ->assertDatabaseHas('plan_features', [
+            ->assertDatabaseHas('plan_fixed_items', [
                 'key'   => 'max_storage_amount',
                 'value' => 100,
             ])
-            ->assertDatabaseHas('plan_features', [
+            ->assertDatabaseHas('plan_fixed_items', [
                 'key'   => 'max_team_members',
                 'value' => 6,
             ]);
@@ -142,7 +142,7 @@ class FixedPlansTest extends TestCase
         // Create plan features
         collect(['max_storage_amount', 'max_team_members'])
             ->each(
-                fn ($feature) => PlanFeature::create([
+                fn ($feature) => PlanFixedItem::create([
                     'plan_id'        => $plan->id,
                     'key'            => $feature,
                     'value'          => 10,
@@ -212,11 +212,11 @@ class FixedPlansTest extends TestCase
                 'name'        => 'New name',
                 'description' => 'New description',
             ])
-            ->assertDatabaseHas('plan_features', [
+            ->assertDatabaseHas('plan_fixed_items', [
                 'key'   => 'max_storage_amount',
                 'value' => 120,
             ])
-            ->assertDatabaseHas('plan_features', [
+            ->assertDatabaseHas('plan_fixed_items', [
                 'key'   => 'max_team_members',
                 'value' => 12,
             ])
@@ -232,7 +232,7 @@ class FixedPlansTest extends TestCase
             ->create();
 
         $plan = Plan::factory()
-            ->hasFeatures(1)
+            ->hasFixedItems(1)
             ->create();
 
         // Create plan drivers
@@ -257,13 +257,13 @@ class FixedPlansTest extends TestCase
 
         // TODO: this can't be fixed, must be flexible for new gateway development
         /*$this
-            ->assertDatabaseCount('plan_features', 2)
+            ->assertDatabaseCount('plan_fixed_items', 2)
             ->assertDatabaseCount('plan_drivers', 2);*/
 
         $this->assertDatabaseHas('plans', [
             'type'        => 'fixed',
-            'id'     => $plan->id,
-            'status' => 'archived',
+            'id'          => $plan->id,
+            'status'      => 'archived',
         ]);
 
         // TODO: this can't be fixed, must be flexible for new gateway development
