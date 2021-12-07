@@ -7,10 +7,10 @@ use VueFileManager\Subscription\Support\Engines\Engine;
 use VueFileManager\Subscription\Support\Engines\PayPalEngine;
 use VueFileManager\Subscription\Support\Engines\StripeEngine;
 use VueFileManager\Subscription\Support\Engines\PayStackEngine;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 
 /**
- * @method createFixedPlan(CreatePlanData $data)
+ * @method createFixedPlan(CreateFixedPlanData $data)
  * @method createCustomer(array $user)
  * @method webhook(Request $request)
  */

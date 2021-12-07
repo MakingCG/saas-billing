@@ -4,7 +4,7 @@ namespace VueFileManager\Subscription\Domain\Plans\Actions;
 use Spatie\QueueableAction\QueueableAction;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 
 class CreatePlansViaDriversAPIAction
 {
@@ -16,7 +16,7 @@ class CreatePlansViaDriversAPIAction
     }
 
     public function __invoke(
-        CreatePlanData $data,
+        CreateFixedPlanData $data,
         Plan $plan,
     ) {
         collect(config('subscription.available_drivers'))

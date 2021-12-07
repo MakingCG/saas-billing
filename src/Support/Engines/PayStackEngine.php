@@ -7,10 +7,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Support\Services\PayStackHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
@@ -27,7 +27,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
     /**
      * https://paystack.com/docs/api/#plan-create
      */
-    public function createFixedPlan(CreatePlanData $data): array
+    public function createFixedPlan(CreateFixedPlanData $data): array
     {
         // Get supported currency by paystack
         $supportedCurrencies = ['ZAR'];

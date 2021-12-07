@@ -4,7 +4,7 @@ namespace VueFileManager\Subscription\Domain\Plans\DTO;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class CreatePlanData extends DataTransferObject
+class CreateFixedPlanData extends DataTransferObject
 {
     public string $type;
     public string $name;

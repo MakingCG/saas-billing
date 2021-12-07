@@ -9,11 +9,11 @@ use Stripe\WebhookSignature;
 use Illuminate\Http\Client\Response;
 use Stripe\Exception\SignatureVerificationException;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Support\Webhooks\StripeWebhooks;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Services\StripeHttpService;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeEngine extends StripeWebhooks implements Engine
@@ -37,7 +37,7 @@ class StripeEngine extends StripeWebhooks implements Engine
      * https://stripe.com/docs/api/products/create?lang=php
      * https://stripe.com/docs/api/prices/create?lang=php
      */
-    public function createFixedPlan(CreatePlanData $data): array
+    public function createFixedPlan(CreateFixedPlanData $data): array
     {
         // Create product
         $product = $this->api->post('/products', [

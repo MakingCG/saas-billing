@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
 use VueFileManager\Subscription\Support\Services\PayPalHttpService;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 
@@ -24,7 +24,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create
      */
-    public function createFixedPlan(CreatePlanData $data): array
+    public function createFixedPlan(CreateFixedPlanData $data): array
     {
         $productId = $this->getOrCreateProductId();
 

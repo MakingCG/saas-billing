@@ -19,11 +19,13 @@ class StorePlanRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'type'        => 'required|string',
             'name'        => 'required|string',
-            'amount'      => 'required|numeric',
-            'interval'    => 'required|string',
+            'amount'      => 'sometimes|numeric',
+            'interval'    => 'sometimes|string',
             'description' => 'sometimes|string|nullable',
             'currency'    => 'required|string',
+            'meters'      => 'sometimes|array',
         ];
     }
 }

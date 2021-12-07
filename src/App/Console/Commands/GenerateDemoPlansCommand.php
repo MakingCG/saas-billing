@@ -2,8 +2,8 @@
 namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Console\Command;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
-use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
+use VueFileManager\Subscription\Domain\Plans\Actions\StoreFixedPlanAction;
 
 class GenerateDemoPlansCommand extends Command
 {
@@ -12,7 +12,7 @@ class GenerateDemoPlansCommand extends Command
     public $description = 'Generate demo plans';
 
     public function __construct(
-        private StorePlanForPaymentServiceAction $storePlanForPaymentService,
+        private StoreFixedPlanAction $storeFixedPlan,
     ) {
         parent::__construct();
     }
@@ -98,7 +98,7 @@ class GenerateDemoPlansCommand extends Command
         // Create plans
         foreach ($plans as $plan) {
             foreach ($plan['intervals'] as $interval) {
-                $data = CreatePlanData::fromArray([
+                $data = CreateFixedPlanData::fromArray([
                     'type'        => $plan['type'],
                     'name'        => $plan['name'],
                     'description' => $plan['description'],
@@ -111,7 +111,7 @@ class GenerateDemoPlansCommand extends Command
                 $this->info("Creating plan with name: {$plan['name']} and interval: {$interval['interval']}");
 
                 // Store plans to the database and gateway
-                ($this->storePlanForPaymentService)($data);
+                ($this->storeFixedPlan)($data);
             }
         }
     }

@@ -3,16 +3,18 @@ namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Domain\Plans\Actions\StoreMeteredPlanAction;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanResource;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanCollection;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 use VueFileManager\Subscription\Domain\Plans\Requests\StorePlanRequest;
 use VueFileManager\Subscription\Domain\Plans\Requests\UpdatePlanRequest;
-use VueFileManager\Subscription\Domain\Plans\Actions\StorePlanForPaymentServiceAction;
+use VueFileManager\Subscription\Domain\Plans\Actions\StoreFixedPlanAction;
 use VueFileManager\Subscription\Domain\Plans\Actions\DeletePlansFromPaymentServiceAction;
 
-class FixedPlansController extends Controller
+class PlansController extends Controller
 {
     /**
      * Show all visible subscription plans
@@ -40,13 +42,26 @@ class FixedPlansController extends Controller
      */
     public function store(
         StorePlanRequest $request,
-        StorePlanForPaymentServiceAction $storePlanForPaymentService,
+        StoreFixedPlanAction $storeFixedPlan,
+        StoreMeteredPlanAction $storeMeteredPlan,
     ): Response {
-        // Map data into DTO
-        $data = CreatePlanData::fromRequest($request);
+        // Create fixed Plan
+        if ($request->input('type') === 'fixed') {
+            // Map data into DTO
+            $fixedPlanData = CreateFixedPlanData::fromRequest($request);
 
-        // Store plan to the internal database
-        $plan = $storePlanForPaymentService($data);
+            // Store plan to the internal database
+            $plan = $storeFixedPlan($fixedPlanData);
+        }
+
+        // Create metered Plan
+        if ($request->input('type') === 'metered') {
+            // Map data into DTO
+            $meteredPlanData = CreateMeteredPlanData::fromRequest($request);
+
+            // Store plan to the internal database
+            $plan = $storeMeteredPlan($meteredPlanData);
+        }
 
         return response(new PlanResource($plan), 201);
     }

@@ -18,7 +18,7 @@ class CreatePlanMeteredTiersTable extends Migration
             $table->integer('first_unit')->default(1);
             $table->integer('last_unit')->nullable();
             $table->decimal('per_unit');
-            $table->decimal('flat_fee')->default(0);
+            $table->decimal('flat_fee')->nullable();
         });
     }
 

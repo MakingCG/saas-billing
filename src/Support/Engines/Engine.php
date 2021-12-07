@@ -4,7 +4,7 @@ namespace VueFileManager\Subscription\Support\Engines;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 interface Engine
@@ -17,7 +17,7 @@ interface Engine
     /**
      * Create new subscription plan
      */
-    public function createFixedPlan(CreatePlanData $data): array;
+    public function createFixedPlan(CreateFixedPlanData $data): array;
 
     /**
      * Update subscription plan

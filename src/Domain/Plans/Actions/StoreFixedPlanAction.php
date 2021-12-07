@@ -2,16 +2,16 @@
 namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreatePlanData;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 
-class StorePlanForPaymentServiceAction
+class StoreFixedPlanAction
 {
     public function __construct(
         private CreatePlansViaDriversAPIAction $createPlansViaDriversAPI,
     ) {
     }
 
-    public function __invoke(CreatePlanData $data)
+    public function __invoke(CreateFixedPlanData $data)
     {
         // Create plan
         $plan = Plan::create([
@@ -24,12 +24,10 @@ class StorePlanForPaymentServiceAction
 
         // Create features
         foreach ($data->features as $feature => $value) {
-            $plan
-                ->fixedItems()
-                ->create([
-                    'key'   => $feature,
-                    'value' => $value,
-                ]);
+            $plan->fixedItems()->create([
+                'key'   => $feature,
+                'value' => $value,
+            ]);
         }
 
         // Create plan in available gateways
