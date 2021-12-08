@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
@@ -106,7 +105,7 @@ class PayStackWebhooksTest extends TestCase
             'driver'         => 'paystack',
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -303,11 +302,11 @@ class PayStackWebhooksTest extends TestCase
                 'name'    => $planHigher->name,
             ]);
 
-        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->name === $planHigher->name);
+        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->name === $planHigher->name);
 
         Http::assertSentInOrder([
-            fn(Request $request) => $request->url() === "https://api.paystack.co/subscription/{$initialSubscription->driverId()}",
-            fn(Request $request) => $request->url() === 'https://api.paystack.co/subscription/disable',
+            fn (Request $request) => $request->url() === "https://api.paystack.co/subscription/{$initialSubscription->driverId()}",
+            fn (Request $request) => $request->url() === 'https://api.paystack.co/subscription/disable',
         ]);
     }
 
@@ -407,7 +406,7 @@ class PayStackWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -480,7 +479,7 @@ class PayStackWebhooksTest extends TestCase
                         'signature'                    => 'SIG_XtQmL8nBieEY6wPi0zzP',
                         'account_name'                 => null,
                         'receiver_bank_account_number' => null,
-                        'receiver_bank'                => null,],
+                        'receiver_bank'                => null, ],
                     'customer'             => [
                         'id'                         => 61682919,
                         'first_name'                 => null,
@@ -603,7 +602,7 @@ class PayStackWebhooksTest extends TestCase
                         'signature'                    => 'SIG_XtQmL8nBieEY6wPi0zzP',
                         'account_name'                 => null,
                         'receiver_bank_account_number' => null,
-                        'receiver_bank'                => null,],
+                        'receiver_bank'                => null, ],
                     'customer'             => [
                         'id'                         => 61682919,
                         'first_name'                 => null,
@@ -636,8 +635,9 @@ class PayStackWebhooksTest extends TestCase
 
         $this
             ->assertDatabaseHas('balances', [
-                'user_id' => $user->id,
-                'balance' => 10.00,
+                'user_id'  => $user->id,
+                'balance'  => 10.00,
+                'currency' => 'ZAR',
             ])
             ->assertDatabaseHas('transactions', [
                 'user_id'   => $user->id,

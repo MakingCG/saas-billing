@@ -73,18 +73,6 @@ class PayPalWebhooksTest extends TestCase
                     'plan_id'         => $plan->driverId('paypal'),
                     'status'          => 'APPROVAL_PENDING',
                 ],
-                'links'            => [
-                    [
-                        'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-8A715371GG332831A-4MM87741Y6956121U',
-                        'rel'    => 'self',
-                        'method' => 'GET',
-                    ],
-                    [
-                        'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-8A715371GG332831A-4MM87741Y6956121U/resend',
-                        'rel'    => 'resend',
-                        'method' => 'POST',
-                    ],
-                ],
             ])
             ->assertOk();
 
@@ -227,42 +215,6 @@ class PayPalWebhooksTest extends TestCase
                 'status'             => 'ACTIVE',
                 'status_update_time' => '2021-11-10T06:42:48Z',
             ],
-            'status'           => 'PENDING',
-            'transmissions'    => [
-                [
-                    'webhook_url'      => 'https://internanogalakticky.vuefilemanager.com/api/subscriptions/paypal/webhooks',
-                    'http_status'      => 500,
-                    'reason_phrase'    => 'HTTP/1.1 200 Connection established',
-                    'response_headers' => [
-                        'Transfer-Encoding'           => 'chunked',
-                        'date'                        => 'Tue, 16 Nov 2021 10:53:54 GMT',
-                        'Server'                      => 'nginx/1.14.2',
-                        'Cache-Control'               => 'no-cache, private',
-                        'Access-Control-Allow-Origin' => '*',
-                        'Connection'                  => 'keep-alive',
-                        'Content-Type'                => 'text/html; charset=UTF-8',
-                    ],
-                    'transmission_id'  => '1092bc00-46cb-11ec-9b26-e1d8a0400366',
-                    'status'           => 'PENDING',
-                    'timestamp'        => '2021-11-16T10:50:51Z',
-                ],
-            ],
-            'links'            => [
-                [
-                    'href'    => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-5W900153L71312432-5CW911939G6805917',
-                    'rel'     => 'self',
-                    'method'  => 'GET',
-                    'encType' => 'application/json',
-                ],
-                [
-                    'href'    => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-5W900153L71312432-5CW911939G6805917/resend',
-                    'rel'     => 'resend',
-                    'method'  => 'POST',
-                    'encType' => 'application/json',
-                ],
-            ],
-            'event_version'    => '1.0',
-            'resource_version' => '2.0',
         ])
             ->assertOk();
 
@@ -383,22 +335,6 @@ class PayPalWebhooksTest extends TestCase
                 'status'             => 'CANCELLED',
                 'status_update_time' => '2018-12-10T21:20:49Z',
             ],
-            'links'            => [
-                [
-                    'href'    => 'https://api.paypal.com/v1/notifications/webhooks-events/WH-UY687577TY25889J9-2R6T55435R66168Y6',
-                    'rel'     => 'self',
-                    'method'  => 'GET',
-                    'encType' => 'application/json',
-                ],
-                [
-                    'href'    => 'https://api.paypal.com/v1/notifications/webhooks-events/WH-UY687577TY25889J9-2R6T55435R66168Y6/resend',
-                    'rel'     => 'resend',
-                    'method'  => 'POST',
-                    'encType' => 'application/json',
-                ],
-            ],
-            'event_version'    => '1.0',
-            'resource_version' => '2.0',
         ])
             ->assertOk();
 
@@ -579,41 +515,6 @@ class PayPalWebhooksTest extends TestCase
                 'state'                       => 'completed',
                 'invoice_number'              => '',
             ],
-            'status'        => 'PENDING',
-            'transmissions' => [
-                [
-                    'webhook_url'      => 'https://internanogalakticky.vuefilemanager.com/api/subscriptions/paypal/webhooks',
-                    'http_status'      => 500,
-                    'reason_phrase'    => 'HTTP/1.1 200 Connection established',
-                    'response_headers' => [
-                        'Transfer-Encoding'           => 'chunked',
-                        'date'                        => 'Thu, 18 Nov 2021 07:58:56 GMT',
-                        'Server'                      => 'nginx/1.14.2',
-                        'Cache-Control'               => 'no-cache, private',
-                        'Access-Control-Allow-Origin' => '*',
-                        'Connection'                  => 'keep-alive',
-                        'Content-Type'                => 'text/html; charset=UTF-8',
-                    ],
-                    'transmission_id'  => '5af9daf0-4845-11ec-939e-edb49e359949',
-                    'status'           => 'PENDING',
-                    'timestamp'        => '2021-11-18T07:58:45Z',
-                ],
-            ],
-            'links'         => [
-                [
-                    'href'    => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-9XV66238KD489590N-2R389597JR522592U',
-                    'rel'     => 'self',
-                    'method'  => 'GET',
-                    'encType' => 'application/json',
-                ],
-                [
-                    'href'    => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-9XV66238KD489590N-2R389597JR522592U/resend',
-                    'rel'     => 'resend',
-                    'method'  => 'POST',
-                    'encType' => 'application/json',
-                ],
-            ],
-            'event_version' => '1.0',
         ])
             ->assertOk();
 
@@ -627,5 +528,95 @@ class PayPalWebhooksTest extends TestCase
             'driver'    => 'paypal',
             'reference' => 'I-6W1M3FWTVL19',
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function paypal_webhook_payment_capture_completed()
+    {
+        $user = User::factory()
+            ->create();
+
+        resolve(VerifyWebhookPayPalMocksClass::class)();
+
+        $this->postJson('/api/subscriptions/paypal/webhooks', [
+            'id'               => 'WH-83V83050EE416880M-36871424CH1549020',
+            'create_time'      => '2021-12-08T14:34:47.401Z',
+            'resource_type'    => 'capture',
+            'event_type'       => 'PAYMENT.CAPTURE.COMPLETED',
+            'summary'          => 'Payment completed for $ 10.49 USD',
+            'resource'         => [
+                'amount'                      => [
+                    'value'         => '10.49',
+                    'currency_code' => 'USD',
+                ],
+                'seller_protection'           => [
+                    'dispute_categories' => [
+                        'ITEM_NOT_RECEIVED',
+                        'UNAUTHORIZED_TRANSACTION',
+                    ],
+                    'status'             => 'ELIGIBLE',
+                ],
+                'supplementary_data'          => [
+                    'related_ids' => [
+                        'order_id' => '3L909709RA4092508',
+                    ],
+                ],
+                'update_time'                 => '2021-12-08T14:34:42Z',
+                'create_time'                 => '2021-12-08T14:34:42Z',
+                'final_capture'               => true,
+                'seller_receivable_breakdown' => [
+                    'paypal_fee'   => [
+                        'value'         => '0.71',
+                        'currency_code' => 'USD',
+                    ],
+                    'gross_amount' => [
+                        'value'         => '10.49',
+                        'currency_code' => 'USD',
+                    ],
+                    'net_amount'   => [
+                        'value'         => '9.78',
+                        'currency_code' => 'USD',
+                    ],
+                ],
+                'links'                       => [
+                    [
+                        'method' => 'GET',
+                        'rel'    => 'self',
+                        'href'   => 'https://api.sandbox.paypal.com/v2/payments/captures/5WS14661GG734453U',
+                    ],
+                    [
+                        'method' => 'POST',
+                        'rel'    => 'refund',
+                        'href'   => 'https://api.sandbox.paypal.com/v2/payments/captures/5WS14661GG734453U/refund',
+                    ],
+                    [
+                        'method' => 'GET',
+                        'rel'    => 'up',
+                        'href'   => 'https://api.sandbox.paypal.com/v2/checkout/orders/3L909709RA4092508',
+                    ],
+                ],
+                'id'                          => '5WS14661GG734453U',
+                'status'                      => 'COMPLETED',
+                'custom_id'                   => $user->id,
+            ],
+        ])->assertOk();
+
+        $this
+            ->assertDatabaseHas('balances', [
+                'user_id'  => $user->id,
+                'balance'  => 10.49,
+                'currency' => 'USD',
+            ])
+            ->assertDatabaseHas('transactions', [
+                'user_id'   => $user->id,
+                'type'      => 'charge',
+                'status'    => 'completed',
+                'currency'  => 'USD',
+                'amount'    => 10.49,
+                'driver'    => 'paypal',
+                'reference' => '5WS14661GG734453U',
+            ]);
     }
 }

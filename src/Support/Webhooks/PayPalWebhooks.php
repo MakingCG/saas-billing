@@ -112,4 +112,26 @@ class PayPalWebhooks
             'amount'    => $request->input('resource.amount.total'),
         ]);
     }
+
+    public function handlePaymentCaptureCompleted(Request $request): void
+    {
+        // Get our user
+        $user = config('auth.providers.users.model')::find($request->input('resource.custom_id'))
+            ->first();
+
+        $user->creditBalance(
+            balance: $request->input('resource.amount.value'),
+            currency: $request->input('resource.amount.currency_code'),
+        );
+
+        // Store transaction
+        $user->transactions()->create([
+            'status'    => 'completed',
+            'type'      => 'charge',
+            'driver'    => 'paypal',
+            'reference' => $request->input('resource.id'),
+            'currency'  => $request->input('resource.amount.currency_code'),
+            'amount'    => $request->input('resource.amount.value'),
+        ]);
+    }
 }
