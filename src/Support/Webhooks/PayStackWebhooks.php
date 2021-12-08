@@ -113,17 +113,43 @@ class PayStackWebhooks
 
     public function handleChargeSuccess(Request $request): void
     {
+        // Get plan
+        $plan = $request->input('data.plan');
+
+        // Get user
         $user = config('auth.providers.users.model')::where('email', $request->input('data.customer.email'))
             ->first();
 
-        $user->transactions()->create([
-            'status'    => 'completed',
-            'type'      => 'charge',
-            'driver'    => 'paystack',
-            'plan_name' => $request->input('data.plan.name'),
-            'reference' => $request->input('data.reference'),
-            'currency'  => $request->input('data.currency'),
-            'amount'    => $request->input('data.amount') / 100,
-        ]);
+        // TODO: resolve conflict with ZAR/USD currency
+        // Proceed as credit balance
+        if (empty($plan)) {
+
+            $user->creditBalance(
+                balance: $request->input('data.amount') / 100,
+                currency: $request->input('data.currency'),
+            );
+
+            $user->transactions()->create([
+                'status'    => 'completed',
+                'type'      => 'charge',
+                'driver'    => 'paystack',
+                'reference' => $request->input('data.reference'),
+                'currency'  => $request->input('data.currency'),
+                'amount'    => $request->input('data.amount') / 100,
+            ]);
+        }
+
+        // Proceed as subscription charge
+        if (! empty($plan)) {
+            $user->transactions()->create([
+                'status'    => 'completed',
+                'type'      => 'charge',
+                'driver'    => 'paystack',
+                'plan_name' => $request->input('data.plan.name'),
+                'reference' => $request->input('data.reference'),
+                'currency'  => $request->input('data.currency'),
+                'amount'    => $request->input('data.amount') / 100,
+            ]);
+        }
     }
 }
