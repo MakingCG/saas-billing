@@ -15,38 +15,50 @@ class PlanResource extends JsonResource
     {
         return [
             'data' => [
-                'id'         => $this->id,
-                'type'       => 'plans',
-                'attributes' => [
-                    'name'        => $this->name,
-                    'type'        => $this->type,
-                    'visible'     => $this->visible,
-                    'currency'    => $this->currency,
-                    'description' => $this->description,
-                    'subscribers' => $this->subscriptions->count(),
-                ],
+                'id'          => $this->id,
+                'type'        => 'plans',
+                'attributes'  => match ($this->type) {
+                    'metered' => $this->getMeteredAttributes(),
+                    'fixed'   => $this->getFixedAttributes(),
+                },
                 'meta'       => [
                     // Get gateway driver ids
                     'driver_plan_id' => $this->drivers->pluck('driver_plan_id', 'driver'),
-
-                    // Get fixed plan attributes
-                    'fixed'          => $this->when($this->type === 'fixed', fn () => [
-                        'price'    => format_currency($this->amount, $this->currency),
-                        'amount'   => $this->amount,
-                        'features' => $this->fixedFeatures->pluck('value', 'key'),
-                        'interval' => $this->interval,
-                    ]),
-
-                    // Get metered plan attributes
-                    'metered'        => $this->when($this->type === 'metered', fn () => [
-                        'prices' => $this->meteredFeatures->map(fn ($price) => [
-                            'key'       => $price['key'],
-                            'charge_by' => $price['charge_by'],
-                            'tiers'     => $price['tiers'],
-                        ]),
-                    ]),
                 ],
             ],
+        ];
+    }
+
+    private function getFixedAttributes(): array
+    {
+        return [
+            'name'        => $this->name,
+            'type'        => $this->type,
+            'visible'     => $this->visible,
+            'currency'    => $this->currency,
+            'description' => $this->description,
+            'subscribers' => $this->subscriptions->count(),
+            'price'       => format_currency($this->amount, $this->currency),
+            'amount'      => $this->amount,
+            'features'    => $this->fixedFeatures->pluck('value', 'key'),
+            'interval'    => $this->interval,
+        ];
+    }
+
+    private function getMeteredAttributes(): array
+    {
+        return [
+            'name'        => $this->name,
+            'type'        => $this->type,
+            'visible'     => $this->visible,
+            'currency'    => $this->currency,
+            'description' => $this->description,
+            'subscribers' => $this->subscriptions->count(),
+            'prices'      => $this->meteredFeatures->map(fn ($price) => [
+                'key'       => $price['key'],
+                'charge_by' => $price['charge_by'],
+                'tiers'     => $price['tiers'],
+            ]),
         ];
     }
 }

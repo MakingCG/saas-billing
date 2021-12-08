@@ -61,7 +61,7 @@ class SettlePrePaidSubscriptionPeriodSchedule
 
                 // Update next subscription period date
                 $subscription->update([
-                    'renews_at' => now()->subDays(30),
+                    'renews_at' => now()->addDays(30),
                 ]);
             });
     }

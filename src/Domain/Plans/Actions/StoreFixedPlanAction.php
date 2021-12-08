@@ -15,6 +15,7 @@ class StoreFixedPlanAction
     {
         // Create plan
         $plan = Plan::create([
+            'type'        => 'fixed',
             'name'        => $data->name,
             'description' => $data->description,
             'interval'    => $data->interval,

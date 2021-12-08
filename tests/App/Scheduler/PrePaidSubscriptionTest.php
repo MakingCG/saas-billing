@@ -84,7 +84,7 @@ class PrePaidSubscriptionTest extends TestCase
 
         $this
             ->assertDatabaseHas('subscriptions', [
-                'renews_at' => now()->subDays(30),
+                'renews_at' => now()->addDays(30),
             ])
             ->assertDatabaseHas('transactions', [
                 'user_id'   => $user->id,
@@ -154,6 +154,9 @@ class PrePaidSubscriptionTest extends TestCase
         resolve(SettlePrePaidSubscriptionPeriodSchedule::class)();
 
         $this
+            ->assertDatabaseHas('subscriptions', [
+                'renews_at' => now()->addDays(30),
+            ])
             ->assertDatabaseHas('balance_debts', [
                 'debt'     => 29.49,
                 'currency' => 'USD',
