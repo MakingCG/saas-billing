@@ -19,8 +19,10 @@ class CreateSubscriptionsTable extends Migration
             $table->uuid('plan_id');
 
             $table->string('name');
+            $table->enum('type', ['fixed', 'pre-paid', 'auto-renew']);
             $table->enum('status', ['inactive', 'active', 'cancelled', 'completed'])->default('active');
 
+            $table->timestamp('renews_at')->nullable();
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();
             $table->timestamps();

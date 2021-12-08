@@ -1571,6 +1571,7 @@ class StripeWebhooksTest extends TestCase
 
         $this->assertDatabaseHas('transactions', [
             'user_id'   => $user->id,
+            'type'      => 'charge',
             'status'    => 'completed',
             'plan_name' => $subscription->name,
             'currency'  => 'usd',

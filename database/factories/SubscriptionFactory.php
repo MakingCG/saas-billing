@@ -16,6 +16,7 @@ class SubscriptionFactory extends Factory
             'id'            => Str::uuid(),
             'user_id'       => Str::uuid(),
             'plan_id'       => Str::uuid(),
+            'type'          => $this->faker->randomElement(['fixed', 'pre-paid', 'auto-renew']),
             'name'          => $this->faker->randomElement(['Starter Pack', 'Professional Pack', 'Elite Pack']),
             'status'        => $this->faker->randomElement(['active', 'cancelled']),
             'trial_ends_at' => $this->faker->dateTimeBetween('-12 months'),

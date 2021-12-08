@@ -17,8 +17,10 @@ use VueFileManager\Subscription\Domain\Subscriptions\Traits\SubscriptionHelpers;
  * @property string id
  * @property string user_id
  * @property string plan_id
+ * @property string type
  * @property string name
  * @property string subscription_id
+ * @property DateTime renews_at
  * @property DateTime trial_ends_at
  * @property DateTime ends_at
  */

@@ -30,6 +30,7 @@ class StripeWebhooks
             ->first();
 
         $subscription = Subscription::create([
+            'type'    => 'fixed',
             'status'  => 'inactive',
             'plan_id' => $planDriver->plan->id,
             'user_id' => $customer->user_id,
@@ -132,6 +133,7 @@ class StripeWebhooks
 
         $customer->user->transactions()->create([
             'status'    => 'completed',
+            'type'      => 'charge',
             'driver'    => 'stripe',
             'plan_name' => $subscriptionDriver->subscription->name,
             'reference' => $request->input('data.object.id'),

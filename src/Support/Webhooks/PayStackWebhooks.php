@@ -74,6 +74,7 @@ class PayStackWebhooks
         // Create new subscription
         if (! $customer->user->subscription) {
             $subscription = Subscription::create([
+                'type'    => 'fixed',
                 'plan_id' => $planDriver->plan->id,
                 'user_id' => $customer->user_id,
                 'name'    => $planDriver->plan->name,
@@ -117,6 +118,7 @@ class PayStackWebhooks
 
         $user->transactions()->create([
             'status'    => 'completed',
+            'type'      => 'charge',
             'driver'    => 'paystack',
             'plan_name' => $request->input('data.plan.name'),
             'reference' => $request->input('data.reference'),

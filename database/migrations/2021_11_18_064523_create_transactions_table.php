@@ -16,10 +16,11 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->index();
             $table->uuid('user_id')->index();
+            $table->enum('type', ['charge', 'credit', 'withdrawal']);
             $table->enum('status', ['completed', 'error', 'cancelled']);
             $table->string('plan_name');
             $table->string('driver');
-            $table->string('reference');
+            $table->string('reference')->nullable();
             $table->decimal('amount');
             $table->text('currency');
             $table->timestamps();

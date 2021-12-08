@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use Carbon\Carbon;
 use Tests\Models\User;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -16,6 +17,8 @@ class TestCase extends Orchestra
     public function setUp(): void
     {
         parent::setUp();
+
+        Carbon::setTestNow('1. January 2022');
 
         $this->withoutExceptionHandling();
 

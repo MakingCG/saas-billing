@@ -25,6 +25,7 @@ class PayPalWebhooks
 
         // Store new subscription
         $subscription = Subscription::create([
+            'type'    => 'fixed',
             'plan_id' => $planDriver->plan->id,
             'user_id' => $userId,
             'name'    => $planDriver->plan->name,
@@ -103,6 +104,7 @@ class PayPalWebhooks
         // Store transaction
         $user->transactions()->create([
             'status'    => 'completed',
+            'type'      => 'charge',
             'driver'    => 'paypal',
             'plan_name' => $plan->name,
             'reference' => $request->input('resource.billing_agreement_id'),
