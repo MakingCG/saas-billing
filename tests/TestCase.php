@@ -4,6 +4,7 @@ namespace Tests;
 use Carbon\Carbon;
 use Tests\Models\User;
 use Laravel\Sanctum\SanctumServiceProvider;
+use Illuminate\Support\Facades\Notification;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -17,6 +18,8 @@ class TestCase extends Orchestra
     public function setUp(): void
     {
         parent::setUp();
+
+        Notification::fake();
 
         Carbon::setTestNow('1. January 2022');
 

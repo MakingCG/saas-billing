@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ConfirmStripePayment extends Notification implements ShouldQueue
+class ConfirmStripePaymentNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

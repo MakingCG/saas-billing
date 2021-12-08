@@ -14,7 +14,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
-use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePayment;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification;
 
 class StripeWebhooksTest extends TestCase
 {
@@ -1586,8 +1586,6 @@ class StripeWebhooksTest extends TestCase
      */
     public function stripe_webhook_payment_intent_payment_failed()
     {
-        Notification::fake();
-
         $user = User::factory()
             ->create();
 
@@ -1771,7 +1769,7 @@ class StripeWebhooksTest extends TestCase
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
-        Notification::assertSentTo($user, ConfirmStripePayment::class);
+        Notification::assertSentTo($user, ConfirmStripePaymentNotification::class);
     }
 
     /**

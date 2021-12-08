@@ -1,8 +1,10 @@
 <?php
 namespace Domain\Balances\Traits;
 
-use ErrorException;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Domain\Balances\Exceptions\InsufficientBalanceException;
+use VueFileManager\Subscription\Domain\Balances\Models\BalanceDebt;
 use VueFileManager\Subscription\Domain\Balances\Models\Balance as BalanceModel;
 
 trait Balance
@@ -10,6 +12,11 @@ trait Balance
     public function balance(): HasOne
     {
         return $this->hasOne(BalanceModel::class, 'user_id', 'id');
+    }
+
+    public function debts(): HasMany
+    {
+        return $this->hasMany(BalanceDebt::class, 'user_id', 'id');
     }
 
     /**
@@ -34,13 +41,13 @@ trait Balance
     /**
      * Decrease user balance
      *
-     * @throws ErrorException
+     * @throws InsufficientBalanceException
      */
     public function withdrawBalance($balance): void
     {
         // Check if user has sufficient balance
         if ($this->balance->balance < $balance) {
-            throw new ErrorException('There is not sufficient balance');
+            throw new InsufficientBalanceException();
         }
 
         // Decrement balance

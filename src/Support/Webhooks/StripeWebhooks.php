@@ -11,7 +11,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
-use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePayment;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification;
 
 class StripeWebhooks
 {
@@ -147,7 +147,7 @@ class StripeWebhooks
         $customer = Customer::where('driver_user_id', $request->input('data.object.customer'))
             ->first();
 
-        $customer->user->notify(new ConfirmStripePayment([
+        $customer->user->notify(new ConfirmStripePaymentNotification([
             'url'    => $request->input('data.object.hosted_invoice_url'),
             'amount' => format_currency(
                 amount: $request->input('data.object.amount_remaining') / 100,

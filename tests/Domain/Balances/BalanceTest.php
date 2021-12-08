@@ -1,10 +1,10 @@
 <?php
 namespace Tests\Domain\Balances;
 
-use ErrorException;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Domain\Balances\Exceptions\InsufficientBalanceException;
 
 class BalanceTest extends TestCase
 {
@@ -73,7 +73,7 @@ class BalanceTest extends TestCase
      */
     public function it_try_to_withdraw_more_than_current_user_balance()
     {
-        $this->expectException(ErrorException::class);
+        $this->expectException(InsufficientBalanceException::class);
 
         $this->user->balance()->create([
             'currency' => 'USD',
