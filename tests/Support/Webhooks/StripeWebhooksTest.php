@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Support\Webhooks;
 
 use Carbon\Carbon;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
@@ -21,7 +23,7 @@ class StripeWebhooksTest extends TestCase
     /**
      * @test
      */
-    public function stripe_webhook_create_subscription()
+    public function stripe_webhook_create_fixed_subscription()
     {
         Event::fake([
             SubscriptionWasUpdated::class,
@@ -82,78 +84,76 @@ class StripeWebhooksTest extends TestCase
                             'items'                             =>
                                 [
                                     'object'      => 'list',
-                                    'data'        =>
+                                    'data'        => [
                                         [
-                                            0 =>
+                                            'id'                 => 'si_KhZR5Hq52f5FJw',
+                                            'object'             => 'subscription_item',
+                                            'billing_thresholds' => null,
+                                            'created'            => 1638432379,
+                                            'metadata'           =>
                                                 [
-                                                    'id'                 => 'si_KhZR5Hq52f5FJw',
-                                                    'object'             => 'subscription_item',
-                                                    'billing_thresholds' => null,
-                                                    'created'            => 1638432379,
-                                                    'metadata'           =>
+                                                ],
+                                            'plan'               =>
+                                                [
+                                                    'id'                => 'price_1K1vL5B9m4sTKy1qrkbJ7QEF',
+                                                    'object'            => 'plan',
+                                                    'active'            => true,
+                                                    'aggregate_usage'   => null,
+                                                    'amount'            => 9949,
+                                                    'amount_decimal'    => '9949',
+                                                    'billing_scheme'    => 'per_unit',
+                                                    'created'           => 1638374843,
+                                                    'currency'          => 'usd',
+                                                    'interval'          => 'year',
+                                                    'interval_count'    => 1,
+                                                    'livemode'          => false,
+                                                    'metadata'          =>
                                                         [
                                                         ],
-                                                    'plan'               =>
+                                                    'nickname'          => null,
+                                                    'product'           => 'prod_KhJzsgmz5m457o',
+                                                    'tiers_mode'        => null,
+                                                    'transform_usage'   => null,
+                                                    'trial_period_days' => null,
+                                                    'usage_type'        => 'licensed',
+                                                ],
+                                            'price'              =>
+                                                [
+                                                    'id'                  => 'price_1K1vL5B9m4sTKy1qrkbJ7QEF',
+                                                    'object'              => 'price',
+                                                    'active'              => true,
+                                                    'billing_scheme'      => 'per_unit',
+                                                    'created'             => 1638374843,
+                                                    'currency'            => 'usd',
+                                                    'livemode'            => false,
+                                                    'lookup_key'          => null,
+                                                    'metadata'            =>
                                                         [
-                                                            'id'                => 'price_1K1vL5B9m4sTKy1qrkbJ7QEF',
-                                                            'object'            => 'plan',
-                                                            'active'            => true,
+                                                        ],
+                                                    'nickname'            => null,
+                                                    'product'             => 'prod_KhJzsgmz5m457o',
+                                                    'recurring'           =>
+                                                        [
                                                             'aggregate_usage'   => null,
-                                                            'amount'            => 9949,
-                                                            'amount_decimal'    => '9949',
-                                                            'billing_scheme'    => 'per_unit',
-                                                            'created'           => 1638374843,
-                                                            'currency'          => 'usd',
                                                             'interval'          => 'year',
                                                             'interval_count'    => 1,
-                                                            'livemode'          => false,
-                                                            'metadata'          =>
-                                                                [
-                                                                ],
-                                                            'nickname'          => null,
-                                                            'product'           => 'prod_KhJzsgmz5m457o',
-                                                            'tiers_mode'        => null,
-                                                            'transform_usage'   => null,
                                                             'trial_period_days' => null,
                                                             'usage_type'        => 'licensed',
                                                         ],
-                                                    'price'              =>
-                                                        [
-                                                            'id'                  => 'price_1K1vL5B9m4sTKy1qrkbJ7QEF',
-                                                            'object'              => 'price',
-                                                            'active'              => true,
-                                                            'billing_scheme'      => 'per_unit',
-                                                            'created'             => 1638374843,
-                                                            'currency'            => 'usd',
-                                                            'livemode'            => false,
-                                                            'lookup_key'          => null,
-                                                            'metadata'            =>
-                                                                [
-                                                                ],
-                                                            'nickname'            => null,
-                                                            'product'             => 'prod_KhJzsgmz5m457o',
-                                                            'recurring'           =>
-                                                                [
-                                                                    'aggregate_usage'   => null,
-                                                                    'interval'          => 'year',
-                                                                    'interval_count'    => 1,
-                                                                    'trial_period_days' => null,
-                                                                    'usage_type'        => 'licensed',
-                                                                ],
-                                                            'tax_behavior'        => 'unspecified',
-                                                            'tiers_mode'          => null,
-                                                            'transform_quantity'  => null,
-                                                            'type'                => 'recurring',
-                                                            'unit_amount'         => 9949,
-                                                            'unit_amount_decimal' => '9949',
-                                                        ],
-                                                    'quantity'           => 1,
-                                                    'subscription'       => 'sub_1K2AJ4B9m4sTKy1qtr8XNc2D',
-                                                    'tax_rates'          =>
-                                                        [
-                                                        ],
+                                                    'tax_behavior'        => 'unspecified',
+                                                    'tiers_mode'          => null,
+                                                    'transform_quantity'  => null,
+                                                    'type'                => 'recurring',
+                                                    'unit_amount'         => 9949,
+                                                    'unit_amount_decimal' => '9949',
+                                                ],
+                                            'quantity'           => 1,
+                                            'subscription'       => 'sub_1K2AJ4B9m4sTKy1qtr8XNc2D',
+                                            'tax_rates'          =>
+                                                [
                                                 ],
                                         ],
+                                    ],
                                     'has_more'    => false,
                                     'total_count' => 1,
                                     'url'         => '/v1/subscription_items?subscription=sub_1K2AJ4B9m4sTKy1qtr8XNc2D',
@@ -218,7 +218,7 @@ class StripeWebhooksTest extends TestCase
 
         // Send webhook
         $this
-            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
@@ -239,6 +239,495 @@ class StripeWebhooksTest extends TestCase
         ]);
 
         Event::assertNothingDispatched();
+    }
+
+    /**
+     * @test
+     */
+    public function stripe_webhook_create_metered_subscription()
+    {
+        Event::fake([
+            SubscriptionWasUpdated::class,
+        ]);
+
+        $user = User::factory()
+            ->create();
+
+        Customer::create([
+            'user_id'        => $user->id,
+            'driver_user_id' => 'cus_KjAlPNelS6xFkq',
+            'driver'         => 'stripe',
+        ]);
+
+        // Create plan with metered features
+        $plan = Plan::factory()
+            ->hasDrivers([
+                'driver'         => 'stripe',
+                'driver_plan_id' => 'prod_KkCwo4KLpPp4EV',
+            ])
+            ->create([
+                'type'     => 'metered',
+                'currency' => 'USD',
+            ]);
+
+        PlanMeteredFeature::factory()
+            ->hasTiers([
+                'first_unit' => 1,
+                'last_unit'  => null,
+                'per_unit'   => 0.90,
+                'flat_fee'   => 2.49,
+            ])
+            ->create([
+                'plan_id'            => $plan->id,
+                'key'                => 'bandwidth',
+                'aggregate_strategy' => 'sum_of_usage',
+            ]);
+
+        PlanMeteredFeature::factory()
+            ->hasTiers([
+                'first_unit' => 1,
+                'last_unit'  => null,
+                'per_unit'   => 0.09,
+                'flat_fee'   => null,
+            ])
+            ->create([
+                'plan_id'            => $plan->id,
+                'key'                => 'storage',
+                'aggregate_strategy' => 'maximum_usage',
+            ]);
+
+        $payload = [
+            'id'               => 'evt_1K4iaDB9m4sTKy1qbnftcdp0',
+            'object'           => 'event',
+            'api_version'      => '2020-08-27',
+            'created'          => 1639040793,
+            'data'             => [
+                'object' => [
+                    'id'                                => 'sub_1K4iaCB9m4sTKy1qTzKk1Jhy',
+                    'object'                            => 'subscription',
+                    'application_fee_percent'           => NULL,
+                    'automatic_tax'                     => [
+                        'enabled' => false,
+                    ],
+                    'billing_cycle_anchor'              => 1639040792,
+                    'billing_thresholds'                => NULL,
+                    'cancel_at'                         => NULL,
+                    'cancel_at_period_end'              => false,
+                    'canceled_at'                       => NULL,
+                    'collection_method'                 => 'charge_automatically',
+                    'created'                           => 1639040792,
+                    'current_period_end'                => 1641719192,
+                    'current_period_start'              => 1639040792,
+                    'customer'                          => 'cus_KjAlPNelS6xFkq',
+                    'days_until_due'                    => NULL,
+                    'default_payment_method'            => NULL,
+                    'default_source'                    => NULL,
+                    'default_tax_rates'                 => [
+                    ],
+                    'discount'                          => NULL,
+                    'ended_at'                          => NULL,
+                    'items'                             => [
+                        'object'      => 'list',
+                        'data'        => [
+                            [
+                                'id'                 => 'si_KkD0nYORB0E3BA',
+                                'object'             => 'subscription_item',
+                                'billing_thresholds' => NULL,
+                                'created'            => 1639040792,
+                                'metadata'           => [
+                                ],
+                                'plan'               => [
+                                    'id'                => 'price_1K4iWkB9m4sTKy1qmesZCAx5',
+                                    'object'            => 'plan',
+                                    'active'            => true,
+                                    'aggregate_usage'   => 'max',
+                                    'amount'            => NULL,
+                                    'amount_decimal'    => NULL,
+                                    'billing_scheme'    => 'tiered',
+                                    'created'           => 1639040578,
+                                    'currency'          => 'usd',
+                                    'interval'          => 'month',
+                                    'interval_count'    => 1,
+                                    'livemode'          => false,
+                                    'metadata'          => [
+                                    ],
+                                    'nickname'          => 'storage',
+                                    'product'           => 'prod_KkCwo4KLpPp4EV',
+                                    'tiers_mode'        => 'volume',
+                                    'transform_usage'   => NULL,
+                                    'trial_period_days' => NULL,
+                                    'usage_type'        => 'metered',
+                                ],
+                                'price'              => [
+                                    'id'                  => 'price_1K4iWkB9m4sTKy1qmesZCAx5',
+                                    'object'              => 'price',
+                                    'active'              => true,
+                                    'billing_scheme'      => 'tiered',
+                                    'created'             => 1639040578,
+                                    'currency'            => 'usd',
+                                    'livemode'            => false,
+                                    'lookup_key'          => NULL,
+                                    'metadata'            => [
+                                    ],
+                                    'nickname'            => 'storage',
+                                    'product'             => 'prod_KkCwo4KLpPp4EV',
+                                    'recurring'           => [
+                                        'aggregate_usage'   => 'max',
+                                        'interval'          => 'month',
+                                        'interval_count'    => 1,
+                                        'trial_period_days' => NULL,
+                                        'usage_type'        => 'metered',
+                                    ],
+                                    'tax_behavior'        => 'unspecified',
+                                    'tiers_mode'          => 'volume',
+                                    'transform_quantity'  => NULL,
+                                    'type'                => 'recurring',
+                                    'unit_amount'         => NULL,
+                                    'unit_amount_decimal' => NULL,
+                                ],
+                                'subscription'       => 'sub_1K4iaCB9m4sTKy1qTzKk1Jhy',
+                                'tax_rates'          => [
+                                ],
+                            ],
+                            [
+                                'id'                 => 'si_KkD00pzcVNa99N',
+                                'object'             => 'subscription_item',
+                                'billing_thresholds' => NULL,
+                                'created'            => 1639040792,
+                                'metadata'           => [
+                                ],
+                                'plan'               => [
+                                    'id'                => 'price_1K4iWjB9m4sTKy1qbg1QCYJG',
+                                    'object'            => 'plan',
+                                    'active'            => true,
+                                    'aggregate_usage'   => 'sum',
+                                    'amount'            => NULL,
+                                    'amount_decimal'    => NULL,
+                                    'billing_scheme'    => 'tiered',
+                                    'created'           => 1639040577,
+                                    'currency'          => 'usd',
+                                    'interval'          => 'month',
+                                    'interval_count'    => 1,
+                                    'livemode'          => false,
+                                    'metadata'          => [
+                                    ],
+                                    'nickname'          => 'bandwidth',
+                                    'product'           => 'prod_KkCwo4KLpPp4EV',
+                                    'tiers_mode'        => 'volume',
+                                    'transform_usage'   => NULL,
+                                    'trial_period_days' => NULL,
+                                    'usage_type'        => 'metered',
+                                ],
+                                'price'              => [
+                                    'id'                  => 'price_1K4iWjB9m4sTKy1qbg1QCYJG',
+                                    'object'              => 'price',
+                                    'active'              => true,
+                                    'billing_scheme'      => 'tiered',
+                                    'created'             => 1639040577,
+                                    'currency'            => 'usd',
+                                    'livemode'            => false,
+                                    'lookup_key'          => NULL,
+                                    'metadata'            => [
+                                    ],
+                                    'nickname'            => 'bandwidth',
+                                    'product'             => 'prod_KkCwo4KLpPp4EV',
+                                    'recurring'           => [
+                                        'aggregate_usage'   => 'sum',
+                                        'interval'          => 'month',
+                                        'interval_count'    => 1,
+                                        'trial_period_days' => NULL,
+                                        'usage_type'        => 'metered',
+                                    ],
+                                    'tax_behavior'        => 'unspecified',
+                                    'tiers_mode'          => 'volume',
+                                    'transform_quantity'  => NULL,
+                                    'type'                => 'recurring',
+                                    'unit_amount'         => NULL,
+                                    'unit_amount_decimal' => NULL,
+                                ],
+                                'subscription'       => 'sub_1K4iaCB9m4sTKy1qTzKk1Jhy',
+                                'tax_rates'          => [
+                                ],
+                            ],
+                        ],
+                        'has_more'    => false,
+                        'total_count' => 2,
+                        'url'         => '/v1/subscription_items?subscription=sub_1K4iaCB9m4sTKy1qTzKk1Jhy',
+                    ],
+                    'latest_invoice'                    => 'in_1K4iaCB9m4sTKy1qM86iknUV',
+                    'livemode'                          => false,
+                    'metadata'                          => [
+                    ],
+                    'next_pending_invoice_item_invoice' => NULL,
+                    'pause_collection'                  => NULL,
+                    'payment_settings'                  => [
+                        'payment_method_options' => NULL,
+                        'payment_method_types'   => NULL,
+                    ],
+                    'pending_invoice_item_interval'     => NULL,
+                    'pending_setup_intent'              => NULL,
+                    'pending_update'                    => NULL,
+                    'plan'                              => NULL,
+                    'quantity'                          => NULL,
+                    'schedule'                          => NULL,
+                    'start_date'                        => 1639040792,
+                    'status'                            => 'active',
+                    'transfer_data'                     => NULL,
+                    'trial_end'                         => NULL,
+                    'trial_start'                       => NULL,
+                ],
+            ],
+            'livemode'         => false,
+            'pending_webhooks' => 1,
+            'request'          => [
+                'id'              => 'req_po5D6sdkTUg1Gn',
+                'idempotency_key' => '1ed3b4c9-c401-4302-81f5-23fee86c9389',
+            ],
+            'type'             => 'customer.subscription.created',
+        ];
+
+        // Send webhook
+        $this
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
+
+        // Check if subscription was created
+        $subscription = Subscription::first();
+
+        // Check relationships are correct
+        $this->assertEquals($user->id, $subscription->user->id);
+        $this->assertEquals($plan->id, $subscription->plan->id);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'status' => 'inactive',
+            'type'   => 'pre-paid',
+        ]);
+
+        $this->assertDatabaseHas('subscription_drivers', [
+            'driver_subscription_id' => 'sub_1K4iaCB9m4sTKy1qTzKk1Jhy',
+            'driver'                 => 'stripe',
+        ]);
+
+        Event::assertNothingDispatched();
+    }
+
+    /**
+     * @test
+     */
+    public function stripe_webhook_activate_subscription()
+    {
+        Event::fake([
+            SubscriptionWasCreated::class,
+        ]);
+
+        $plan = Plan::factory()
+            ->hasDrivers([
+                'driver' => 'stripe',
+            ])
+            ->create();
+
+        $subscription = Subscription::factory()
+            ->hasDriver([
+                'driver'                 => 'stripe',
+                'driver_subscription_id' => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
+            ])
+            ->create([
+                'plan_id' => $plan->id,
+                'status'  => 'inactive',
+                'ends_at' => null,
+            ]);
+
+        $payload = [
+            'id'               => 'evt_1K2BE4B9m4sTKy1qd8N60DtV',
+            'object'           => 'event',
+            'api_version'      => '2020-08-27',
+            'created'          => 1638435911,
+            'data'             =>
+                [
+                    'object'              =>
+                        [
+                            'id'                                => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
+                            'object'                            => 'subscription',
+                            'application_fee_percent'           => null,
+                            'automatic_tax'                     =>
+                                [
+                                    'enabled' => false,
+                                ],
+                            'billing_cycle_anchor'              => 1638435908,
+                            'billing_thresholds'                => null,
+                            'cancel_at'                         => null,
+                            'cancel_at_period_end'              => false,
+                            'canceled_at'                       => null,
+                            'collection_method'                 => 'charge_automatically',
+                            'created'                           => 1638435908,
+                            'current_period_end'                => 1638435908,
+                            'current_period_start'              => 1638435908,
+                            'customer'                          => 'cus_KhaOUge4a5x8hm',
+                            'days_until_due'                    => null,
+                            'default_payment_method'            => null,
+                            'default_source'                    => null,
+                            'default_tax_rates'                 =>
+                                [
+                                ],
+                            'discount'                          => null,
+                            'ended_at'                          => null,
+                            'items'                             =>
+                                [
+                                    'object'      => 'list',
+                                    'data'        =>
+                                        [
+                                            0 =>
+                                                [
+                                                    'id'                 => 'si_KhaOoyIprhNoTc',
+                                                    'object'             => 'subscription_item',
+                                                    'billing_thresholds' => null,
+                                                    'created'            => 1638435908,
+                                                    'metadata'           =>
+                                                        [
+                                                        ],
+                                                    'plan'               =>
+                                                        [
+                                                            'id'                => 'plan_KhaOxXzYP2Nova',
+                                                            'object'            => 'plan',
+                                                            'active'            => true,
+                                                            'aggregate_usage'   => null,
+                                                            'amount'            => 2000,
+                                                            'amount_decimal'    => '2000',
+                                                            'billing_scheme'    => 'per_unit',
+                                                            'created'           => 1638435907,
+                                                            'currency'          => 'usd',
+                                                            'interval'          => 'month',
+                                                            'interval_count'    => 1,
+                                                            'livemode'          => false,
+                                                            'metadata'          =>
+                                                                [
+                                                                ],
+                                                            'nickname'          => null,
+                                                            'product'           => 'prod_KhaO4s6RUDhOWF',
+                                                            'tiers_mode'        => null,
+                                                            'transform_usage'   => null,
+                                                            'trial_period_days' => null,
+                                                            'usage_type'        => 'licensed',
+                                                        ],
+                                                    'price'              =>
+                                                        [
+                                                            'id'                  => 'plan_KhaOxXzYP2Nova',
+                                                            'object'              => 'price',
+                                                            'active'              => true,
+                                                            'billing_scheme'      => 'per_unit',
+                                                            'created'             => 1638435907,
+                                                            'currency'            => 'usd',
+                                                            'livemode'            => false,
+                                                            'lookup_key'          => null,
+                                                            'metadata'            =>
+                                                                [
+                                                                ],
+                                                            'nickname'            => null,
+                                                            'product'             => 'prod_KhaO4s6RUDhOWF',
+                                                            'recurring'           =>
+                                                                [
+                                                                    'aggregate_usage'   => null,
+                                                                    'interval'          => 'month',
+                                                                    'interval_count'    => 1,
+                                                                    'trial_period_days' => null,
+                                                                    'usage_type'        => 'licensed',
+                                                                ],
+                                                            'tax_behavior'        => 'unspecified',
+                                                            'tiers_mode'          => null,
+                                                            'transform_quantity'  => null,
+                                                            'type'                => 'recurring',
+                                                            'unit_amount'         => 2000,
+                                                            'unit_amount_decimal' => '2000',
+                                                        ],
+                                                    'quantity'           => 1,
+                                                    'subscription'       => 'sub_1K2BE0B9m4sTKy1qJDq7pt1o',
+                                                    'tax_rates'          =>
+                                                        [
+                                                        ],
+                                                ],
+                                        ],
+                                    'has_more'    => false,
+                                    'total_count' => 1,
+                                    'url'         => '/v1/subscription_items?subscription=sub_1K2BE0B9m4sTKy1qJDq7pt1o',
+                                ],
+                            'latest_invoice'                    => 'in_1K2BE0B9m4sTKy1qiscPsYFt',
+                            'livemode'                          => false,
+                            'metadata'                          =>
+                                [
+                                    'foo' => 'bar',
+                                ],
+                            'next_pending_invoice_item_invoice' => null,
+                            'pause_collection'                  => null,
+                            'payment_settings'                  =>
+                                [
+                                    'payment_method_options' => null,
+                                    'payment_method_types'   => null,
+                                ],
+                            'pending_invoice_item_interval'     => null,
+                            'pending_setup_intent'              => null,
+                            'pending_update'                    => null,
+                            'plan'                              =>
+                                [
+                                    'id'                => $plan->driverId('stripe'),
+                                    'object'            => 'plan',
+                                    'active'            => true,
+                                    'aggregate_usage'   => null,
+                                    'amount'            => 2000,
+                                    'amount_decimal'    => '2000',
+                                    'billing_scheme'    => 'per_unit',
+                                    'created'           => 1638435907,
+                                    'currency'          => 'usd',
+                                    'interval'          => 'month',
+                                    'interval_count'    => 1,
+                                    'livemode'          => false,
+                                    'metadata'          =>
+                                        [
+                                        ],
+                                    'nickname'          => null,
+                                    'product'           => 'prod_KhaO4s6RUDhOWF',
+                                    'tiers_mode'        => null,
+                                    'transform_usage'   => null,
+                                    'trial_period_days' => null,
+                                    'usage_type'        => 'licensed',
+                                ],
+                            'quantity'                          => 1,
+                            'schedule'                          => null,
+                            'start_date'                        => 1638435908,
+                            'status'                            => 'active',
+                            'transfer_data'                     => null,
+                            'trial_end'                         => null,
+                            'trial_start'                       => null,
+                        ],
+                    'previous_attributes' =>
+                        [
+                            'metadata' =>
+                                [
+                                    'foo' => null,
+                                ],
+                        ],
+                ],
+            'livemode'         => false,
+            'pending_webhooks' => 2,
+            'request'          =>
+                [
+                    'id'              => 'req_QlWcOYveSlsar5',
+                    'idempotency_key' => '34faedb2-9b1b-4bc0-a3a6-701c437efc81',
+                ],
+            'type'             => 'customer.subscription.updated',
+        ];
+
+        // Send webhook
+        $this
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
+            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
+            ->assertOk();
+
+        $this->assertDatabaseHas('subscriptions', [
+            'status' => 'active',
+        ]);
+
+        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -451,7 +940,7 @@ class StripeWebhooksTest extends TestCase
 
         // Send webhook
         $this
-            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
@@ -460,7 +949,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -673,7 +1162,7 @@ class StripeWebhooksTest extends TestCase
 
         // Send webhook
         $this
-            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
@@ -682,225 +1171,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => now(),
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
-    }
-
-    /**
-     * @test
-     */
-    public function stripe_webhook_activate_subscription()
-    {
-        Event::fake([
-            SubscriptionWasCreated::class,
-        ]);
-
-        $plan = Plan::factory()
-            ->hasDrivers([
-                'driver' => 'stripe',
-            ])
-            ->create();
-
-        $subscription = Subscription::factory()
-            ->hasDriver([
-                'driver'                 => 'stripe',
-                'driver_subscription_id' => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
-            ])
-            ->create([
-                'plan_id' => $plan->id,
-                'status'  => 'inactive',
-                'ends_at' => null,
-            ]);
-
-        $payload = [
-            'id'               => 'evt_1K2BE4B9m4sTKy1qd8N60DtV',
-            'object'           => 'event',
-            'api_version'      => '2020-08-27',
-            'created'          => 1638435911,
-            'data'             =>
-                [
-                    'object'              =>
-                        [
-                            'id'                                => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
-                            'object'                            => 'subscription',
-                            'application_fee_percent'           => null,
-                            'automatic_tax'                     =>
-                                [
-                                    'enabled' => false,
-                                ],
-                            'billing_cycle_anchor'              => 1638435908,
-                            'billing_thresholds'                => null,
-                            'cancel_at'                         => null,
-                            'cancel_at_period_end'              => false,
-                            'canceled_at'                       => null,
-                            'collection_method'                 => 'charge_automatically',
-                            'created'                           => 1638435908,
-                            'current_period_end'                => 1638435908,
-                            'current_period_start'              => 1638435908,
-                            'customer'                          => 'cus_KhaOUge4a5x8hm',
-                            'days_until_due'                    => null,
-                            'default_payment_method'            => null,
-                            'default_source'                    => null,
-                            'default_tax_rates'                 =>
-                                [
-                                ],
-                            'discount'                          => null,
-                            'ended_at'                          => null,
-                            'items'                             =>
-                                [
-                                    'object'      => 'list',
-                                    'data'        =>
-                                        [
-                                            0 =>
-                                                [
-                                                    'id'                 => 'si_KhaOoyIprhNoTc',
-                                                    'object'             => 'subscription_item',
-                                                    'billing_thresholds' => null,
-                                                    'created'            => 1638435908,
-                                                    'metadata'           =>
-                                                        [
-                                                        ],
-                                                    'plan'               =>
-                                                        [
-                                                            'id'                => 'plan_KhaOxXzYP2Nova',
-                                                            'object'            => 'plan',
-                                                            'active'            => true,
-                                                            'aggregate_usage'   => null,
-                                                            'amount'            => 2000,
-                                                            'amount_decimal'    => '2000',
-                                                            'billing_scheme'    => 'per_unit',
-                                                            'created'           => 1638435907,
-                                                            'currency'          => 'usd',
-                                                            'interval'          => 'month',
-                                                            'interval_count'    => 1,
-                                                            'livemode'          => false,
-                                                            'metadata'          =>
-                                                                [
-                                                                ],
-                                                            'nickname'          => null,
-                                                            'product'           => 'prod_KhaO4s6RUDhOWF',
-                                                            'tiers_mode'        => null,
-                                                            'transform_usage'   => null,
-                                                            'trial_period_days' => null,
-                                                            'usage_type'        => 'licensed',
-                                                        ],
-                                                    'price'              =>
-                                                        [
-                                                            'id'                  => 'plan_KhaOxXzYP2Nova',
-                                                            'object'              => 'price',
-                                                            'active'              => true,
-                                                            'billing_scheme'      => 'per_unit',
-                                                            'created'             => 1638435907,
-                                                            'currency'            => 'usd',
-                                                            'livemode'            => false,
-                                                            'lookup_key'          => null,
-                                                            'metadata'            =>
-                                                                [
-                                                                ],
-                                                            'nickname'            => null,
-                                                            'product'             => 'prod_KhaO4s6RUDhOWF',
-                                                            'recurring'           =>
-                                                                [
-                                                                    'aggregate_usage'   => null,
-                                                                    'interval'          => 'month',
-                                                                    'interval_count'    => 1,
-                                                                    'trial_period_days' => null,
-                                                                    'usage_type'        => 'licensed',
-                                                                ],
-                                                            'tax_behavior'        => 'unspecified',
-                                                            'tiers_mode'          => null,
-                                                            'transform_quantity'  => null,
-                                                            'type'                => 'recurring',
-                                                            'unit_amount'         => 2000,
-                                                            'unit_amount_decimal' => '2000',
-                                                        ],
-                                                    'quantity'           => 1,
-                                                    'subscription'       => 'sub_1K2BE0B9m4sTKy1qJDq7pt1o',
-                                                    'tax_rates'          =>
-                                                        [
-                                                        ],
-                                                ],
-                                        ],
-                                    'has_more'    => false,
-                                    'total_count' => 1,
-                                    'url'         => '/v1/subscription_items?subscription=sub_1K2BE0B9m4sTKy1qJDq7pt1o',
-                                ],
-                            'latest_invoice'                    => 'in_1K2BE0B9m4sTKy1qiscPsYFt',
-                            'livemode'                          => false,
-                            'metadata'                          =>
-                                [
-                                    'foo' => 'bar',
-                                ],
-                            'next_pending_invoice_item_invoice' => null,
-                            'pause_collection'                  => null,
-                            'payment_settings'                  =>
-                                [
-                                    'payment_method_options' => null,
-                                    'payment_method_types'   => null,
-                                ],
-                            'pending_invoice_item_interval'     => null,
-                            'pending_setup_intent'              => null,
-                            'pending_update'                    => null,
-                            'plan'                              =>
-                                [
-                                    'id'                => $plan->driverId('stripe'),
-                                    'object'            => 'plan',
-                                    'active'            => true,
-                                    'aggregate_usage'   => null,
-                                    'amount'            => 2000,
-                                    'amount_decimal'    => '2000',
-                                    'billing_scheme'    => 'per_unit',
-                                    'created'           => 1638435907,
-                                    'currency'          => 'usd',
-                                    'interval'          => 'month',
-                                    'interval_count'    => 1,
-                                    'livemode'          => false,
-                                    'metadata'          =>
-                                        [
-                                        ],
-                                    'nickname'          => null,
-                                    'product'           => 'prod_KhaO4s6RUDhOWF',
-                                    'tiers_mode'        => null,
-                                    'transform_usage'   => null,
-                                    'trial_period_days' => null,
-                                    'usage_type'        => 'licensed',
-                                ],
-                            'quantity'                          => 1,
-                            'schedule'                          => null,
-                            'start_date'                        => 1638435908,
-                            'status'                            => 'active',
-                            'transfer_data'                     => null,
-                            'trial_end'                         => null,
-                            'trial_start'                       => null,
-                        ],
-                    'previous_attributes' =>
-                        [
-                            'metadata' =>
-                                [
-                                    'foo' => null,
-                                ],
-                        ],
-                ],
-            'livemode'         => false,
-            'pending_webhooks' => 2,
-            'request'          =>
-                [
-                    'id'              => 'req_QlWcOYveSlsar5',
-                    'idempotency_key' => '34faedb2-9b1b-4bc0-a3a6-701c437efc81',
-                ],
-            'type'             => 'customer.subscription.updated',
-        ];
-
-        // Send webhook
-        $this
-            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
-            ->postJson('/api/subscriptions/stripe/webhooks', $payload)
-            ->assertOk();
-
-        $this->assertDatabaseHas('subscriptions', [
-            'status' => 'active',
-        ]);
-
-        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1111,7 +1382,7 @@ class StripeWebhooksTest extends TestCase
 
         // Send webhook
         $this
-            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
@@ -1120,7 +1391,7 @@ class StripeWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1316,7 +1587,7 @@ class StripeWebhooksTest extends TestCase
 
         // Send webhook
         $this
-            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
@@ -1325,7 +1596,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => Carbon::createFromTimestamp(1641113362),
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1565,7 +1836,7 @@ class StripeWebhooksTest extends TestCase
         ];
 
         $this
-            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
@@ -1765,7 +2036,7 @@ class StripeWebhooksTest extends TestCase
         ];
 
         $this
-            ->withHeader('Stripe-Signature',  $this->generateTestSignature($payload))
+            ->withHeader('Stripe-Signature', $this->generateTestSignature($payload))
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
