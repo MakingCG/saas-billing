@@ -55,9 +55,9 @@ class PlanResource extends JsonResource
             'description' => $this->description,
             'subscribers' => $this->subscriptions->count(),
             'prices'      => $this->meteredFeatures->map(fn ($price) => [
-                'key'       => $price['key'],
-                'charge_by' => $price['charge_by'],
-                'tiers'     => $price['tiers'],
+                'key'                => $price['key'],
+                'aggregate_strategy' => $price['aggregate_strategy'],
+                'tiers'              => $price['tiers'],
             ]),
         ];
     }

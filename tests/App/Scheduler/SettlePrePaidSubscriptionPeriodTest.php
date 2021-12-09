@@ -39,9 +39,9 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'flat_fee'   => 2.49,
             ])
             ->create([
-                'plan_id'   => $plan->id,
-                'key'       => 'bandwidth',
-                'charge_by' => 'sum_of_usage',
+                'plan_id'            => $plan->id,
+                'key'                => 'bandwidth',
+                'aggregate_strategy' => 'sum_of_usage',
             ]);
 
         PlanMeteredFeature::factory()
@@ -52,9 +52,9 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'flat_fee'   => 0,
             ])
             ->create([
-                'plan_id'   => $plan->id,
-                'key'       => 'storage',
-                'charge_by' => 'maximum_usage',
+                'plan_id'            => $plan->id,
+                'key'                => 'storage',
+                'aggregate_strategy' => 'maximum_usage',
             ]);
 
         $subscription = Subscription::factory()
@@ -124,9 +124,9 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'flat_fee'   => 2.49,
             ])
             ->create([
-                'plan_id'   => $plan->id,
-                'key'       => 'bandwidth',
-                'charge_by' => 'sum_of_usage',
+                'plan_id'            => $plan->id,
+                'key'                => 'bandwidth',
+                'aggregate_strategy' => 'sum_of_usage',
             ]);
 
         $subscription = Subscription::factory()

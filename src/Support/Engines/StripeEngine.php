@@ -14,6 +14,7 @@ use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Services\StripeHttpClient;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeEngine implements Engine
@@ -54,6 +55,38 @@ class StripeEngine implements Engine
 
         return [
             'id'   => $plan->json()['id'],
+            'name' => $data->name,
+        ];
+    }
+
+    public function createMeteredPlan(CreateMeteredPlanData $data): array
+    {
+        // Create product
+        $product = $this->post('/products', [
+            'url'         => url('/'),
+            'name'        => $data->name,
+            'description' => $data->description,
+        ]);
+
+        // Create prices
+        foreach ($data->meters as $meter) {
+            $this->post('/prices', [
+                'product'        => $product->json()['id'],
+                'nickname'       => $meter['key'],
+                'currency'       => strtolower($data->currency),
+                'billing_scheme' => 'tiered',
+                'tiers'          => mapStripeTiers($meter['tiers']),
+                'tiers_mode'     => 'volume',
+                'recurring'      => [
+                    'interval'        => 'month',
+                    'usage_type'      => 'metered',
+                    'aggregate_usage' => mapStripeAggregateStrategy($meter['aggregate_strategy']),
+                ],
+            ]);
+        }
+
+        return [
+            'id'   => $product->json()['id'],
             'name' => $data->name,
         ];
     }

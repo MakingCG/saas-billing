@@ -2,11 +2,39 @@
 
 return [
     'driver'            => env('SUBSCRIPTION_DRIVER', 'stripe'),
+
+    /*
+     * Activate drivers to handle subscription
+     */
     'available_drivers' => [
         'paystack',
         'paypal',
         'stripe',
     ],
+    'metered_billing' => [
+        /*
+         * Drivers which have native support for metered billing.
+         * This native support doesn't use subscription package credit system, but prefer
+         * auto-renew and maintain metered subscription on behalf of external service.
+         */
+        'native_support' => [
+            'stripe',
+        ],
+    ],
+    'paystack' => [
+        /*
+         * List of allowed ip address to verify paystack webhook request
+         */
+        'allowed_ips' => [
+            '52.214.14.220',
+            '52.49.173.169',
+            '52.31.139.75',
+        ],
+    ],
+
+    /*
+     * Get gateway credentials
+     */
     'credentials'       => [
         'stripe'   => [
             'secret'     => env('STRIPE_SECRET_KEY'),
@@ -20,11 +48,6 @@ return [
             'id'         => env('PAYPAL_CLIENT_ID'),
             'secret'     => env('PAYPAL_CLIENT_SECRET'),
             'webhook_id' => env('PAYPAL_WEBHOOK_ID'),
-        ],
-    ],
-    'paystack' => [
-        'allowed_ips' => [
-            '52.31.139.75', '52.49.173.169', '52.214.14.220',
         ],
     ],
 ];

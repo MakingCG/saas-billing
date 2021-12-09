@@ -15,6 +15,7 @@ use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\Confi
 
 trait StripeWebhooks
 {
+    // TODO: handle metered subscription creation
     public function handleCustomerSubscriptionCreated(Request $request): void
     {
         $customerCode = $request->input('data.object.customer');

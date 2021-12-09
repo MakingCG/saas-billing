@@ -3,9 +3,15 @@ namespace Domain\Plans\Actions;
 
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
+use VueFileManager\Subscription\Domain\Plans\Actions\CreateMeteredPlansViaDriversAPIAction;
 
 class StoreMeteredPlanAction
 {
+    public function __construct(
+        public CreateMeteredPlansViaDriversAPIAction $createPlansViaDriversAPI,
+    ) {
+    }
+
     public function __invoke(CreateMeteredPlanData $meteredPlanData)
     {
         // Store plan
@@ -19,8 +25,8 @@ class StoreMeteredPlanAction
         foreach ($meteredPlanData->meters as $meter) {
             // Store metered item
             $price = $plan->meteredFeatures()->create([
-                'key'       => $meter['key'],
-                'charge_by' => $meter['charge_by'],
+                'key'                => $meter['key'],
+                'aggregate_strategy' => $meter['aggregate_strategy'],
             ]);
 
             // Store metered item tier
@@ -33,6 +39,11 @@ class StoreMeteredPlanAction
                 ]);
             }
         }
+
+        // Create plan in available gateways
+        $this->createPlansViaDriversAPI
+            ->onQueue()
+            ->execute($meteredPlanData, $plan);
 
         return $plan;
     }

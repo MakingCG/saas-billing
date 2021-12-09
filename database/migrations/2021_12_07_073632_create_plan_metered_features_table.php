@@ -17,7 +17,7 @@ class CreatePlanMeteredFeaturesTable extends Migration
             $table->uuid('id')->index();
             $table->uuid('plan_id')->index();
             $table->text('key');
-            $table->enum('charge_by', ['sum_of_usage', 'maximum_usage']);
+            $table->enum('aggregate_strategy', ['sum_of_usage', 'maximum_usage']);
         });
     }
 

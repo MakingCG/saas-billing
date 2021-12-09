@@ -12,6 +12,7 @@ use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
 use VueFileManager\Subscription\Support\Services\PayStackHttpClient;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 
@@ -42,6 +43,11 @@ class PayStackEngine implements Engine
             'id'   => $response->json()['data']['plan_code'],
             'name' => $response->json()['data']['name'],
         ];
+    }
+
+    public function createMeteredPlan(CreateMeteredPlanData $data): array
+    {
+        return [];
     }
 
     /**

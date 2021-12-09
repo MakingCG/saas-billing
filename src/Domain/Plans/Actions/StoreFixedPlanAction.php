@@ -7,7 +7,7 @@ use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 class StoreFixedPlanAction
 {
     public function __construct(
-        private CreatePlansViaDriversAPIAction $createPlansViaDriversAPI,
+        private CreateFixedPlansViaDriversAPIAction $createPlansViaDriversAPI,
     ) {
     }
 

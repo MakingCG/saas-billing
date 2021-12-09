@@ -3,16 +3,19 @@ namespace Tests\Domain\Plans;
 
 use Tests\TestCase;
 use Tests\Models\User;
+use Tests\Mocking\Stripe\CreateMeteredPlanStripeMocksClass;
 
 class MeteredPlanTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_create_plan()
+    public function it_create_metered_plan()
     {
         $user = User::factory()
             ->create();
+
+        resolve(CreateMeteredPlanStripeMocksClass::class)();
 
         $this
             ->actingAs($user)
@@ -23,9 +26,9 @@ class MeteredPlanTest extends TestCase
                 'currency'    => 'USD',
                 'meters'      => [
                     [
-                        'key'       => 'bandwidth',
-                        'charge_by' => 'sum_of_usage',
-                        'tiers'     => [
+                        'key'                => 'bandwidth',
+                        'aggregate_strategy' => 'sum_of_usage',
+                        'tiers'              => [
                             [
                                 'first_unit' => 1,
                                 'last_unit'  => null,
@@ -35,9 +38,9 @@ class MeteredPlanTest extends TestCase
                         ],
                     ],
                     [
-                        'key'       => 'storage',
-                        'charge_by' => 'maximum_usage',
-                        'tiers'     => [
+                        'key'                => 'storage',
+                        'aggregate_strategy' => 'maximum_usage',
+                        'tiers'              => [
                             [
                                 'first_unit' => 1,
                                 'last_unit'  => null,
@@ -54,6 +57,17 @@ class MeteredPlanTest extends TestCase
                 'type' => 'metered',
             ]);
 
+        // Check only drivers which have native support for metered billing
+        collect(config('subscription.metered_billing.native_support'))
+            ->each(function ($driver) {
+                if (in_array($driver, config('subscription.available_drivers'))) {
+                    $this
+                        ->assertDatabaseHas('plan_drivers', [
+                            'driver' => $driver,
+                        ]);
+                }
+            });
+
         $this
             ->assertDatabaseHas('plans', [
                 'type'        => 'metered',
@@ -63,12 +77,12 @@ class MeteredPlanTest extends TestCase
                 'status'      => 'active',
             ])
             ->assertDatabaseHas('plan_metered_features', [
-                'key'       => 'bandwidth',
-                'charge_by' => 'sum_of_usage',
+                'key'                => 'bandwidth',
+                'aggregate_strategy' => 'sum_of_usage',
             ])
             ->assertDatabaseHas('plan_metered_features', [
-                'key'       => 'storage',
-                'charge_by' => 'maximum_usage',
+                'key'                => 'storage',
+                'aggregate_strategy' => 'maximum_usage',
             ])
             ->assertDatabaseHas('metered_tiers', [
                 'first_unit' => 1,

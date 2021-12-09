@@ -6,7 +6,7 @@ use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 
-class CreatePlansViaDriversAPIAction
+class CreateFixedPlansViaDriversAPIAction
 {
     use QueueableAction;
 

@@ -67,7 +67,7 @@ class FixedPlansTest extends TestCase
     /**
      * @test
      */
-    public function it_create_plan()
+    public function it_create_fixed_plan()
     {
         $user = User::factory()
             ->create();

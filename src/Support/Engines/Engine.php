@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 interface Engine
@@ -15,9 +16,14 @@ interface Engine
     public function getPlan(string $planId): Response;
 
     /**
-     * Create new subscription plan
+     * Create new fixed plan
      */
     public function createFixedPlan(CreateFixedPlanData $data): array;
+
+    /**
+     * Create new metered plan
+     */
+    public function createMeteredPlan(CreateMeteredPlanData $data): array;
 
     /**
      * Update subscription plan
