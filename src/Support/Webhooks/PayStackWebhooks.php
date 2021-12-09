@@ -124,7 +124,7 @@ class PayStackWebhooks
         // Proceed as credit balance
         if (empty($plan)) {
             $user->creditBalance(
-                balance: $request->input('data.amount') / 100,
+                credit: $request->input('data.amount') / 100,
                 currency: $request->input('data.currency'),
             );
 
@@ -144,7 +144,7 @@ class PayStackWebhooks
                 'status'    => 'completed',
                 'type'      => 'charge',
                 'driver'    => 'paystack',
-                'plan_name' => $request->input('data.plan.name'),
+                'note'      => $request->input('data.plan.name'),
                 'reference' => $request->input('data.reference'),
                 'currency'  => $request->input('data.currency'),
                 'amount'    => $request->input('data.amount') / 100,

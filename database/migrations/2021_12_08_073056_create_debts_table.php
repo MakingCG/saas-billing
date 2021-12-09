@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBalanceDebtsTable extends Migration
+class CreateDebtsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateBalanceDebtsTable extends Migration
      */
     public function up()
     {
-        Schema::create('balance_debts', function (Blueprint $table) {
+        Schema::create('debts', function (Blueprint $table) {
             $table->uuid('id')->index();
-            $table->uuid('user_id');
-            $table->decimal('debt');
+            $table->uuid('user_id')->index();
+            $table->uuid('transaction_id');
+            $table->decimal('amount');
             $table->string('currency');
             $table->timestamps();
         });
@@ -29,6 +30,6 @@ class CreateBalanceDebtsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('balance_debts');
+        Schema::dropIfExists('debts');
     }
 }

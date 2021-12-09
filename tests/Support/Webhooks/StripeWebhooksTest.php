@@ -1573,7 +1573,7 @@ class StripeWebhooksTest extends TestCase
             'user_id'   => $user->id,
             'type'      => 'charge',
             'status'    => 'completed',
-            'plan_name' => $subscription->name,
+            'note'      => $subscription->name,
             'currency'  => 'usd',
             'amount'    => 20,
             'driver'    => 'stripe',

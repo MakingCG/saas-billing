@@ -18,7 +18,7 @@ class CreateTransactionsTable extends Migration
             $table->uuid('user_id')->index();
             $table->enum('type', ['charge', 'credit', 'withdrawal']);
             $table->enum('status', ['completed', 'error', 'cancelled']);
-            $table->string('plan_name')->nullable();
+            $table->text('note')->nullable();
             $table->string('driver');
             $table->string('reference')->nullable();
             $table->decimal('amount');

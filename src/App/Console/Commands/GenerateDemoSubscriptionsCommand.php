@@ -86,7 +86,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             fn ($transaction) =>
             $howdy->transactions()->create([
                 'status'     => 'completed',
-                'plan_name'  => $professionalPackPlan->name,
+                'note'       => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
                 'amount'     => $professionalPackPlan->amount,
                 'driver'     => 'paypal',
@@ -106,7 +106,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             fn ($transaction) =>
             $johan->transactions()->create([
                 'status'     => 'completed',
-                'plan_name'  => $professionalPackPlan->name,
+                'note'       => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
                 'amount'     => $professionalPackPlan->amount,
                 'driver'     => 'stripe',
@@ -127,7 +127,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             fn ($transaction) =>
             $alice->transactions()->create([
                 'status'     => 'completed',
-                'plan_name'  => $businessPackPlan->name,
+                'note'       => $businessPackPlan->name,
                 'currency'   => $businessPackPlan->currency,
                 'amount'     => $businessPackPlan->amount,
                 'driver'     => 'paystack',

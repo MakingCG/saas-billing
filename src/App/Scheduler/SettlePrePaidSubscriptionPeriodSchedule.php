@@ -1,8 +1,8 @@
 <?php
 namespace App\Scheduler;
 
-use Domain\Balances\Exceptions\InsufficientBalanceException;
-use Domain\Balances\Notifications\InsufficientBalanceNotification;
+use Domain\Credits\Exceptions\InsufficientBalanceException;
+use Domain\Credits\Notifications\InsufficientBalanceNotification;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class SettlePrePaidSubscriptionPeriodSchedule
@@ -41,21 +41,32 @@ class SettlePrePaidSubscriptionPeriodSchedule
 
                     // Create transaction
                     $subscription->user->transactions()->create([
-                        'type'      => 'withdrawal',
-                        'status'    => 'completed',
-                        'plan_name' => $subscription->plan->name,
-                        'currency'  => $subscription->plan->currency,
-                        'amount'    => array_sum($toPay),
-                        'driver'    => 'system',
+                        'type'     => 'withdrawal',
+                        'status'   => 'completed',
+                        'note'     => now()->format('d. M') . ' - ' . now()->subDays(30)->format('d. M'),
+                        'currency' => $subscription->plan->currency,
+                        'amount'   => array_sum($toPay),
+                        'driver'   => 'system',
                     ]);
                 } catch (InsufficientBalanceException $e) {
                     // Notify user
                     $subscription->user->notify(new InsufficientBalanceNotification());
 
+                    // Create error transaction
+                    $transaction = $subscription->user->transactions()->create([
+                        'type'     => 'withdrawal',
+                        'status'   => 'error',
+                        'note'     => now()->format('d. M') . ' - ' . now()->subDays(30)->format('d. M'),
+                        'currency' => $subscription->plan->currency,
+                        'amount'   => array_sum($toPay),
+                        'driver'   => 'system',
+                    ]);
+
                     // Store debt record
                     $subscription->user->debts()->create([
-                        'currency' => $subscription->plan->currency,
-                        'debt'     => array_sum($toPay),
+                        'currency'       => $subscription->plan->currency,
+                        'amount'         => array_sum($toPay),
+                        'transaction_id' => $transaction->id,
                     ]);
                 }
 

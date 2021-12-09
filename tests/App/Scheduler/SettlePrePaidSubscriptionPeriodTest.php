@@ -7,12 +7,13 @@ use Tests\Models\User;
 use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
-use VueFileManager\Subscription\Domain\Balances\Models\Balance;
-use Domain\Balances\Notifications\InsufficientBalanceNotification;
+use VueFileManager\Subscription\Domain\Credits\Models\Balance;
+use Domain\Credits\Notifications\InsufficientBalanceNotification;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
+use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
-class PrePaidSubscriptionTest extends TestCase
+class SettlePrePaidSubscriptionPeriodTest extends TestCase
 {
     /**
      * @test
@@ -88,15 +89,15 @@ class PrePaidSubscriptionTest extends TestCase
             ])
             ->assertDatabaseHas('transactions', [
                 'user_id'   => $user->id,
-                'plan_name' => $plan->name,
                 'type'      => 'withdrawal',
                 'status'    => 'completed',
+                'note'      => '01. Jan - 02. Dec',
                 'currency'  => 'USD',
                 'amount'    => 3.645,
                 'driver'    => 'system',
                 'reference' => null,
             ])
-            ->assertEquals(6.355, Balance::first()->balance);
+            ->assertEquals(6.355, Balance::first()->amount);
     }
 
     /**
@@ -157,13 +158,23 @@ class PrePaidSubscriptionTest extends TestCase
             ->assertDatabaseHas('subscriptions', [
                 'renews_at' => now()->addDays(30),
             ])
-            ->assertDatabaseHas('balance_debts', [
-                'debt'     => 29.49,
-                'currency' => 'USD',
-                'user_id'  => $user->id,
+            ->assertDatabaseHas('debts', [
+                'amount'         => 29.49,
+                'currency'       => 'USD',
+                'user_id'        => $user->id,
+                'transaction_id' => Transaction::first()->id,
             ])
-            ->assertDatabaseCount('transactions', 0)
-            ->assertEquals(20.00, Balance::first()->balance);
+            ->assertDatabaseHas('transactions', [
+                'user_id'   => $user->id,
+                'type'      => 'withdrawal',
+                'status'    => 'error',
+                'note'      => '01. Jan - 02. Dec',
+                'currency'  => 'USD',
+                'amount'    => 29.49,
+                'driver'    => 'system',
+                'reference' => null,
+            ])
+            ->assertEquals(20.00, Balance::first()->amount);
 
         Notification::assertSentTo($user, InsufficientBalanceNotification::class);
     }

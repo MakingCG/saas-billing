@@ -106,7 +106,7 @@ class PayPalWebhooks
             'status'    => 'completed',
             'type'      => 'charge',
             'driver'    => 'paypal',
-            'plan_name' => $plan->name,
+            'note'      => $plan->name,
             'reference' => $request->input('resource.billing_agreement_id'),
             'currency'  => $request->input('resource.amount.currency'),
             'amount'    => $request->input('resource.amount.total'),
@@ -120,7 +120,7 @@ class PayPalWebhooks
             ->first();
 
         $user->creditBalance(
-            balance: $request->input('resource.amount.value'),
+            credit: $request->input('resource.amount.value'),
             currency: $request->input('resource.amount.currency_code'),
         );
 

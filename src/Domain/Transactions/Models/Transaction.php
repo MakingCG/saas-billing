@@ -7,13 +7,14 @@ use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use VueFileManager\Subscription\Domain\Credits\Models\Debt;
 use VueFileManager\Subscription\Database\Factories\TransactionFactory;
 
 /**
  * @method static create(array $array)
  * @property string id
  * @property string user_id
- * @property string plan_name
+ * @property string note
  * @property string status
  * @property string currency
  * @property int amount
@@ -45,6 +46,11 @@ class Transaction extends Model
     public function user(): HasOne
     {
         return $this->hasOne(config('auth.providers.users.model'), 'id', 'user_id');
+    }
+
+    public function debt(): HasOne
+    {
+        return $this->hasOne(Debt::class, 'transaction_id', 'id');
     }
 
     protected static function boot()

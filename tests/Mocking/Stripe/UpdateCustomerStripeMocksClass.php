@@ -12,7 +12,7 @@ class UpdateCustomerStripeMocksClass
                 'id'               => 'cus_KhKzgeRbNMvLSX',
                 'object'           => 'customer',
                 'address'          => null,
-                'balance'          => 0,
+                'amount'           => 0,
                 'created'          => 1638378579,
                 'currency'         => 'eur',
                 'default_source'   => null,

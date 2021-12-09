@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Balances\Notifications;
+namespace Domain\Credits\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;

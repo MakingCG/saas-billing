@@ -522,7 +522,7 @@ class PayPalWebhooksTest extends TestCase
             'user_id'   => $user->id,
             'type'      => 'charge',
             'status'    => 'completed',
-            'plan_name' => $plan->name,
+            'note'      => $plan->name,
             'currency'  => 'USD',
             'amount'    => 10,
             'driver'    => 'paypal',
@@ -606,7 +606,7 @@ class PayPalWebhooksTest extends TestCase
         $this
             ->assertDatabaseHas('balances', [
                 'user_id'  => $user->id,
-                'balance'  => 10.49,
+                'amount'   => 10.49,
                 'currency' => 'USD',
             ])
             ->assertDatabaseHas('transactions', [

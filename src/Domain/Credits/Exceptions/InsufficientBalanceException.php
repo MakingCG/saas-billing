@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Balances\Exceptions;
+namespace Domain\Credits\Exceptions;
 
 use Exception;
 

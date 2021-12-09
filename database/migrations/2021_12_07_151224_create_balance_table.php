@@ -16,8 +16,8 @@ class CreateBalanceTable extends Migration
         Schema::create('balances', function (Blueprint $table) {
             $table->uuid('id');
             $table->uuid('user_id');
-            $table->decimal('balance')->default(0);
-            $table->string('currency')->nullable();
+            $table->decimal('amount')->default(0);
+            $table->string('currency');
             $table->timestamps();
         });
     }

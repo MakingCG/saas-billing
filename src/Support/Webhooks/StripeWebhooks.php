@@ -135,7 +135,7 @@ class StripeWebhooks
             'status'    => 'completed',
             'type'      => 'charge',
             'driver'    => 'stripe',
-            'plan_name' => $subscriptionDriver->subscription->name,
+            'note'      => $subscriptionDriver->subscription->name,
             'reference' => $request->input('data.object.id'),
             'currency'  => $request->input('data.object.currency'),
             'amount'    => $request->input('data.object.amount_paid') / 100,
