@@ -7,19 +7,15 @@ use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
-use VueFileManager\Subscription\Support\Services\PayPalHttpService;
+use VueFileManager\Subscription\Support\Services\PayPalHttpClient;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 
-class PayPalEngine extends PayPalWebhooks implements Engine
+class PayPalEngine implements Engine
 {
-    public PayPalHttpService $api;
-
-    public function __construct()
-    {
-        $this->api = resolve(PayPalHttpService::class);
-    }
+    use PayPalWebhooks;
+    use PayPalHttpClient;
 
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create
@@ -28,7 +24,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     {
         $productId = $this->getOrCreateProductId();
 
-        $plan = $this->api->post('/billing/plans', [
+        $plan = $this->post('/billing/plans', [
             'product_id'          => $productId,
             'name'                => $data->name,
             'description'         => $data->description,
@@ -66,7 +62,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function updatePlan(Plan $plan): Response
     {
-        $response = $this->api->patch("/billing/plans/{$plan->driverId('paypal')}", [
+        $response = $this->patch("/billing/plans/{$plan->driverId('paypal')}", [
             [
                 'op'    => 'replace',
                 'path'  => '/name',
@@ -87,7 +83,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function getPlan(string $planId): Response
     {
-        return $this->api->get("/billing/plans/$planId");
+        return $this->get("/billing/plans/$planId");
     }
 
     /**
@@ -95,7 +91,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function deletePlan(string $planId): void
     {
-        $this->api->post("/billing/plans/{$planId}/deactivate", []);
+        $this->post("/billing/plans/{$planId}/deactivate", []);
     }
 
     /**
@@ -119,7 +115,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function getSubscription(string $subscriptionId): Response
     {
-        return $this->api->get("/billing/subscriptions/$subscriptionId");
+        return $this->get("/billing/subscriptions/$subscriptionId");
     }
 
     /**
@@ -128,7 +124,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
-        return $this->api->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
+        return $this->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
             'plan_id'             => $plan->driverId('paypal'),
             'application_context' => [
                 'url' => url('/user/settings/subscription'),
@@ -141,7 +137,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
      */
     public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
     {
-        $response = $this->api->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
+        $response = $this->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
             'plan_id'             => $plan->driverId('paypal'),
             'application_context' => [
                 'return_url' => url('/user/settings/subscription'),
@@ -163,7 +159,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
         $originalSubscription = $this->getSubscription($subscription->driverId());
 
         // Cancel subscription request
-        $response = $this->api->post("/billing/subscriptions/{$subscription->driverId()}/cancel", [
+        $response = $this->post("/billing/subscriptions/{$subscription->driverId()}/cancel", [
             'reason' => 'User decided cancel his subscription',
         ]);
 
@@ -182,7 +178,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         // Verify PayPal webhook
-        $response = $this->api->post('/notifications/verify-webhook-signature', [
+        $response = $this->post('/notifications/verify-webhook-signature', [
             'auth_algo'         => $request->header('PAYPAL-AUTH-ALGO'),
             'cert_url'          => $request->header('PAYPAL-CERT-URL'),
             'transmission_id'   => $request->header('PAYPAL-TRANSMISSION-ID'),
@@ -235,7 +231,7 @@ class PayPalEngine extends PayPalWebhooks implements Engine
             return $plan->json()['product_id'];
         }
 
-        $response = $this->api->post('/catalogs/products', [
+        $response = $this->post('/catalogs/products', [
             'name'        => 'Subscription Service',
             'description' => 'Cloud subscription service',
             'type'        => 'SERVICE',

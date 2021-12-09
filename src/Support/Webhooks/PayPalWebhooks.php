@@ -10,7 +10,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
 
-class PayPalWebhooks
+trait PayPalWebhooks
 {
     public function handleBillingSubscriptionCreated(Request $request): void
     {

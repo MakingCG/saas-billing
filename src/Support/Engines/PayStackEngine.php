@@ -10,19 +10,15 @@ use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
+use VueFileManager\Subscription\Support\Services\PayStackHttpClient;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
-use VueFileManager\Subscription\Support\Services\PayStackHttpService;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 
-class PayStackEngine extends PayStackWebhooks implements Engine
+class PayStackEngine implements Engine
 {
-    public PayStackHttpService $api;
-
-    public function __construct()
-    {
-        $this->api = resolve(PayStackHttpService::class);
-    }
+    use PayStackWebhooks;
+    use PayStackHttpClient;
 
     /**
      * https://paystack.com/docs/api/#plan-create
@@ -35,7 +31,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         // Check currency availability form plan
         $planCurrency = in_array($data->currency, $supportedCurrencies) ? $data->currency : 'ZAR';
 
-        $response = $this->api->post('/plan', [
+        $response = $this->post('/plan', [
             'name'     => $data->name,
             'currency' => $planCurrency,
             'amount'   => $data->amount * 100,
@@ -53,7 +49,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function updatePlan(Plan $plan): Response
     {
-        $response = $this->api->put("/plan/{$plan->driverId('paystack')}", [
+        $response = $this->put("/plan/{$plan->driverId('paystack')}", [
             'name' => $plan->name,
         ]);
 
@@ -65,7 +61,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function getPlan(string $planId): Response
     {
-        $response = $this->api->get("/plan/$planId");
+        $response = $this->get("/plan/$planId");
 
         // Check if subscription exist
         if (! $response->json()['status']) {
@@ -80,7 +76,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function deletePlan(string $planId): void
     {
-        $this->api->delete("/plan/$planId");
+        $this->delete("/plan/$planId");
     }
 
     /**
@@ -88,7 +84,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function createCustomer(array $user): Response
     {
-        $response = $this->api->post('/customer', [
+        $response = $this->post('/customer', [
             'email'      => $user['email'],
             'first_name' => $user['name'],
             'last_name'  => $user['surname'],
@@ -113,7 +109,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         // Get paystack customer id
         $customer = User::find($user['id']);
 
-        return $this->api->put("/customer/{$customer->customerId('paystack')}", [
+        return $this->put("/customer/{$customer->customerId('paystack')}", [
             'email'      => $user['email'],
             'first_name' => $user['name'],
             'last_name'  => $user['surname'],
@@ -126,7 +122,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function getSubscription(string $subscriptionId): Response
     {
-        $response = $this->api->get("/subscription/$subscriptionId");
+        $response = $this->get("/subscription/$subscriptionId");
 
         // Check if subscription exist
         if (! $response->json()['status']) {
@@ -146,7 +142,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
      */
     public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
     {
-        $response = $this->api->get("/subscription/{$subscription->driverId()}/manage/link");
+        $response = $this->get("/subscription/{$subscription->driverId()}/manage/link");
 
         return [
             'driver' => 'paystack',
@@ -163,7 +159,7 @@ class PayStackEngine extends PayStackWebhooks implements Engine
         $subscriptionDetail = $this->getSubscription($subscription->driverId());
 
         // Send cancel subscription request
-        $response = $this->api->post('/subscription/disable', [
+        $response = $this->post('/subscription/disable', [
             'code'  => $subscriptionDetail->json()['data']['subscription_code'],
             'token' => $subscriptionDetail->json()['data']['email_token'],
         ]);

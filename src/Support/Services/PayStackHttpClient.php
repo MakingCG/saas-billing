@@ -5,7 +5,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Promise\PromiseInterface;
 
-class PayStackHttpService
+trait PayStackHttpClient
 {
     private string $bearer;
     private string $api;

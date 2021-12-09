@@ -11,7 +11,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
 
-class PayStackWebhooks
+trait PayStackWebhooks
 {
     public function handleSubscriptionCreate(Request $request): void
     {

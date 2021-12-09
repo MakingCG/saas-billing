@@ -5,15 +5,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use VueFileManager\Subscription\Support\EngineManager;
-use VueFileManager\Subscription\Support\Services\StripeHttpService;
+use VueFileManager\Subscription\Support\Services\StripeHttpClient;
 
 class CreateStripeSessionController
 {
-    public function __construct(
-        private StripeHttpService $api,
-        private EngineManager $engine,
-    ) {
-    }
+    use StripeHttpClient;
 
     public function __invoke(Request $request): Response
     {
@@ -22,7 +18,7 @@ class CreateStripeSessionController
         // Create a customer
         $customerId = $user->customerId('stripe') ?? $this->createCustomer($user);
 
-        $session = $this->api->post('/checkout/sessions', [
+        $session = $this->post('/checkout/sessions', [
             'success_url' => url('/platform/files'),
             'cancel_url'  => url('/platform/files'),
             'line_items'  => [
@@ -43,7 +39,7 @@ class CreateStripeSessionController
 
     private function createCustomer($user)
     {
-        $customer = $this->engine
+        $customer = resolve(EngineManager::class)
             ->driver('stripe')
             ->createCustomer([
                 'id'      => $user->id,

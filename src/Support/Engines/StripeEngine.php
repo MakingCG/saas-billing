@@ -11,26 +11,22 @@ use Stripe\Exception\SignatureVerificationException;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Webhooks\StripeWebhooks;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
-use VueFileManager\Subscription\Support\Services\StripeHttpService;
+use VueFileManager\Subscription\Support\Services\StripeHttpClient;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
-class StripeEngine extends StripeWebhooks implements Engine
+class StripeEngine implements Engine
 {
-    public StripeHttpService $api;
-
-    public function __construct()
-    {
-        $this->api = resolve(StripeHttpService::class);
-    }
+    use StripeWebhooks;
+    use StripeHttpClient;
 
     /*
      * https://stripe.com/docs/api/prices/retrieve?lang=php
      */
     public function getPlan(string $planId): Response
     {
-        return $this->api->get("/prices/$planId");
+        return $this->get("/prices/$planId");
     }
 
     /*
@@ -40,14 +36,14 @@ class StripeEngine extends StripeWebhooks implements Engine
     public function createFixedPlan(CreateFixedPlanData $data): array
     {
         // Create product
-        $product = $this->api->post('/products', [
+        $product = $this->post('/products', [
             'url'         => url('/'),
             'name'        => $data->name,
             'description' => $data->description,
         ]);
 
         // Next create subscription plan
-        $plan = $this->api->post('/prices', [
+        $plan = $this->post('/prices', [
             'product'     => $product->json()['id'],
             'currency'    => strtolower($data->currency),
             'unit_amount' => $data->amount * 100,
@@ -71,7 +67,7 @@ class StripeEngine extends StripeWebhooks implements Engine
         $stripePlan = $this->getPlan($plan->driverId('stripe'));
 
         // Update stripe product where are stored name and description
-        return $this->api->post("/products/{$stripePlan['product']}", [
+        return $this->post("/products/{$stripePlan['product']}", [
             'name'        => $plan->name,
             'description' => $plan->description,
         ]);
@@ -82,7 +78,7 @@ class StripeEngine extends StripeWebhooks implements Engine
      */
     public function deletePlan(string $planId): void
     {
-        $this->api->delete("/plans/{$planId}");
+        $this->delete("/plans/{$planId}");
     }
 
     /*
@@ -90,7 +86,7 @@ class StripeEngine extends StripeWebhooks implements Engine
      */
     public function createCustomer(array $user): Response
     {
-        $response = $this->api->post('/customers', [
+        $response = $this->post('/customers', [
             'metadata' => [
                 'id' => $user['id'],
             ],
@@ -118,7 +114,7 @@ class StripeEngine extends StripeWebhooks implements Engine
         $customer = User::find($user['id']);
 
         // Update customer request
-        return $this->api->post("/customers/{$customer->customerId('stripe')}", [
+        return $this->post("/customers/{$customer->customerId('stripe')}", [
             'email' => $user['email'],
             'name'  => $user['name'] . ' ' . $user['surname'],
             'phone' => $user['phone'] ?? null,
@@ -130,7 +126,7 @@ class StripeEngine extends StripeWebhooks implements Engine
      */
     public function getSubscription(string $subscriptionId): Response
     {
-        return $this->api->get("/subscriptions/$subscriptionId");
+        return $this->get("/subscriptions/$subscriptionId");
     }
 
     /*
@@ -140,7 +136,7 @@ class StripeEngine extends StripeWebhooks implements Engine
     {
         $stripeSubscription = $this->getSubscription($subscription->driverId());
 
-        return $this->api->post("/subscriptions/{$subscription->driverId()}", [
+        return $this->post("/subscriptions/{$subscription->driverId()}", [
             'items' => [
                 [
                     'id'    => $stripeSubscription->json()['items']['data'][0]['id'],
@@ -161,7 +157,7 @@ class StripeEngine extends StripeWebhooks implements Engine
     public function cancelSubscription(Subscription $subscription): Response
     {
         // Send cancel subscription request
-        $response = $this->api->delete("/subscriptions/{$subscription->driverId()}");
+        $response = $this->delete("/subscriptions/{$subscription->driverId()}");
 
         // Store end_at period and update status as cancelled
         $subscription->update([

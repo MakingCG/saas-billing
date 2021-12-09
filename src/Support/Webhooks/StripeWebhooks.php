@@ -13,7 +13,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification;
 
-class StripeWebhooks
+trait StripeWebhooks
 {
     public function handleCustomerSubscriptionCreated(Request $request): void
     {

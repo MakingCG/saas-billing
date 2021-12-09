@@ -5,10 +5,9 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Promise\PromiseInterface;
 
-class StripeHttpService
+trait StripeHttpClient
 {
     private string $secret;
-
     private string $api;
 
     public function __construct()
