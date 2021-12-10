@@ -36,18 +36,13 @@ class PayStackEngine implements Engine
             'name'     => $data->name,
             'currency' => $planCurrency,
             'amount'   => $data->amount * 100,
-            'interval' => $this->mapIntervals($data->interval),
+            'interval' => mapPaystackIntervals($data->interval),
         ]);
 
         return [
             'id'   => $response->json()['data']['plan_code'],
             'name' => $response->json()['data']['name'],
         ];
-    }
-
-    public function createMeteredPlan(CreateMeteredPlanData $data): array
-    {
-        return [];
     }
 
     /**
@@ -138,11 +133,6 @@ class PayStackEngine implements Engine
         return $response;
     }
 
-    public function swapSubscription(Subscription $subscription, Plan $plan): Response
-    {
-        //TODO: frontend implementation
-    }
-
     /*
      * https://paystack.com/docs/api/#subscription-manage-link
      */
@@ -204,16 +194,13 @@ class PayStackEngine implements Engine
         return new \Symfony\Component\HttpFoundation\Response('Webhook Handled', 200);
     }
 
-    /**
-     * Map internal request interval to Paystack supported intervals
-     */
-    private function mapIntervals(string $interval): string
+    public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
-        return match ($interval) {
-            'day'   => 'daily',
-            'week'  => 'weekly',
-            'month' => 'monthly',
-            'year'  => 'annually',
-        };
+        //TODO: frontend implementation
+    }
+
+    public function createMeteredPlan(CreateMeteredPlanData $data): array
+    {
+        return [];
     }
 }

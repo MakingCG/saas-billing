@@ -32,7 +32,7 @@ class PayPalEngine implements Engine
             'billing_cycles'      => [
                 [
                     'frequency'      => [
-                        'interval_unit'  => $this->mapInterval($data->interval),
+                        'interval_unit'  => mapPayPalInterval($data->interval),
                         'interval_count' => 1,
                     ],
                     'tenure_type'    => 'REGULAR',
@@ -56,11 +56,6 @@ class PayPalEngine implements Engine
             'id'   => $plan->json()['id'],
             'name' => $plan->json()['name'],
         ];
-    }
-
-    public function createMeteredPlan(CreateMeteredPlanData $data): array
-    {
-        return [];
     }
 
     /**
@@ -98,22 +93,6 @@ class PayPalEngine implements Engine
     public function deletePlan(string $planId): void
     {
         $this->post("/billing/plans/{$planId}/deactivate", []);
-    }
-
-    /**
-     * Method is not provided by PayPal api
-     */
-    public function createCustomer(array $user): null|Response
-    {
-        return null;
-    }
-
-    /**
-     * Method is not provided by PayPal api
-     */
-    public function updateCustomer(array $user): null|Response
-    {
-        return null;
     }
 
     /**
@@ -210,19 +189,6 @@ class PayPalEngine implements Engine
     }
 
     /**
-     * Map internal request interval to PayPal supported intervals
-     */
-    private function mapInterval(string $interval): string
-    {
-        return match ($interval) {
-            'day'   => 'DAY',
-            'week'  => 'WEEK',
-            'month' => 'MONTH',
-            'year'  => 'YEAR',
-        };
-    }
-
-    /**
      * If isn't any product created, create them. If there is
      * some product, then get his id.
      */
@@ -245,5 +211,20 @@ class PayPalEngine implements Engine
         ]);
 
         return $response->json()['id'];
+    }
+
+    public function createCustomer(array $user): null|Response
+    {
+        return null;
+    }
+
+    public function updateCustomer(array $user): null|Response
+    {
+        return null;
+    }
+
+    public function createMeteredPlan(CreateMeteredPlanData $data): array
+    {
+        return [];
     }
 }

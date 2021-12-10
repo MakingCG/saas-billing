@@ -194,11 +194,6 @@ class StripeEngine implements Engine
         ]);
     }
 
-    public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
-    {
-        return [];
-    }
-
     /*
      * https://stripe.com/docs/api/subscriptions/retrieve?lang=curl
      */
@@ -241,5 +236,10 @@ class StripeEngine implements Engine
         }
 
         return new \Symfony\Component\HttpFoundation\Response('Webhook Handled', 200);
+    }
+
+    public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
+    {
+        return [];
     }
 }

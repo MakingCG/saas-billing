@@ -43,6 +43,8 @@
         },
         "files": [
             "src/Support/helpers.php",
+            "src/Support/PayPalHelpers.php",
+            "src/Support/PaystackHelpers.php",
             "src/Support/StripeHelpers.php"
         ]
     },
