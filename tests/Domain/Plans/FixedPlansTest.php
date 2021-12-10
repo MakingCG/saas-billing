@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Domain\Plans;
 
+use Tests\Mocking\Stripe\GetPlanStripeMocksClass;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Str;
@@ -245,6 +246,7 @@ class FixedPlansTest extends TestCase
                 ])
             );
 
+        resolve(GetPlanStripeMocksClass::class)($plan);
         resolve(DeletePlanPayPalMocksClass::class)($plan);
         resolve(DeletePlanStripeMocksClass::class)($plan);
         resolve(DeletePlanPaystackMocksClass::class)($plan);

@@ -115,6 +115,13 @@ class StripeEngine implements Engine
      */
     public function deletePlan(string $planId): void
     {
+        $product = $this->getPlan($planId);
+
+        // Delete product prices
+        collect($product['prices']['data'])
+            ->map(fn($price) => $this->delete("/plans/{$price['id']}"));
+
+        // Delete product
         $this->delete("/products/{$planId}");
     }
 
