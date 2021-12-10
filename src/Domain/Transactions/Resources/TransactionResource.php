@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Domain\Transactions\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,8 +19,9 @@ class TransactionResource extends JsonResource
                 'id'            => $this->id,
                 'type'          => 'transactions',
                 'attributes'    => [
+                    'type'       => $this->type,
                     'status'     => $this->status,
-                    'note'       => $this->plan_name,
+                    'note'       => $this->note,
                     'price'      => format_currency($this->amount, $this->currency),
                     'currency'   => $this->currency,
                     'amount'     => $this->amount,
@@ -29,7 +31,7 @@ class TransactionResource extends JsonResource
                     'updated_at' => $this->updated_at,
                 ],
                 'relationships' => [
-                    $this->mergeWhen($this->user && $this->user->settings, fn () => [
+                    $this->mergeWhen($this->user && $this->user->settings, fn() => [
                         'user' => [
                             'data' => [
                                 'id'         => $this->user->id,

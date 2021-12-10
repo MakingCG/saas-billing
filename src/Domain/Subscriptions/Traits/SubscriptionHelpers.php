@@ -55,9 +55,9 @@ trait SubscriptionHelpers
     /**
      * Get gateway subscription id
      */
-    public function driverName(): string
+    public function driverName(): null|string
     {
-        return $this->driver->driver;
+        return $this->driver->driver ?? null;
     }
 
     /**
