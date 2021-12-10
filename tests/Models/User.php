@@ -3,7 +3,6 @@ namespace Tests\Models;
 
 use Illuminate\Support\Str;
 use Tests\Factories\UserFactory;
-use VueFileManager\Subscription\Domain\Credits\Traits\Credits;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use VueFileManager\Subscription\App\User\Traits\Billable;
+use VueFileManager\Subscription\Domain\Credits\Traits\Credits;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 

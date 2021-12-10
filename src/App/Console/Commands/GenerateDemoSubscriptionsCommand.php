@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Support\Str;
@@ -7,23 +8,115 @@ use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 class GenerateDemoSubscriptionsCommand extends Command
 {
-    public $signature = 'subscription:demo-subscriptions';
+    public $signature = 'subscription:demo-subscriptions {type=fixed}';
 
     public $description = 'Generate demo subscriptions with their transactions';
 
     public function handle()
     {
-        $this->info('Setting up new subscriptions data...');
 
-        // To tasks
-        $this->create_demo_subscription();
+        if ($this->argument('type') === 'metered') {
+            $this->info('Setting up new pre-paid subscriptions data...');
+
+            $this->generateMeteredSubscription();
+        }
+
+        if ($this->argument('type') === 'fixed') {
+            $this->info('Setting up new fixed subscriptions data...');
+
+            $this->generateFixedSubscription();
+        }
 
         $this->after();
 
         $this->info('Everything is done, congratulations! 🥳🥳🥳');
     }
 
-    public function create_demo_subscription()
+    public function generateMeteredSubscription(): void
+    {
+        $howdy = config('auth.providers.users.model')::where('email', 'howdy@hi5ve.digital')
+            ->first();
+
+        $plan = Plan::where('name', 'Pay as You Go')
+            ->first();
+
+        $this->info("Storing {$plan->name} for {$howdy->email} ...");
+
+        $howdy->subscription()->create([
+            'type'       => 'pre-paid',
+            'plan_id'    => $plan->id,
+            'name'       => $plan->name,
+            'status'     => 'active',
+            'renews_at'  => now()->addDays(16),
+            'created_at' => now()->subDays(14),
+            'updated_at' => now()->subDays(14),
+        ]);
+
+        $this->info("Storing transactions for {$howdy->email} ...");
+
+        collect([
+            [
+                'type'       => 'withdrawal',
+                'created_at' => now()->subDays(2),
+                'amount'     => 12.59,
+                'note'       => now()->subDays(2)->format('d. M') . ' - ' . now()->subDays(32)->format('d. M'),
+            ],
+            [
+                'type'       => 'credit',
+                'created_at' => now()->subDays(26 * 1),
+                'note'       => 'Balance funded',
+                'amount'     => 12.00,
+            ],
+            [
+                'type'       => 'withdrawal',
+                'created_at' => now()->subDays(26 * 1),
+                'note'       => now()->subDays(26 * 1)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 1)->format('d. M'),
+                'amount'     => 2.38,
+            ],
+            [
+                'type'       => 'withdrawal',
+                'created_at' => now()->subDays(26 * 2),
+                'note'       => now()->subDays(26 * 2)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 2)->format('d. M'),
+                'amount'     => 5.12,
+            ],
+            [
+                'type'       => 'withdrawal',
+                'created_at' => now()->subDays(26 * 3),
+                'note'       => now()->subDays(26 * 3)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 3)->format('d. M'),
+                'amount'     => 3.89,
+            ],
+            [
+                'type'       => 'withdrawal',
+                'created_at' => now()->subDays(26 * 4),
+                'note'       => now()->subDays(26 * 4)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 4)->format('d. M'),
+                'amount'     => 7.42,
+            ],
+            [
+                'type'       => 'charge',
+                'created_at' => now()->subDays(26 * 5),
+                'note'       => now()->subDays(26 * 5)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 5)->format('d. M'),
+                'amount'     => 50.00,
+            ],
+        ])->each(
+            fn($transaction) => $howdy->transactions()->create([
+                'type'       => $transaction['type'],
+                'status'     => 'completed',
+                'note'       => $transaction['note'],
+                'currency'   => $plan->currency,
+                'driver'     => 'paypal',
+                'amount'     => $transaction['amount'],
+                'created_at' => $transaction['created_at'],
+                'reference'  => Str::random(12),
+            ])
+        );
+
+        $howdy->balance()->create([
+            'currency' => 'USD',
+            'amount'   => 30.60,
+        ]);
+    }
+
+    public function generateFixedSubscription(): void
     {
         $howdy = config('auth.providers.users.model')::where('email', 'howdy@hi5ve.digital')
             ->first();
@@ -83,8 +176,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ['created_at' => now()->subDays(26 * 4)],
             ['created_at' => now()->subDays(26 * 5)],
         ])->each(
-            fn ($transaction) =>
-            $howdy->transactions()->create([
+            fn($transaction) => $howdy->transactions()->create([
                 'status'     => 'completed',
                 'note'       => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
@@ -103,8 +195,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ['created_at' => now()->subDays(29 * 2)],
             ['created_at' => now()->subDays(29 * 3)],
         ])->each(
-            fn ($transaction) =>
-            $johan->transactions()->create([
+            fn($transaction) => $johan->transactions()->create([
                 'status'     => 'completed',
                 'note'       => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
@@ -124,8 +215,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ['created_at' => now()->subDays(28 * 3)],
             ['created_at' => now()->subDays(28 * 4)],
         ])->each(
-            fn ($transaction) =>
-            $alice->transactions()->create([
+            fn($transaction) => $alice->transactions()->create([
                 'status'     => 'completed',
                 'note'       => $businessPackPlan->name,
                 'currency'   => $businessPackPlan->currency,
