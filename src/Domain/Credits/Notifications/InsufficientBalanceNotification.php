@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Credits\Notifications;
+namespace VueFileManager\Subscription\Domain\Credits\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;

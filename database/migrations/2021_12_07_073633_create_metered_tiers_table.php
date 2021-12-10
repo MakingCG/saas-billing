@@ -17,7 +17,7 @@ class CreateMeteredTiersTable extends Migration
             $table->uuid('metered_feature_id')->index();
             $table->integer('first_unit')->default(1);
             $table->integer('last_unit')->nullable();
-            $table->decimal('per_unit');
+            $table->decimal('per_unit', 8, 4);
             $table->decimal('flat_fee')->nullable();
         });
     }

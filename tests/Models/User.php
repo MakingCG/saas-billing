@@ -3,7 +3,7 @@ namespace Tests\Models;
 
 use Illuminate\Support\Str;
 use Tests\Factories\UserFactory;
-use Domain\Credits\Traits\Credits;
+use VueFileManager\Subscription\Domain\Credits\Traits\Credits;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;

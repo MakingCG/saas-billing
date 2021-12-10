@@ -1,28 +1,38 @@
 <?php
 namespace VueFileManager\Subscription\App\Console\Commands;
 
+use VueFileManager\Subscription\Domain\Plans\Actions\StoreMeteredPlanAction;
 use Illuminate\Console\Command;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Domain\Plans\Actions\StoreFixedPlanAction;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 
 class GenerateDemoPlansCommand extends Command
 {
-    public $signature = 'subscription:demo-plans';
+    public $signature = 'subscription:demo-plans {type=fixed}';
 
     public $description = 'Generate demo plans';
 
     public function __construct(
         private StoreFixedPlanAction $storeFixedPlan,
+        private StoreMeteredPlanAction $storeMeteredPlan,
     ) {
         parent::__construct();
     }
 
     public function handle()
     {
-        $this->info('Setting up new plans demo data...');
+        if ($this->argument('type') === 'metered') {
+            $this->info('Setting up new metered plans demo data...');
 
-        // To tasks
-        $this->generateFixedPlans();
+            $this->generateMeteredPlans();
+        }
+
+        if ($this->argument('type') === 'fixed') {
+            $this->info('Setting up new fixed plans demo data...');
+
+            $this->generateFixedPlans();
+        }
 
         $this->after();
 
@@ -113,6 +123,61 @@ class GenerateDemoPlansCommand extends Command
                 // Store plans to the database and gateway
                 ($this->storeFixedPlan)($data);
             }
+        }
+    }
+
+    public function generateMeteredPlans()
+    {
+        // Define plans
+        $plans = [
+            [
+                'type'        => 'metered',
+                'name'        => 'Pay as You Go',
+                'description' => 'Best for all professionals',
+                'currency'    => 'USD',
+                'meters'      => [
+                    [
+                        'key'                => 'bandwidth',
+                        'aggregate_strategy' => 'sum_of_usage',
+                        'tiers'              => [
+                            [
+                                'first_unit' => 1,
+                                'last_unit'  => null,
+                                'per_unit'   => 0.019,
+                                'flat_fee'   => null,
+                            ],
+                        ],
+                    ],
+                    [
+                        'key'                => 'storage',
+                        'aggregate_strategy' => 'maximum_usage',
+                        'tiers'              => [
+                            [
+                                'first_unit' => 1,
+                                'last_unit'  => null,
+                                'per_unit'   => 0.09,
+                                'flat_fee'   => 2.49,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        // Create plans
+        foreach ($plans as $plan) {
+            $data = CreateMeteredPlanData::fromArray([
+                'type'        => $plan['type'],
+                'name'        => $plan['name'],
+                'meters'      => $plan['meters'],
+                'currency'    => $plan['currency'],
+                'description' => $plan['description'],
+            ]);
+
+            $this->info("Creating plan with name: {$plan['name']}");
+
+            // Store plans to the database and gateway
+            ($this->storeMeteredPlan)($data);
         }
     }
 

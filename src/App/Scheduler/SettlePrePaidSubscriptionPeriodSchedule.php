@@ -1,8 +1,8 @@
 <?php
 namespace App\Scheduler;
 
-use Domain\Credits\Exceptions\InsufficientBalanceException;
-use Domain\Credits\Notifications\InsufficientBalanceNotification;
+use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
+use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class SettlePrePaidSubscriptionPeriodSchedule

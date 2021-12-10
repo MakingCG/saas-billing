@@ -3,7 +3,7 @@ namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Domain\Plans\Actions\StoreMeteredPlanAction;
+use VueFileManager\Subscription\Domain\Plans\Actions\StoreMeteredPlanAction;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanResource;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;

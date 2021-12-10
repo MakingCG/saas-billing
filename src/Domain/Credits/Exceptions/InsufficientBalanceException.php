@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Credits\Exceptions;
+namespace VueFileManager\Subscription\Domain\Credits\Exceptions;
 
 use Exception;
 
