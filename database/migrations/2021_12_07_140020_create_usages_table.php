@@ -16,7 +16,7 @@ class CreateUsagesTable extends Migration
         Schema::create('usages', function (Blueprint $table) {
             $table->uuid('metered_feature_id');
             $table->uuid('subscription_id');
-            $table->uuid('quantity');
+            $table->decimal('quantity', 8, 4);
             $table->timestamps();
         });
     }

@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription;
 
+use App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
@@ -53,6 +54,10 @@ class SubscriptionServiceProvider extends PackageServiceProvider
 
             // Halt expired subscriptions
             $schedule->call(HaltExpiredSubscriptionsSchedule::class)
+                ->daily();
+
+            // Settle pre-paid subscriptions
+            $schedule->call(SettlePrePaidSubscriptionPeriodSchedule::class)
                 ->daily();
         });
     }
