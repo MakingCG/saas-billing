@@ -13,7 +13,7 @@ interface Engine
     /**
      * Get subscription plan
      */
-    public function getPlan(string $planId): Response;
+    public function getPlan(string $planId): array;
 
     /**
      * Create new fixed plan

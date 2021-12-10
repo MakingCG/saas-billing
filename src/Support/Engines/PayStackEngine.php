@@ -65,7 +65,7 @@ class PayStackEngine implements Engine
     /**
      * https://paystack.com/docs/api/#plan-fetch
      */
-    public function getPlan(string $planId): Response
+    public function getPlan(string $planId): array
     {
         $response = $this->get("/plan/$planId");
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers;
 
 use Illuminate\Http\Request;
@@ -15,18 +16,13 @@ class CreateStripeSessionController
     {
         $user = Auth::user();
 
-        // Create a customer
+        // Get or create a customer
         $customerId = $user->customerId('stripe') ?? $this->createCustomer($user);
 
         $session = $this->post('/checkout/sessions', [
             'success_url' => url('/platform/files'),
             'cancel_url'  => url('/platform/files'),
-            'line_items'  => [
-                [
-                    'price'    => $request->input('planCode'),
-                    'quantity' => 1,
-                ],
-            ],
+            'line_items'  => $this->getPlanPrices(),
             'mode'        => 'subscription',
             'customer'    => $customerId,
         ]);
@@ -35,6 +31,19 @@ class CreateStripeSessionController
         return response([
             'url' => $session->json()['url'],
         ], 201);
+    }
+
+    private function getPlanPrices(): array
+    {
+        $plan = resolve(EngineManager::class)
+            ->driver('stripe')
+            ->getPlan(request()->input('planCode'));
+
+        return collect($plan['prices']['data'])
+            ->map(fn($price) => [
+                'price'    => $price['id'],
+                'quantity' => 1,
+            ])->toArray();
     }
 
     private function createCustomer($user)

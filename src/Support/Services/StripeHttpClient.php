@@ -21,27 +21,27 @@ trait StripeHttpClient
     {
         return Http::withToken($this->secret)
             ->asForm()
-            ->get("{$this->api}$url");
+            ->get($this->api . $url);
     }
 
     public function post($url, $data): PromiseInterface|Response
     {
         return Http::withToken($this->secret)
             ->asForm()
-            ->post("{$this->api}$url", $data);
+            ->post($this->api . $url, $data);
     }
 
     public function patch($url, $data): PromiseInterface|Response
     {
         return Http::withToken($this->secret)
             ->asForm()
-            ->patch("{$this->api}$url", $data);
+            ->patch($this->api . $url, $data);
     }
 
     public function delete($url): PromiseInterface|Response
     {
         return Http::withToken($this->secret)
             ->asForm()
-            ->delete("{$this->api}$url");
+            ->delete($this->api . $url);
     }
 }

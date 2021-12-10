@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Carbon\Carbon;
@@ -25,9 +26,15 @@ class StripeEngine implements Engine
     /*
      * https://stripe.com/docs/api/prices/retrieve?lang=php
      */
-    public function getPlan(string $planId): Response
+    public function getPlan(string $planId): array
     {
-        return $this->get("/prices/$planId");
+        $product = $this->get("/products/$planId");
+        $prices = $this->get("/prices?product=$planId");
+
+        return [
+            'product' => $product->json(),
+            'prices'  => $prices->json(),
+        ];
     }
 
     /*
@@ -44,7 +51,7 @@ class StripeEngine implements Engine
         ]);
 
         // Next create subscription plan
-        $plan = $this->post('/prices', [
+        $this->post('/prices', [
             'product'     => $product->json()['id'],
             'currency'    => strtolower($data->currency),
             'unit_amount' => $data->amount * 100,
@@ -54,7 +61,7 @@ class StripeEngine implements Engine
         ]);
 
         return [
-            'id'   => $plan->json()['id'],
+            'id'   => $product->json()['id'],
             'name' => $data->name,
         ];
     }
@@ -96,11 +103,8 @@ class StripeEngine implements Engine
      */
     public function updatePlan(Plan $plan): Response
     {
-        // Get original stripe plan where is stored product_id
-        $stripePlan = $this->getPlan($plan->driverId('stripe'));
-
         // Update stripe product where are stored name and description
-        return $this->post("/products/{$stripePlan['product']}", [
+        return $this->post("/products/{$plan->driverId('stripe')}", [
             'name'        => $plan->name,
             'description' => $plan->description,
         ]);
@@ -111,7 +115,7 @@ class StripeEngine implements Engine
      */
     public function deletePlan(string $planId): void
     {
-        $this->delete("/plans/{$planId}");
+        $this->delete("/products/{$planId}");
     }
 
     /*
@@ -167,13 +171,17 @@ class StripeEngine implements Engine
      */
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
+        // Get subscription to obtain subscription item code
         $stripeSubscription = $this->getSubscription($subscription->driverId());
+
+        // Get product to obtain price id
+        $product = $this->getPlan($plan->driverId('stripe'));
 
         return $this->post("/subscriptions/{$subscription->driverId()}", [
             'items' => [
                 [
                     'id'    => $stripeSubscription->json()['items']['data'][0]['id'],
-                    'price' => $plan->driverId('stripe'),
+                    'price' => $product['prices']['data'][0]['id'],
                 ],
             ],
         ]);
@@ -181,7 +189,7 @@ class StripeEngine implements Engine
 
     public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
     {
-        // TODO: Implement updateSubscription() method.
+        return [];
     }
 
     /*

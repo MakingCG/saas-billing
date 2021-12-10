@@ -87,9 +87,9 @@ class PayPalEngine implements Engine
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_get
      */
-    public function getPlan(string $planId): Response
+    public function getPlan(string $planId): array
     {
-        return $this->get("/billing/plans/$planId");
+        return $this->get("/billing/plans/$planId")->json();
     }
 
     /**
@@ -234,7 +234,7 @@ class PayPalEngine implements Engine
         if ($paypalPlan) {
             $plan = $this->getPlan($paypalPlan->driver_plan_id);
 
-            return $plan->json()['product_id'];
+            return $plan['product_id'];
         }
 
         $response = $this->post('/catalogs/products', [

@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Support\Miscellaneous\Stripe;
 
+use Tests\Mocking\Stripe\GetPlanStripeMocksClass;
 use Tests\TestCase;
 use Tests\Models\User;
 use Tests\Mocking\Stripe\CreateCustomerStripeMocksClass;
@@ -18,11 +19,12 @@ class StripeMiscellaneousTest extends TestCase
 
         resolve(CreateCustomerStripeMocksClass::class)($user);
         resolve(CreateCheckoutSessionStripeMockClass::class)();
+        resolve(GetPlanStripeMocksClass::class)();
 
         $this
             ->actingAs($user)
             ->post('/api/subscriptions/stripe/checkout', [
-                'planCode' => 'price_1K2GqrB9m4sTKy1qqq3VTaoi',
+                'planCode' => 'prod_HKL7vHEYRSC4Ur',
             ])
             ->assertCreated()
             ->assertJsonFragment([
