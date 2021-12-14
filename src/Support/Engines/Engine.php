@@ -7,6 +7,7 @@ use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\Usage\Models\Usage;
 
 interface Engine
 {
@@ -69,4 +70,9 @@ interface Engine
      * Get webhook
      */
     public function webhook(Request $request);
+
+    /**
+     * Report usage
+     */
+    public function reportUsage(Usage $usage);
 }

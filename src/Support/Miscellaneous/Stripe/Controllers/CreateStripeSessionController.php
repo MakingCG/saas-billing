@@ -42,7 +42,6 @@ class CreateStripeSessionController
         return collect($plan['prices']['data'])
             ->map(fn($price) => [
                 'price'    => $price['id'],
-                'quantity' => 1,
             ])->toArray();
     }
 

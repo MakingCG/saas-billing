@@ -10,6 +10,7 @@ use Stripe\WebhookSignature;
 use Illuminate\Http\Client\Response;
 use Stripe\Exception\SignatureVerificationException;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Usage\Models\Usage;
 use VueFileManager\Subscription\Support\Webhooks\StripeWebhooks;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Services\StripeHttpClient;
@@ -236,6 +237,33 @@ class StripeEngine implements Engine
         }
 
         return new \Symfony\Component\HttpFoundation\Response('Webhook Handled', 200);
+    }
+
+    /*
+     * https://stripe.com/docs/api/usage_records/create
+     */
+    public function reportUsage(Usage $usage)
+    {
+        $subscriptionCode = $usage->subscription->driverId('stripe');
+
+        $subscription = cache()
+            ->remember($subscriptionCode, 60 * 60 * 24 * 7, function () use ($subscriptionCode) {
+                return $this->getSubscription($subscriptionCode);
+            });
+
+        $items = collect($subscription->json()['items']['data'])
+            ->map(fn($item) => [
+                $item['plan']['nickname'] => $item['id']
+            ])->collapse();
+
+        $res = $this->post("/subscription_items/{$items[$usage->feature->key]}/usage_records", [
+            'quantity' => $usage->quantity,
+            'action'   => 'set',
+        ]);
+
+        dd(
+            $res->json()
+        );
     }
 
     public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array

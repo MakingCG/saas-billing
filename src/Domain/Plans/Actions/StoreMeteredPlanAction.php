@@ -10,9 +10,7 @@ class StoreMeteredPlanAction
 {
     public function __construct(
         public CreateMeteredPlansViaDriversAPIAction $createPlansViaDriversAPI,
-    )
-    {
-    }
+    ) {}
 
     public function __invoke(CreateMeteredPlanData $meteredPlanData)
     {

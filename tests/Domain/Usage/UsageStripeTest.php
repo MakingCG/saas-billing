@@ -1,16 +1,17 @@
 <?php
+
 namespace Tests\Domain\Usage;
 
 use Tests\TestCase;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
-class UsageTest extends TestCase
+class UsageStripeTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_store_usage()
+    public function it_get_all_visible_plans_for_users()
     {
         $plan = Plan::factory()
             ->hasMeteredFeatures([
@@ -22,18 +23,13 @@ class UsageTest extends TestCase
 
         $subscription = Subscription::factory()
             ->hasDriver([
-                'driver' => 'paypal',
+                'driver' => 'stripe',
+                'driver_subscription_id' => 'sub_1K5BluB9m4sTKy1qsxUAhtt8',
             ])
             ->create([
                 'plan_id' => $plan->id,
             ]);
 
         $subscription->recordUsage('bandwidth', 0.12345);
-
-        $this->assertDatabaseHas('usages', [
-            'metered_feature_id' => $plan->meteredFeatures()->first()->id,
-            'subscription_id'    => $subscription->id,
-            'quantity'           => 0.12345,
-        ]);
     }
 }
