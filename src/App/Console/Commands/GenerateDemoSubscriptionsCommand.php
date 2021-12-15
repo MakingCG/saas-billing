@@ -66,7 +66,7 @@ class GenerateDemoSubscriptionsCommand extends Command
 
             $subscription->usages()->create([
                 'metered_feature_id' => $bandwidthFeature->id,
-                'quantity'           => random_int(11111, 99999),
+                'quantity'           => random_int(111, 999),
                 'created_at'         => now()->subDays($item),
             ]);
 
@@ -79,7 +79,7 @@ class GenerateDemoSubscriptionsCommand extends Command
 
             $subscription->usages()->create([
                 'metered_feature_id' => $storageFeature->id,
-                'quantity'           => random_int(11, 39),
+                'quantity'           => random_int(1111, 3999),
                 'created_at'         => now()->subDays($item),
             ]);
         }

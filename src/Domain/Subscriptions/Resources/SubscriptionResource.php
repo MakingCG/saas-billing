@@ -23,6 +23,7 @@ class SubscriptionResource extends JsonResource
                     'status'        => $this->status,
                     'driver'        => $this->driverName(),
                     'trial_ends_at' => $this->trial_ends_at,
+                    'updated_at'    => $this->updated_at->formatLocalized('%d. %b. %Y'),
                     'created_at'    => $this->created_at->formatLocalized('%d. %b. %Y'),
                     'renews_at'     => $this->created_at->addDays(28)->formatLocalized('%d. %b. %Y'), // TODO: add renew date
                     'ends_at'       => $this->ends_at

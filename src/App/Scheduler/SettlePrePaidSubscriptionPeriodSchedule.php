@@ -23,13 +23,16 @@ class SettlePrePaidSubscriptionPeriodSchedule
                         // TODO: support of multiple tier for near future
                         $tier = $feature->tiers()->first();
 
-                        // Sum subscription usage
-                        $usage = $subscription
+                        $usageQuery = $subscription
                             ->usages()
                             ->where('created_at', '>=', now()->subDays(30))
                             ->where('subscription_id', $subscription->id)
-                            ->where('metered_feature_id', $feature->id)
-                            ->sum('quantity');
+                            ->where('metered_feature_id', $feature->id);
+
+                        $usage = match ($feature->aggregate_strategy) {
+                            'sum_of_usage' => $usageQuery->sum('quantity'),
+                            'maximum_usage' => $usageQuery->max('quantity'),
+                        };
 
                         // return sum of money
                         return ($tier->per_unit * $usage) + $tier->flat_fee;
