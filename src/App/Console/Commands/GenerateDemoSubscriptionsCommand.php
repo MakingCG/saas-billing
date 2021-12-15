@@ -5,6 +5,7 @@ namespace VueFileManager\Subscription\App\Console\Commands;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class GenerateDemoSubscriptionsCommand extends Command
 {
@@ -40,9 +41,10 @@ class GenerateDemoSubscriptionsCommand extends Command
         $plan = Plan::where('name', 'Pay as You Go')
             ->first();
 
-        $this->info("Storing {$plan->name} for {$howdy->email} ...");
+        $this->info("Storing {$plan->name} for {$howdy->email}...");
 
-        $howdy->subscription()->create([
+        $subscription = Subscription::create([
+            'user_id'    => $howdy->id,
             'type'       => 'pre-paid',
             'plan_id'    => $plan->id,
             'name'       => $plan->name,
@@ -52,7 +54,37 @@ class GenerateDemoSubscriptionsCommand extends Command
             'updated_at' => now()->subDays(14),
         ]);
 
-        $this->info("Storing transactions for {$howdy->email} ...");
+        // Log fake usage
+        foreach (range(1, 31) as $item) {
+
+            $this->info("Logging fake bandwidth usage...");
+
+            $bandwidthFeature = $plan
+                ->meteredFeatures()
+                ->where('key', 'bandwidth')
+                ->first();
+
+            $subscription->usages()->create([
+                'metered_feature_id' => $bandwidthFeature->id,
+                'quantity'           => random_int(11111, 99999),
+                'created_at'         => now()->subDays($item),
+            ]);
+
+            $this->info("Logging fake storage usage...");
+
+            $storageFeature = $plan
+                ->meteredFeatures()
+                ->where('key', 'storage')
+                ->first();
+
+            $subscription->usages()->create([
+                'metered_feature_id' => $storageFeature->id,
+                'quantity'           => random_int(11, 39),
+                'created_at'         => now()->subDays($item),
+            ]);
+        }
+
+        $this->info("Storing transactions for {$howdy->email}...");
 
         collect([
             [
@@ -142,7 +174,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ->where('interval', 'month')
             ->first();
 
-        $this->info("Storing {$professionalPackPlan->name} for {$howdy->email} ...");
+        $this->info("Storing {$professionalPackPlan->name} for {$howdy->email}...");
 
         $howdySubscription = $howdy->subscription()->create([
             'plan_id'    => $professionalPackPlan->id,
@@ -152,7 +184,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             'updated_at' => now()->subDays(14),
         ]);
 
-        $this->info("Storing {$businessPackPlan->name} for {$alice->email} ...");
+        $this->info("Storing {$businessPackPlan->name} for {$alice->email}...");
 
         $aliceSubscription = $alice->subscription()->create([
             'plan_id'    => $businessPackPlan->id,
@@ -162,7 +194,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             'updated_at' => now()->subDays(9),
         ]);
 
-        $this->info("Storing {$professionalPackPlan->name} for {$johan->email} ...");
+        $this->info("Storing {$professionalPackPlan->name} for {$johan->email}...");
 
         $johanSubscription = $johan->subscription()->create([
             'plan_id'    => $professionalPackPlan->id,
@@ -173,7 +205,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             'updated_at' => now()->subDays(8),
         ]);
 
-        $this->info("Storing transactions for {$howdy->email} ...");
+        $this->info("Storing transactions for {$howdy->email}...");
 
         collect([
             ['created_at' => now()->subDays(2)],
@@ -194,7 +226,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ])
         );
 
-        $this->info("Storing transactions for {$johan->email} ...");
+        $this->info("Storing transactions for {$johan->email}...");
 
         collect([
             ['created_at' => now()->subDay()],
@@ -213,7 +245,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ])
         );
 
-        $this->info("Storing transactions for {$alice->email} ...");
+        $this->info("Storing transactions for {$alice->email}...");
 
         collect([
             ['created_at' => now()],

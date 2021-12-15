@@ -9,6 +9,7 @@ use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\Usage\Models\Usage;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
 use VueFileManager\Subscription\Support\Services\PayStackHttpClient;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
@@ -202,5 +203,10 @@ class PayStackEngine implements Engine
     public function createMeteredPlan(CreateMeteredPlanData $data): array
     {
         return [];
+    }
+
+    public function reportUsage(Usage $usage)
+    {
+        // TODO: Implement reportUsage() method.
     }
 }

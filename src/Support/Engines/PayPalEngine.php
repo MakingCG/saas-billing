@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
+use VueFileManager\Subscription\Domain\Usage\Models\Usage;
 use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
 use VueFileManager\Subscription\Support\Services\PayPalHttpClient;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
@@ -226,5 +227,10 @@ class PayPalEngine implements Engine
     public function createMeteredPlan(CreateMeteredPlanData $data): array
     {
         return [];
+    }
+
+    public function reportUsage(Usage $usage)
+    {
+        // TODO: Implement reportUsage() method.
     }
 }

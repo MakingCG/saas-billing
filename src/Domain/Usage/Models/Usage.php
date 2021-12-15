@@ -53,7 +53,7 @@ class Usage extends Model
 
         static::created(function ($usage) {
 
-            $driver = $usage->subscription->driver->driver;
+            $driver = $usage->subscription->driver->driver ?? null;
 
             if (in_array($driver, config('subscription.metered_billing.native_support'))) {
                 resolve(EngineManager::class)
