@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Support\Webhooks;
 
 use Carbon\Carbon;
@@ -10,10 +9,10 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
-use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
+use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification;
@@ -305,34 +304,34 @@ class StripeWebhooksTest extends TestCase
                 'object' => [
                     'id'                                => 'sub_1K4iaCB9m4sTKy1qTzKk1Jhy',
                     'object'                            => 'subscription',
-                    'application_fee_percent'           => NULL,
+                    'application_fee_percent'           => null,
                     'automatic_tax'                     => [
                         'enabled' => false,
                     ],
                     'billing_cycle_anchor'              => 1639040792,
-                    'billing_thresholds'                => NULL,
-                    'cancel_at'                         => NULL,
+                    'billing_thresholds'                => null,
+                    'cancel_at'                         => null,
                     'cancel_at_period_end'              => false,
-                    'canceled_at'                       => NULL,
+                    'canceled_at'                       => null,
                     'collection_method'                 => 'charge_automatically',
                     'created'                           => 1639040792,
                     'current_period_end'                => 1641719192,
                     'current_period_start'              => 1639040792,
                     'customer'                          => 'cus_KjAlPNelS6xFkq',
-                    'days_until_due'                    => NULL,
-                    'default_payment_method'            => NULL,
-                    'default_source'                    => NULL,
+                    'days_until_due'                    => null,
+                    'default_payment_method'            => null,
+                    'default_source'                    => null,
                     'default_tax_rates'                 => [
                     ],
-                    'discount'                          => NULL,
-                    'ended_at'                          => NULL,
+                    'discount'                          => null,
+                    'ended_at'                          => null,
                     'items'                             => [
                         'object'      => 'list',
                         'data'        => [
                             [
                                 'id'                 => 'si_KkD0nYORB0E3BA',
                                 'object'             => 'subscription_item',
-                                'billing_thresholds' => NULL,
+                                'billing_thresholds' => null,
                                 'created'            => 1639040792,
                                 'metadata'           => [
                                 ],
@@ -341,8 +340,8 @@ class StripeWebhooksTest extends TestCase
                                     'object'            => 'plan',
                                     'active'            => true,
                                     'aggregate_usage'   => 'max',
-                                    'amount'            => NULL,
-                                    'amount_decimal'    => NULL,
+                                    'amount'            => null,
+                                    'amount_decimal'    => null,
                                     'billing_scheme'    => 'tiered',
                                     'created'           => 1639040578,
                                     'currency'          => 'usd',
@@ -354,8 +353,8 @@ class StripeWebhooksTest extends TestCase
                                     'nickname'          => 'storage',
                                     'product'           => 'prod_KkCwo4KLpPp4EV',
                                     'tiers_mode'        => 'volume',
-                                    'transform_usage'   => NULL,
-                                    'trial_period_days' => NULL,
+                                    'transform_usage'   => null,
+                                    'trial_period_days' => null,
                                     'usage_type'        => 'metered',
                                 ],
                                 'price'              => [
@@ -366,7 +365,7 @@ class StripeWebhooksTest extends TestCase
                                     'created'             => 1639040578,
                                     'currency'            => 'usd',
                                     'livemode'            => false,
-                                    'lookup_key'          => NULL,
+                                    'lookup_key'          => null,
                                     'metadata'            => [
                                     ],
                                     'nickname'            => 'storage',
@@ -375,15 +374,15 @@ class StripeWebhooksTest extends TestCase
                                         'aggregate_usage'   => 'max',
                                         'interval'          => 'month',
                                         'interval_count'    => 1,
-                                        'trial_period_days' => NULL,
+                                        'trial_period_days' => null,
                                         'usage_type'        => 'metered',
                                     ],
                                     'tax_behavior'        => 'unspecified',
                                     'tiers_mode'          => 'volume',
-                                    'transform_quantity'  => NULL,
+                                    'transform_quantity'  => null,
                                     'type'                => 'recurring',
-                                    'unit_amount'         => NULL,
-                                    'unit_amount_decimal' => NULL,
+                                    'unit_amount'         => null,
+                                    'unit_amount_decimal' => null,
                                 ],
                                 'subscription'       => 'sub_1K4iaCB9m4sTKy1qTzKk1Jhy',
                                 'tax_rates'          => [
@@ -392,7 +391,7 @@ class StripeWebhooksTest extends TestCase
                             [
                                 'id'                 => 'si_KkD00pzcVNa99N',
                                 'object'             => 'subscription_item',
-                                'billing_thresholds' => NULL,
+                                'billing_thresholds' => null,
                                 'created'            => 1639040792,
                                 'metadata'           => [
                                 ],
@@ -401,8 +400,8 @@ class StripeWebhooksTest extends TestCase
                                     'object'            => 'plan',
                                     'active'            => true,
                                     'aggregate_usage'   => 'sum',
-                                    'amount'            => NULL,
-                                    'amount_decimal'    => NULL,
+                                    'amount'            => null,
+                                    'amount_decimal'    => null,
                                     'billing_scheme'    => 'tiered',
                                     'created'           => 1639040577,
                                     'currency'          => 'usd',
@@ -414,8 +413,8 @@ class StripeWebhooksTest extends TestCase
                                     'nickname'          => 'bandwidth',
                                     'product'           => 'prod_KkCwo4KLpPp4EV',
                                     'tiers_mode'        => 'volume',
-                                    'transform_usage'   => NULL,
-                                    'trial_period_days' => NULL,
+                                    'transform_usage'   => null,
+                                    'trial_period_days' => null,
                                     'usage_type'        => 'metered',
                                 ],
                                 'price'              => [
@@ -426,7 +425,7 @@ class StripeWebhooksTest extends TestCase
                                     'created'             => 1639040577,
                                     'currency'            => 'usd',
                                     'livemode'            => false,
-                                    'lookup_key'          => NULL,
+                                    'lookup_key'          => null,
                                     'metadata'            => [
                                     ],
                                     'nickname'            => 'bandwidth',
@@ -435,15 +434,15 @@ class StripeWebhooksTest extends TestCase
                                         'aggregate_usage'   => 'sum',
                                         'interval'          => 'month',
                                         'interval_count'    => 1,
-                                        'trial_period_days' => NULL,
+                                        'trial_period_days' => null,
                                         'usage_type'        => 'metered',
                                     ],
                                     'tax_behavior'        => 'unspecified',
                                     'tiers_mode'          => 'volume',
-                                    'transform_quantity'  => NULL,
+                                    'transform_quantity'  => null,
                                     'type'                => 'recurring',
-                                    'unit_amount'         => NULL,
-                                    'unit_amount_decimal' => NULL,
+                                    'unit_amount'         => null,
+                                    'unit_amount_decimal' => null,
                                 ],
                                 'subscription'       => 'sub_1K4iaCB9m4sTKy1qTzKk1Jhy',
                                 'tax_rates'          => [
@@ -458,23 +457,23 @@ class StripeWebhooksTest extends TestCase
                     'livemode'                          => false,
                     'metadata'                          => [
                     ],
-                    'next_pending_invoice_item_invoice' => NULL,
-                    'pause_collection'                  => NULL,
+                    'next_pending_invoice_item_invoice' => null,
+                    'pause_collection'                  => null,
                     'payment_settings'                  => [
-                        'payment_method_options' => NULL,
-                        'payment_method_types'   => NULL,
+                        'payment_method_options' => null,
+                        'payment_method_types'   => null,
                     ],
-                    'pending_invoice_item_interval'     => NULL,
-                    'pending_setup_intent'              => NULL,
-                    'pending_update'                    => NULL,
-                    'plan'                              => NULL,
-                    'quantity'                          => NULL,
-                    'schedule'                          => NULL,
+                    'pending_invoice_item_interval'     => null,
+                    'pending_setup_intent'              => null,
+                    'pending_update'                    => null,
+                    'plan'                              => null,
+                    'quantity'                          => null,
+                    'schedule'                          => null,
                     'start_date'                        => 1639040792,
                     'status'                            => 'active',
-                    'transfer_data'                     => NULL,
-                    'trial_end'                         => NULL,
-                    'trial_start'                       => NULL,
+                    'transfer_data'                     => null,
+                    'trial_end'                         => null,
+                    'trial_start'                       => null,
                 ],
             ],
             'livemode'         => false,
@@ -727,7 +726,7 @@ class StripeWebhooksTest extends TestCase
             'status' => 'active',
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -949,7 +948,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1171,7 +1170,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => now(),
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1391,7 +1390,7 @@ class StripeWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1596,7 +1595,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => Carbon::createFromTimestamp(1641113362),
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
     /**

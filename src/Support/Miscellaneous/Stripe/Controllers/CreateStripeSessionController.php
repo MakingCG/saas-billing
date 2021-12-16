@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers;
 
 use Illuminate\Http\Request;
@@ -40,7 +39,7 @@ class CreateStripeSessionController
             ->getPlan(request()->input('planCode'));
 
         return collect($plan['prices']['data'])
-            ->map(fn($price) => [
+            ->map(fn ($price) => [
                 'price'    => $price['id'],
             ])->toArray();
     }

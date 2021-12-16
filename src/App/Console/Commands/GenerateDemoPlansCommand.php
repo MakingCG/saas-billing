@@ -1,11 +1,11 @@
 <?php
 namespace VueFileManager\Subscription\App\Console\Commands;
 
-use VueFileManager\Subscription\Domain\Plans\Actions\StoreMeteredPlanAction;
 use Illuminate\Console\Command;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
-use VueFileManager\Subscription\Domain\Plans\Actions\StoreFixedPlanAction;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
+use VueFileManager\Subscription\Domain\Plans\Actions\StoreFixedPlanAction;
+use VueFileManager\Subscription\Domain\Plans\Actions\StoreMeteredPlanAction;
 
 class GenerateDemoPlansCommand extends Command
 {

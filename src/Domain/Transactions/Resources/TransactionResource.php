@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Transactions\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,7 +30,7 @@ class TransactionResource extends JsonResource
                     'updated_at' => $this->updated_at,
                 ],
                 'relationships' => [
-                    $this->mergeWhen($this->user && $this->user->settings, fn() => [
+                    $this->mergeWhen($this->user && $this->user->settings, fn () => [
                         'user' => [
                             'data' => [
                                 'id'         => $this->user->id,

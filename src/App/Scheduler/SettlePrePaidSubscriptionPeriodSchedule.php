@@ -1,9 +1,9 @@
 <?php
 namespace App\Scheduler;
 
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
-use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class SettlePrePaidSubscriptionPeriodSchedule
 {
@@ -30,7 +30,7 @@ class SettlePrePaidSubscriptionPeriodSchedule
                             ->where('metered_feature_id', $feature->id);
 
                         $usage = match ($feature->aggregate_strategy) {
-                            'sum_of_usage' => $usageQuery->sum('quantity'),
+                            'sum_of_usage'  => $usageQuery->sum('quantity'),
                             'maximum_usage' => $usageQuery->max('quantity'),
                         };
 

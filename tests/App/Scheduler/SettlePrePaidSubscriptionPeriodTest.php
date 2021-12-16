@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\Domain\Credits\Models\Balance;
-use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
 
 class SettlePrePaidSubscriptionPeriodTest extends TestCase
 {
@@ -93,11 +93,11 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'status'    => 'completed',
                 'note'      => '01. Jan - 02. Dec',
                 'currency'  => 'USD',
-                'amount'    => 3.645,
+                'amount'    => 3.3695,
                 'driver'    => 'system',
                 'reference' => null,
             ])
-            ->assertEquals(6.355, Balance::first()->amount);
+            ->assertEquals(6.6305, Balance::first()->amount);
     }
 
     /**

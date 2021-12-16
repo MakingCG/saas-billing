@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Support\Str;
@@ -15,7 +14,6 @@ class GenerateDemoSubscriptionsCommand extends Command
 
     public function handle()
     {
-
         if ($this->argument('type') === 'metered') {
             $this->info('Setting up new pre-paid subscriptions data...');
 
@@ -56,8 +54,7 @@ class GenerateDemoSubscriptionsCommand extends Command
 
         // Log fake usage
         foreach (range(1, 31) as $item) {
-
-            $this->info("Logging fake bandwidth usage...");
+            $this->info('Logging fake bandwidth usage...');
 
             $bandwidthFeature = $plan
                 ->meteredFeatures()
@@ -70,7 +67,7 @@ class GenerateDemoSubscriptionsCommand extends Command
                 'created_at'         => now()->subDays($item),
             ]);
 
-            $this->info("Logging fake storage usage...");
+            $this->info('Logging fake storage usage...');
 
             $storageFeature = $plan
                 ->meteredFeatures()
@@ -137,7 +134,7 @@ class GenerateDemoSubscriptionsCommand extends Command
                 'driver'     => 'paypal',
             ],
         ])->each(
-            fn($transaction) => $howdy->transactions()->create([
+            fn ($transaction) => $howdy->transactions()->create([
                 'type'       => $transaction['type'],
                 'status'     => 'completed',
                 'note'       => $transaction['note'],
@@ -215,7 +212,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ['created_at' => now()->subDays(26 * 4)],
             ['created_at' => now()->subDays(26 * 5)],
         ])->each(
-            fn($transaction) => $howdy->transactions()->create([
+            fn ($transaction) => $howdy->transactions()->create([
                 'status'     => 'completed',
                 'note'       => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
@@ -234,7 +231,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ['created_at' => now()->subDays(29 * 2)],
             ['created_at' => now()->subDays(29 * 3)],
         ])->each(
-            fn($transaction) => $johan->transactions()->create([
+            fn ($transaction) => $johan->transactions()->create([
                 'status'     => 'completed',
                 'note'       => $professionalPackPlan->name,
                 'currency'   => $professionalPackPlan->currency,
@@ -254,7 +251,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             ['created_at' => now()->subDays(28 * 3)],
             ['created_at' => now()->subDays(28 * 4)],
         ])->each(
-            fn($transaction) => $alice->transactions()->create([
+            fn ($transaction) => $alice->transactions()->create([
                 'status'     => 'completed',
                 'note'       => $businessPackPlan->name,
                 'currency'   => $businessPackPlan->currency,

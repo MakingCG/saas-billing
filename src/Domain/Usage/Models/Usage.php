@@ -3,12 +3,12 @@ namespace VueFileManager\Subscription\Domain\Usage\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Database\Factories\UsageFactory;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
-use VueFileManager\Subscription\Support\EngineManager;
 
 /**
  * @method static create(array $array)
@@ -52,7 +52,6 @@ class Usage extends Model
         parent::boot();
 
         static::created(function ($usage) {
-
             $driver = $usage->subscription->driver->driver ?? null;
 
             if (in_array($driver, config('subscription.metered_billing.native_support'))) {

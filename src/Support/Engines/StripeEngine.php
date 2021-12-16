@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Carbon\Carbon;
@@ -120,7 +119,7 @@ class StripeEngine implements Engine
 
         // Delete product prices
         collect($product['prices']['data'])
-            ->map(fn($price) => $this->delete("/plans/{$price['id']}"));
+            ->map(fn ($price) => $this->delete("/plans/{$price['id']}"));
 
         // Delete product
         $this->delete("/products/{$planId}");
@@ -247,13 +246,11 @@ class StripeEngine implements Engine
         $subscriptionCode = $usage->subscription->driverId('stripe');
 
         $subscription = cache()
-            ->remember($subscriptionCode, 60 * 60 * 24 * 7, function () use ($subscriptionCode) {
-                return $this->getSubscription($subscriptionCode);
-            });
+            ->remember($subscriptionCode, 60 * 60 * 24 * 7, fn () => $this->getSubscription($subscriptionCode));
 
         $items = collect($subscription->json()['items']['data'])
-            ->map(fn($item) => [
-                $item['plan']['nickname'] => $item['id']
+            ->map(fn ($item) => [
+                $item['plan']['nickname'] => $item['id'],
             ])->collapse();
 
         $res = $this->post("/subscription_items/{$items[$usage->feature->key]}/usage_records", [

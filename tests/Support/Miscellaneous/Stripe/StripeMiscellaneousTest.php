@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Support\Miscellaneous\Stripe;
 
-use Tests\Mocking\Stripe\GetPlanStripeMocksClass;
 use Tests\TestCase;
 use Tests\Models\User;
+use Tests\Mocking\Stripe\GetPlanStripeMocksClass;
 use Tests\Mocking\Stripe\CreateCustomerStripeMocksClass;
 use Tests\Mocking\Stripe\CreateCheckoutSessionStripeMockClass;
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Domain\Usage;
 
 use Tests\TestCase;
@@ -9,9 +8,9 @@ use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 class UsageStripeTest extends TestCase
 {
     /**
-     * @test
+     *
      */
-    public function it_get_all_visible_plans_for_users()
+    public function it_report_usage_to_stripe()
     {
         $plan = Plan::factory()
             ->hasMeteredFeatures([
@@ -23,7 +22,7 @@ class UsageStripeTest extends TestCase
 
         $subscription = Subscription::factory()
             ->hasDriver([
-                'driver' => 'stripe',
+                'driver'                 => 'stripe',
                 'driver_subscription_id' => 'sub_1K5BluB9m4sTKy1qsxUAhtt8',
             ])
             ->create([

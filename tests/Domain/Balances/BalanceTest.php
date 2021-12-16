@@ -4,9 +4,9 @@ namespace Tests\Domain\Balances;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Models\Debt;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
+use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 
 class BalanceTest extends TestCase
 {

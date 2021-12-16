@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
+use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 trait Billable
@@ -17,6 +18,11 @@ trait Billable
     public function subscription(): HasOne
     {
         return $this->hasOne(Subscription::class);
+    }
+
+    public function billingAlert(): HasOne
+    {
+        return $this->hasOne(BillingAlert::class);
     }
 
     public function transactions(): HasMany

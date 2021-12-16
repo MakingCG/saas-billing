@@ -1,13 +1,13 @@
 <?php
 namespace VueFileManager\Subscription;
 
-use App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use VueFileManager\Subscription\Support\EngineManager;
+use App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\App\Console\Commands\GenerateDemoPlansCommand;
 use VueFileManager\Subscription\App\Console\Commands\GenerateDemoContentCommand;

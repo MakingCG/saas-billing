@@ -3,9 +3,9 @@ namespace VueFileManager\Subscription\Domain\Credits\Traits;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Models\Debt;
 use VueFileManager\Subscription\Domain\Credits\Models\Balance;
+use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
 
 trait Credits

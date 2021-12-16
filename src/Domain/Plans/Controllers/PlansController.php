@@ -3,7 +3,6 @@ namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VueFileManager\Subscription\Domain\Plans\Actions\StoreMeteredPlanAction;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanResource;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
@@ -12,6 +11,7 @@ use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 use VueFileManager\Subscription\Domain\Plans\Requests\StorePlanRequest;
 use VueFileManager\Subscription\Domain\Plans\Requests\UpdatePlanRequest;
 use VueFileManager\Subscription\Domain\Plans\Actions\StoreFixedPlanAction;
+use VueFileManager\Subscription\Domain\Plans\Actions\StoreMeteredPlanAction;
 use VueFileManager\Subscription\Domain\Plans\Actions\DeletePlansFromPaymentServiceAction;
 
 class PlansController extends Controller

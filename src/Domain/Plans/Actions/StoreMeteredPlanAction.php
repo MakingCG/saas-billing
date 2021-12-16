@@ -1,16 +1,15 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
-use VueFileManager\Subscription\Domain\Plans\Actions\CreateMeteredPlansViaDriversAPIAction;
 
 class StoreMeteredPlanAction
 {
     public function __construct(
         public CreateMeteredPlansViaDriversAPIAction $createPlansViaDriversAPI,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateMeteredPlanData $meteredPlanData)
     {
@@ -29,7 +28,8 @@ class StoreMeteredPlanAction
                 'aggregate_strategy' => $meter['aggregate_strategy'],
             ]);
 
-            collect($meter['tiers'])->each(fn($tier) =>
+            collect($meter['tiers'])->each(
+                fn ($tier) =>
                 $price->tiers()->create([
                     'first_unit' => $tier['first_unit'],
                     'last_unit'  => $tier['last_unit'],

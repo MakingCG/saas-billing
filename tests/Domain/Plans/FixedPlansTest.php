@@ -1,11 +1,11 @@
 <?php
 namespace Tests\Domain\Plans;
 
-use Tests\Mocking\Stripe\GetPlanStripeMocksClass;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Artisan;
+use Tests\Mocking\Stripe\GetPlanStripeMocksClass;
 use Tests\Mocking\PayPal\CreatePlanPayPalMocksClass;
 use Tests\Mocking\PayPal\DeletePlanPayPalMocksClass;
 use Tests\Mocking\PayPal\UpdatePlanPayPalMocksClass;

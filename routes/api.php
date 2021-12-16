@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Domain\BillingAlerts\BillingAlertController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
@@ -35,6 +36,9 @@ Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api', 'auth:san
 
     // Transactions
     Route::get('/transactions', GetTransactionsController::class);
+
+    // Alerts
+    Route::apiResource('/billing-alerts', BillingAlertController::class);
 });
 
 // Admin
