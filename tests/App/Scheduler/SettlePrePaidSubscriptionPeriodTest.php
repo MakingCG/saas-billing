@@ -23,6 +23,12 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
         $user = User::factory()
             ->create();
 
+        $user->billingAlert()
+            ->create([
+                'amount' => 5,
+                'triggered' => true,
+            ]);
+
         $user->creditBalance(10.00, 'USD');
 
         $plan = Plan::factory()
@@ -96,6 +102,9 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'amount'    => 3.3695,
                 'driver'    => 'system',
                 'reference' => null,
+            ])
+            ->assertDatabaseHas('billing_alerts', [
+                'triggered' => false,
             ])
             ->assertEquals(6.6305, Balance::first()->amount);
     }

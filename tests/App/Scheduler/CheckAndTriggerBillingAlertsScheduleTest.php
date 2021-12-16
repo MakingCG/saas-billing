@@ -1,52 +1,29 @@
 <?php
-namespace Tests\Domain\Usage;
+namespace Tests\App\Scheduler;
 
 use Tests\TestCase;
 use Tests\Models\User;
-use Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
+use Illuminate\Support\Facades\Notification;
+use App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use Domain\BillingAlerts\Notifications\BillingAlertTriggered;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
-class UsageTest extends TestCase
+class CheckAndTriggerBillingAlertsScheduleTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_store_usage()
-    {
-        $plan = Plan::factory()
-            ->hasMeteredFeatures([
-                'key' => 'bandwidth',
-            ])
-            ->create([
-                'type' => 'metered',
-            ]);
-
-        $subscription = Subscription::factory()
-            ->hasDriver([
-                'driver' => 'paypal',
-            ])
-            ->create([
-                'plan_id' => $plan->id,
-            ]);
-
-        $subscription->recordUsage('bandwidth', 0.12345);
-
-        $this->assertDatabaseHas('usages', [
-            'metered_feature_id' => $plan->meteredFeatures()->first()->id,
-            'subscription_id'    => $subscription->id,
-            'quantity'           => 0.12345,
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function it_get_estimates_for_current_period()
+    public function it_trigger_billing_alert_and_send_notification()
     {
         $user = User::factory()
             ->create();
+
+        $user->billingAlert()
+            ->create([
+                'amount' => 5,
+            ]);
 
         $plan = Plan::factory()
             ->create([
@@ -58,7 +35,7 @@ class UsageTest extends TestCase
             ->hasTiers([
                 'first_unit' => 1,
                 'last_unit'  => null,
-                'per_unit'   => 0.19,
+                'per_unit'   => 1.49,
                 'flat_fee'   => 0,
             ])
             ->create([
@@ -71,7 +48,7 @@ class UsageTest extends TestCase
             ->hasTiers([
                 'first_unit' => 1,
                 'last_unit'  => null,
-                'per_unit'   => 1.29,
+                'per_unit'   => 2.4,
                 'flat_fee'   => 0,
             ])
             ->create([
@@ -92,20 +69,21 @@ class UsageTest extends TestCase
                 'ends_at'    => null,
             ]);
 
-        foreach (range(1, 6) as $i) {
+        foreach (range(1, 2) as $i) {
             // Travel by time
             $this->travel(-1)->days();
 
-            // Record usages
-            $subscription->recordUsage('bandwidth', 1 + $i);
-            $subscription->recordUsage('storage', 1 + $i);
+            // Record usages - 3.645 total
+            $subscription->recordUsage('bandwidth', 1);
+            $subscription->recordUsage('storage', 1);
         }
 
-        $estimates = resolve(SumUsageForCurrentPeriodAction::class)($subscription);
+        resolve(CheckAndTriggerBillingAlertsSchedule::class)();
 
-        $this->assertEquals(9.03, $estimates->where('feature', 'storage')->first()['amount']);
-        $this->assertEquals(5.13, $estimates->where('feature', 'bandwidth')->first()['amount']);
+        $this->assertDatabaseHas('billing_alerts', [
+            'triggered' => true,
+        ]);
 
-        $this->assertEquals(14.16, $estimates->sum('amount'));
+        Notification::assertSentTo($user, BillingAlertTriggered::class);
     }
 }

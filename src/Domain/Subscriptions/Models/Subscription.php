@@ -38,6 +38,7 @@ class Subscription extends Model
         'user_id'       => 'string',
         'ends_at'       => 'datetime',
         'trial_ends_at' => 'datetime',
+        'renews_at'     => 'datetime',
     ];
 
     public $incrementing = false;
