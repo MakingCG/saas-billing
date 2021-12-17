@@ -150,6 +150,11 @@ class GenerateDemoSubscriptionsCommand extends Command
             'currency' => 'USD',
             'amount'   => 30.60,
         ]);
+
+        $howdy->billingAlert()->create([
+            'currency' => 'USD',
+            'amount'   => 25,
+        ]);
     }
 
     public function generateFixedSubscription(): void

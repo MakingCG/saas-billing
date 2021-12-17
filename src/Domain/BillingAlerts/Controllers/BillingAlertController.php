@@ -1,5 +1,5 @@
 <?php
-namespace VueFileManager\Subscription\Domain\BillingAlerts;
+namespace VueFileManager\Subscription\Domain\BillingAlerts\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
