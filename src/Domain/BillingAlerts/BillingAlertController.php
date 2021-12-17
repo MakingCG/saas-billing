@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
 
 class BillingAlertController extends Controller
 {
@@ -19,5 +20,21 @@ class BillingAlertController extends Controller
             );
 
         return response('Done', 201);
+    }
+
+    public function update(Request $request, BillingAlert $billingAlert): Response|Application|ResponseFactory
+    {
+        $billingAlert->update(
+            $request->only('amount')
+        );
+
+        return response('Done', 204);
+    }
+
+    public function destroy(BillingAlert $billingAlert): Response|Application|ResponseFactory
+    {
+        $billingAlert->delete();
+
+        return response('Done', 204);
     }
 }
