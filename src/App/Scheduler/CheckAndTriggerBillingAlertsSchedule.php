@@ -1,8 +1,8 @@
 <?php
 namespace App\Scheduler;
 
-use Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
-use Domain\BillingAlerts\Notifications\BillingAlertTriggered;
+use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
+use VueFileManager\Subscription\Domain\BillingAlerts\Notifications\BillingAlertTriggered;
 use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
 
 class CheckAndTriggerBillingAlertsSchedule

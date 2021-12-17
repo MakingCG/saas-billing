@@ -1,5 +1,5 @@
 <?php
-namespace Domain\BillingAlerts\Notifications;
+namespace VueFileManager\Subscription\Domain\BillingAlerts\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;

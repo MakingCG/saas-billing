@@ -1,5 +1,5 @@
 <?php
-namespace Domain\Usage\Actions;
+namespace VueFileManager\Subscription\Domain\Usage\Actions;
 
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 

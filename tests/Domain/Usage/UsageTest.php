@@ -3,7 +3,7 @@ namespace Tests\Domain\Usage;
 
 use Tests\TestCase;
 use Tests\Models\User;
-use Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
+use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;

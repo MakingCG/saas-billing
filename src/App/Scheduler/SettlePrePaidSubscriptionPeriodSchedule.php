@@ -1,7 +1,7 @@
 <?php
 namespace App\Scheduler;
 
-use Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
+use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;

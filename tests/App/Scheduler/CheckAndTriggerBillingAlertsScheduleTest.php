@@ -6,9 +6,9 @@ use Tests\Models\User;
 use Illuminate\Support\Facades\Notification;
 use App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use Domain\BillingAlerts\Notifications\BillingAlertTriggered;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\BillingAlerts\Notifications\BillingAlertTriggered;
 
 class CheckAndTriggerBillingAlertsScheduleTest extends TestCase
 {

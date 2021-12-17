@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Domain\BillingAlerts\BillingAlertController;
+use VueFileManager\Subscription\Domain\BillingAlerts\BillingAlertController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
