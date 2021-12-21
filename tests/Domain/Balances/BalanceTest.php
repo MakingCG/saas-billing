@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Domain\Balances;
 
 use Tests\TestCase;
@@ -18,6 +19,44 @@ class BalanceTest extends TestCase
 
         $this->user = User::factory()
             ->create();
+    }
+
+    /**
+     * @test
+     */
+    public function admin_credit_user_balance()
+    {
+        $admin = User::factory()
+            ->create([
+                'role' => 'admin',
+            ]);
+
+        $this->user->balance()->create([
+            'currency' => 'USD',
+            'amount'   => 50.00,
+        ]);
+
+        $this
+            ->actingAs($admin)
+            ->postJson("/api/subscriptions/admin/users/{$this->user->id}/credit", [
+                'amount' => 20,
+            ])
+            ->assertNoContent();
+
+        $this
+            ->assertDatabaseHas('transactions', [
+                'user_id'  => $this->user->id,
+                'amount'   => 20.00,
+                'currency' => 'USD',
+                'status'   => 'completed',
+                'type'     => 'credit',
+                'driver'   => 'system',
+            ])
+            ->assertDatabaseHas('balances', [
+                'user_id'  => $this->user->id,
+                'amount'   => 70.00,
+                'currency' => 'USD',
+            ]);
     }
 
     /**

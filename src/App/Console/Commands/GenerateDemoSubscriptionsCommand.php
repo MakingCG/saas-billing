@@ -94,7 +94,7 @@ class GenerateDemoSubscriptionsCommand extends Command
             [
                 'type'       => 'credit',
                 'created_at' => now()->subDays(26 * 1),
-                'note'       => 'Bonus',
+                'note'       => __('Bonus'),
                 'amount'     => 12.00,
                 'driver'     => 'system',
             ],

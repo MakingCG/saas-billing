@@ -1,5 +1,6 @@
 <?php
 
+use VueFileManager\Subscription\Domain\Credits\Controllers\CreditUserBalanceController;
 use Illuminate\Support\Facades\Route;
 use VueFileManager\Subscription\Domain\BillingAlerts\Controllers\BillingAlertController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
@@ -51,6 +52,7 @@ Route::group(['prefix' => 'api/subscriptions/admin', 'middleware' => ['api', 'au
     // User data
     Route::get('/users/{id}/transactions', GetUserTransactionsController::class);
     Route::get('/users/{id}/subscription', GetUserSubscriptionController::class);
+    Route::post('/users/{id}/credit', CreditUserBalanceController::class);
 
     // Transactions
     Route::get('/transactions', GetAllTransactionsController::class);
