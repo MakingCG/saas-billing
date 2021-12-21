@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Domain\Plans\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -15,11 +16,11 @@ class PlanResource extends JsonResource
     {
         return [
             'data' => [
-                'id'          => $this->id,
-                'type'        => 'plans',
-                'attributes'  => match ($this->type) {
+                'id'         => $this->id,
+                'type'       => 'plans',
+                'attributes' => match ($this->type) {
                     'metered' => $this->getMeteredAttributes(),
-                    'fixed'   => $this->getFixedAttributes(),
+                    'fixed' => $this->getFixedAttributes(),
                 },
                 'meta'       => [
                     // Get gateway driver ids
@@ -52,9 +53,10 @@ class PlanResource extends JsonResource
             'type'        => $this->type,
             'visible'     => $this->visible,
             'currency'    => $this->currency,
+            'interval'    => $this->interval,
             'description' => $this->description,
             'subscribers' => $this->subscriptions->count(),
-            'prices'      => $this->meteredFeatures->map(fn ($price) => [
+            'prices'      => $this->meteredFeatures->map(fn($price) => [
                 'key'                => $price['key'],
                 'aggregate_strategy' => $price['aggregate_strategy'],
                 'tiers'              => $price['tiers'],

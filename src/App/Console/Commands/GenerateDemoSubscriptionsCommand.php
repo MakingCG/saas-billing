@@ -33,128 +33,141 @@ class GenerateDemoSubscriptionsCommand extends Command
 
     public function generateMeteredSubscription(): void
     {
-        $howdy = config('auth.providers.users.model')::where('email', 'howdy@hi5ve.digital')
-            ->first();
-
         $plan = Plan::where('name', 'Pay as You Go')
             ->first();
 
-        $this->info("Storing {$plan->name} for {$howdy->email}...");
+        config('auth.providers.users.model')::all()
+            ->each(function ($user) use ($plan) {
 
-        $subscription = Subscription::create([
-            'user_id'    => $howdy->id,
-            'type'       => 'pre-paid',
-            'plan_id'    => $plan->id,
-            'name'       => $plan->name,
-            'status'     => 'active',
-            'renews_at'  => now()->addDays(16),
-            'created_at' => now()->subDays(14),
-            'updated_at' => now()->subDays(14),
-        ]);
+                $isHowdy = $user->email === 'howdy@hi5ve.digital' ?? false;
 
-        // Log fake usage
-        foreach (range(1, 31) as $item) {
-            $this->info('Logging fake bandwidth usage...');
+                $this->info("Storing {$plan->name} for {$user->email}...");
 
-            $bandwidthFeature = $plan
-                ->meteredFeatures()
-                ->where('key', 'bandwidth')
-                ->first();
+                $subscription = Subscription::create([
+                    'user_id'    => $user->id,
+                    'type'       => 'pre-paid',
+                    'plan_id'    => $plan->id,
+                    'name'       => $plan->name,
+                    'status'     => 'active',
+                    'renews_at'  => now()->addDays(16),
+                    'created_at' => now()->subDays(14),
+                    'updated_at' => now()->subDays(14),
+                ]);
 
-            $subscription->usages()->create([
-                'metered_feature_id' => $bandwidthFeature->id,
-                'quantity'           => random_int(111, 999),
-                'created_at'         => now()->subDays($item),
-            ]);
+                // Log fake usage
+                foreach (range(1, 31) as $item) {
+                    $this->info('Logging fake bandwidth usage...');
 
-            $this->info('Logging fake storage usage...');
+                    $bandwidthFeature = $plan
+                        ->meteredFeatures()
+                        ->where('key', 'bandwidth')
+                        ->first();
 
-            $storageFeature = $plan
-                ->meteredFeatures()
-                ->where('key', 'storage')
-                ->first();
+                    $subscription->usages()->create([
+                        'metered_feature_id' => $bandwidthFeature->id,
+                        'quantity'           => random_int(111, 999),
+                        'created_at'         => now()->subDays($item),
+                    ]);
 
-            $subscription->usages()->create([
-                'metered_feature_id' => $storageFeature->id,
-                'quantity'           => random_int(1111, 3999),
-                'created_at'         => now()->subDays($item),
-            ]);
-        }
+                    $this->info('Logging fake storage usage...');
 
-        $this->info("Storing transactions for {$howdy->email}...");
+                    $storageFeature = $plan
+                        ->meteredFeatures()
+                        ->where('key', 'storage')
+                        ->first();
 
-        collect([
-            [
-                'type'       => 'withdrawal',
-                'created_at' => now()->subDays(2),
-                'amount'     => 12.59,
-                'note'       => now()->subDays(2)->format('d. M') . ' - ' . now()->subDays(32)->format('d. M'),
-                'driver'     => 'system',
-            ],
-            [
-                'type'       => 'credit',
-                'created_at' => now()->subDays(26 * 1),
-                'note'       => __('Bonus'),
-                'amount'     => 12.00,
-                'driver'     => 'system',
-            ],
-            [
-                'type'       => 'withdrawal',
-                'created_at' => now()->subDays(26 * 1),
-                'note'       => now()->subDays(26 * 1)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 1)->format('d. M'),
-                'amount'     => 2.38,
-                'driver'     => 'system',
-            ],
-            [
-                'type'       => 'withdrawal',
-                'created_at' => now()->subDays(26 * 2),
-                'note'       => now()->subDays(26 * 2)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 2)->format('d. M'),
-                'amount'     => 5.12,
-                'driver'     => 'system',
-            ],
-            [
-                'type'       => 'withdrawal',
-                'created_at' => now()->subDays(26 * 3),
-                'note'       => now()->subDays(26 * 3)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 3)->format('d. M'),
-                'amount'     => 3.89,
-                'driver'     => 'system',
-            ],
-            [
-                'type'       => 'withdrawal',
-                'created_at' => now()->subDays(26 * 4),
-                'note'       => now()->subDays(26 * 4)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 4)->format('d. M'),
-                'amount'     => 7.42,
-                'driver'     => 'system',
-            ],
-            [
-                'type'       => 'charge',
-                'created_at' => now()->subDays(26 * 5),
-                'note'       => 'Account Fund',
-                'amount'     => 50.00,
-                'driver'     => 'paypal',
-            ],
-        ])->each(
-            fn ($transaction) => $howdy->transactions()->create([
-                'type'       => $transaction['type'],
-                'status'     => 'completed',
-                'note'       => $transaction['note'],
-                'currency'   => $plan->currency,
-                'driver'     => $transaction['driver'],
-                'amount'     => $transaction['amount'],
-                'created_at' => $transaction['created_at'],
-                'reference'  => Str::random(12),
-            ])
-        );
+                    $subscription->usages()->create([
+                        'metered_feature_id' => $storageFeature->id,
+                        'quantity'           => random_int(1111, 3999),
+                        'created_at'         => now()->subDays($item),
+                    ]);
+                }
 
-        $howdy->balance()->create([
-            'currency' => 'USD',
-            'amount'   => 30.60,
-        ]);
+                $flatFeeFeature = $plan
+                    ->meteredFeatures()
+                    ->where('key', 'flat-fee')
+                    ->first();
 
-        $howdy->billingAlert()->create([
-            'currency' => 'USD',
-            'amount'   => 25,
-        ]);
+                $subscription->usages()->create([
+                    'metered_feature_id' => $flatFeeFeature->id,
+                    'quantity'           => 1,
+                    'created_at'         => now()->subDays(2),
+                ]);
+
+                $this->info("Storing transactions for {$user->email}...");
+
+                collect([
+                    [
+                        'type'       => 'withdrawal',
+                        'created_at' => now()->subDays(2),
+                        'amount'     => $isHowdy ? 12.59 : random_int(1, 20),
+                        'note'       => now()->subDays(2)->format('d. M') . ' - ' . now()->subDays(32)->format('d. M'),
+                        'driver'     => 'system',
+                    ],
+                    [
+                        'type'       => 'credit',
+                        'created_at' => now()->subDays(26 * 1),
+                        'note'       => __('Bonus'),
+                        'amount'     => $isHowdy ? 12.00 : random_int(1, 20),
+                        'driver'     => 'system',
+                    ],
+                    [
+                        'type'       => 'withdrawal',
+                        'created_at' => now()->subDays(26 * 1),
+                        'note'       => now()->subDays(26 * 1)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 1)->format('d. M'),
+                        'amount'     => $isHowdy ? 2.38 : random_int(1, 20),
+                        'driver'     => 'system',
+                    ],
+                    [
+                        'type'       => 'withdrawal',
+                        'created_at' => now()->subDays(26 * 2),
+                        'note'       => now()->subDays(26 * 2)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 2)->format('d. M'),
+                        'amount'     => $isHowdy ? 5.12 : random_int(1, 20),
+                        'driver'     => 'system',
+                    ],
+                    [
+                        'type'       => 'withdrawal',
+                        'created_at' => now()->subDays(26 * 3),
+                        'note'       => now()->subDays(26 * 3)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 3)->format('d. M'),
+                        'amount'     => $isHowdy ? 3.89 : random_int(1, 20),
+                        'driver'     => 'system',
+                    ],
+                    [
+                        'type'       => 'withdrawal',
+                        'created_at' => now()->subDays(26 * 4),
+                        'note'       => now()->subDays(26 * 4)->format('d. M') . ' - ' . now()->subDays(30 + 26 * 4)->format('d. M'),
+                        'amount'     => $isHowdy ? 7.42 : random_int(1, 20),
+                        'driver'     => 'system',
+                    ],
+                    [
+                        'type'       => 'charge',
+                        'created_at' => now()->subDays(26 * 5),
+                        'note'       => 'Account Fund',
+                        'amount'     => $isHowdy ? 50.00 : random_int(1, 20),
+                        'driver'     => 'paypal',
+                    ],
+                ])->each(
+                    fn ($transaction) => $user->transactions()->create([
+                        'type'       => $transaction['type'],
+                        'status'     => 'completed',
+                        'note'       => $transaction['note'],
+                        'currency'   => $plan->currency,
+                        'driver'     => $transaction['driver'],
+                        'amount'     => $transaction['amount'],
+                        'created_at' => $transaction['created_at'],
+                        'reference'  => Str::random(12),
+                    ])
+                );
+
+                $user->balance()->create([
+                    'currency' => 'USD',
+                    'amount'   => $isHowdy ? 30.60 : random_int(20, 60),
+                ]);
+
+                $user->billingAlert()->create([
+                    'amount'   => $isHowdy ? 25 : random_int(30, 80),
+                ]);
+            });
     }
 
     public function generateFixedSubscription(): void
