@@ -161,13 +161,25 @@ class GenerateDemoPlansCommand extends Command
                         ],
                     ],
                     [
-                        'key'                => 'flat-fee',
+                        'key'                => 'flatFee',
                         'aggregate_strategy' => 'maximum_usage',
                         'tiers'              => [
                             [
                                 'first_unit' => 1,
                                 'last_unit'  => null,
                                 'per_unit'   => 2.49,
+                                'flat_fee'   => null,
+                            ],
+                        ],
+                    ],
+                    [
+                        'key'                => 'member',
+                        'aggregate_strategy' => 'maximum_usage',
+                        'tiers'              => [
+                            [
+                                'first_unit' => 1,
+                                'last_unit'  => null,
+                                'per_unit'   => 0.10,
                                 'flat_fee'   => null,
                             ],
                         ],

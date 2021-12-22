@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
 use Spatie\QueueableAction\QueueableAction;
@@ -11,17 +12,20 @@ class DeletePlansFromPaymentServiceAction
 
     public function __construct(
         public EngineManager $subscription
-    ) {
-    }
+    ) {}
 
     public function __invoke(Plan $plan)
     {
         // Delete plan from all available payment gateways
         collect(config('subscription.available_drivers'))
-            ->each(
-                fn ($driver) => $this->subscription
-                    ->driver($driver)
-                    ->deletePlan($plan->driverId($driver))
-            );
+            ->each(function ($driver) use ($plan) {
+
+                // Check if external driver exist
+                if ($plan->driverId($driver)) {
+                    $this->subscription
+                        ->driver($driver)
+                        ->deletePlan($plan->driverId($driver));
+                }
+            });
     }
 }

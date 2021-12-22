@@ -39,10 +39,11 @@ class GenerateDemoSubscriptionsCommand extends Command
         config('auth.providers.users.model')::all()
             ->each(function ($user) use ($plan) {
 
-                $isHowdy = $user->email === 'howdy@hi5ve.digital' ?? false;
+                $isHowdy = $user->email === 'howdy@hi5ve.digital';
 
                 $this->info("Storing {$plan->name} for {$user->email}...");
 
+                // 1. Create subscription
                 $subscription = Subscription::create([
                     'user_id'    => $user->id,
                     'type'       => 'pre-paid',
@@ -54,7 +55,7 @@ class GenerateDemoSubscriptionsCommand extends Command
                     'updated_at' => now()->subDays(14),
                 ]);
 
-                // Log fake usage
+                // 2. Log fake storage and bandwidth
                 foreach (range(1, 31) as $item) {
                     $this->info('Logging fake bandwidth usage...');
 
@@ -83,9 +84,10 @@ class GenerateDemoSubscriptionsCommand extends Command
                     ]);
                 }
 
+                // 3. Store flat fee
                 $flatFeeFeature = $plan
                     ->meteredFeatures()
-                    ->where('key', 'flat-fee')
+                    ->where('key', 'flatFee')
                     ->first();
 
                 $subscription->usages()->create([
@@ -94,6 +96,19 @@ class GenerateDemoSubscriptionsCommand extends Command
                     'created_at'         => now()->subDays(2),
                 ]);
 
+                // 4. Store member count
+                $memberFeature = $plan
+                    ->meteredFeatures()
+                    ->where('key', 'member')
+                    ->first();
+
+                $subscription->usages()->create([
+                    'metered_feature_id' => $memberFeature->id,
+                    'quantity'           => 7,
+                    'created_at'         => now()->subDays(2),
+                ]);
+
+                // 5. Store fake transactions
                 $this->info("Storing transactions for {$user->email}...");
 
                 collect([
@@ -159,11 +174,13 @@ class GenerateDemoSubscriptionsCommand extends Command
                     ])
                 );
 
+                // Add default user balance
                 $user->balance()->create([
                     'currency' => 'USD',
                     'amount'   => $isHowdy ? 30.60 : random_int(20, 60),
                 ]);
 
+                // Create billing alert
                 $user->billingAlert()->create([
                     'amount'   => $isHowdy ? 25 : random_int(30, 80),
                 ]);

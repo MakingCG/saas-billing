@@ -65,7 +65,7 @@ class Plan extends Model
         return $this->drivers()
             ->where('driver', $driver)
             ->first()
-            ->driver_plan_id;
+            ->driver_plan_id ?? null;
     }
 
     protected static function newFactory(): PlanFactory

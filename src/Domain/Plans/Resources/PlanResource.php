@@ -56,11 +56,12 @@ class PlanResource extends JsonResource
             'interval'    => $this->interval,
             'description' => $this->description,
             'subscribers' => $this->subscriptions->count(),
-            'prices'      => $this->meteredFeatures->map(fn($price) => [
-                'key'                => $price['key'],
-                'aggregate_strategy' => $price['aggregate_strategy'],
-                'tiers'              => $price['tiers'],
-            ]),
+            'features'      => $this->meteredFeatures->mapWithKeys(fn($price) => [
+                $price['key'] => [
+                    'aggregate_strategy' => $price['aggregate_strategy'],
+                    'tiers'              => $price['tiers'],
+                ],
+            ])
         ];
     }
 }
