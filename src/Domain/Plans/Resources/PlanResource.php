@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Plans\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -16,11 +15,11 @@ class PlanResource extends JsonResource
     {
         return [
             'data' => [
-                'id'         => $this->id,
-                'type'       => 'plans',
-                'attributes' => match ($this->type) {
+                'id'          => $this->id,
+                'type'        => 'plans',
+                'attributes'  => match ($this->type) {
                     'metered' => $this->getMeteredAttributes(),
-                    'fixed' => $this->getFixedAttributes(),
+                    'fixed'   => $this->getFixedAttributes(),
                 },
                 'meta'       => [
                     // Get gateway driver ids
@@ -49,19 +48,19 @@ class PlanResource extends JsonResource
     private function getMeteredAttributes(): array
     {
         return [
-            'name'        => $this->name,
-            'type'        => $this->type,
-            'visible'     => $this->visible,
-            'currency'    => $this->currency,
-            'interval'    => $this->interval,
-            'description' => $this->description,
-            'subscribers' => $this->subscriptions->count(),
-            'features'      => $this->meteredFeatures->mapWithKeys(fn($price) => [
+            'name'          => $this->name,
+            'type'          => $this->type,
+            'visible'       => $this->visible,
+            'currency'      => $this->currency,
+            'interval'      => $this->interval,
+            'description'   => $this->description,
+            'subscribers'   => $this->subscriptions->count(),
+            'features'      => $this->meteredFeatures->mapWithKeys(fn ($price) => [
                 $price['key'] => [
                     'aggregate_strategy' => $price['aggregate_strategy'],
                     'tiers'              => $price['tiers'],
                 ],
-            ])
+            ]),
         ];
     }
 }

@@ -38,7 +38,6 @@ class GenerateDemoSubscriptionsCommand extends Command
 
         config('auth.providers.users.model')::all()
             ->each(function ($user) use ($plan) {
-
                 $isHowdy = $user->email === 'howdy@hi5ve.digital';
 
                 $this->info("Storing {$plan->name} for {$user->email}...");

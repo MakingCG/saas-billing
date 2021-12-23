@@ -5,11 +5,41 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
+use Tests\Mocking\Stripe\GetPlanStripeMocksClass;
+use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use Tests\Mocking\Stripe\CreateSubscriptionStripeMocksClass;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class SubscriptionStripeTest extends TestCase
 {
+    /**
+     * @test
+     */
+    public function it_create_stripe_subscription()
+    {
+        $user = User::factory()
+            ->hasCustomers([
+                'driver_user_id' => 'cus_Khwr2RAte5Xhkf',
+                'driver'         => 'stripe',
+            ])
+            ->create();
+
+        $plan = Plan::factory()
+            ->hasDrivers([
+                'driver' => 'stripe',
+            ])
+            ->create();
+
+        resolve(GetPlanStripeMocksClass::class)();
+        resolve(CreateSubscriptionStripeMocksClass::class)();
+
+        $response = resolve(EngineManager::class)
+            ->driver('stripe')
+            ->createSubscription($plan, $user);
+
+        $this->assertEquals('sub_1K9m2OB9m4sTKy1qS88pLbae', $response['id']);
+    }
     /**
      * @test
      */

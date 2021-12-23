@@ -25,7 +25,7 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
 
         $user->billingAlert()
             ->create([
-                'amount' => 5,
+                'amount'    => 5,
                 'triggered' => true,
             ]);
 

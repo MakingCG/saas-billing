@@ -52,6 +52,11 @@ interface Engine
     public function getSubscription(string $subscriptionId): Response;
 
     /**
+     * Get Subscription details
+     */
+    public function createSubscription(Plan $plan, $user = null): array;
+
+    /**
      * Swap subscription plan
      */
     public function swapSubscription(Subscription $subscription, Plan $plan): Response;

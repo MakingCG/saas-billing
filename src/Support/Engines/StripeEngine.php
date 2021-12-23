@@ -174,6 +174,25 @@ class StripeEngine implements Engine
     }
 
     /*
+     * https://stripe.com/docs/api/subscriptions/create
+     */
+    public function createSubscription(Plan $plan, $user = null): array
+    {
+        $product = $this->getPlan($plan->driverId('stripe'));
+
+        // Get prices id
+        $priceIds = collect($product['prices']['data'])
+            ->map(fn ($price) => ['price' => $price['id']]);
+
+        $response = $this->post('/subscriptions', [
+            'customer' => $user->customerId('stripe'),
+            'items'    => $priceIds,
+        ]);
+
+        return $response->json();
+    }
+
+    /*
      * https://stripe.com/docs/api/subscriptions/update?lang=php
      */
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
