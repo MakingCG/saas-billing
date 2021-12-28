@@ -173,4 +173,12 @@ trait StripeWebhooks
             ),
         ]));
     }
+
+    /**
+     * Handle offline charge for native metered billing system
+     */
+    public function handlePaymentIntentSucceeded(Request $request)
+    {
+        // TODO: implement
+    }
 }

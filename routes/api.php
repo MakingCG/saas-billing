@@ -18,13 +18,18 @@ use VueFileManager\Subscription\Domain\Transactions\Controllers\GetUserTransacti
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetAllSubscriptionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetUserSubscriptionController;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\CreateStripeSessionController;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\CreateStripeSetupIntentController;
 
 // System
 Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api']], function () {
     Route::post('/{driver}/webhooks', WebhooksController::class);
     Route::get('/plans', GetPlansController::class);
+});
 
-    Route::post('/stripe/checkout', CreateStripeSessionController::class);
+// Stripe
+Route::group(['prefix' => 'api/stripe', 'middleware' => ['api', 'auth:sanctum']], function () {
+    Route::get('/setup-intent', CreateStripeSetupIntentController::class);
+    Route::post('/checkout', CreateStripeSessionController::class);
 });
 
 // User

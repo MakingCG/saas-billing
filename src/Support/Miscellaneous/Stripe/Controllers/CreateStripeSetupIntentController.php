@@ -1,0 +1,48 @@
+<?php
+namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use VueFileManager\Subscription\Support\EngineManager;
+use VueFileManager\Subscription\Support\Services\StripeHttpClient;
+
+class CreateStripeSetupIntentController extends Controller
+{
+    use StripeHttpClient;
+
+    public function __invoke(Request $request): Response
+    {
+        $user = Auth::user();
+
+        // Get or create a customer
+        $customerId = $user->customerId('stripe') ?? $this->createCustomer($user);
+
+        // Create setup intent
+        $paymentIntent = $this->post('/setup_intents', [
+            'customer'             => $customerId,
+            'payment_method_types' => [
+                'card',
+            ],
+        ]);
+
+        return response([
+            'client_secret' => $paymentIntent->json()['client_secret'],
+        ], 201);
+    }
+
+    private function createCustomer($user)
+    {
+        $customer = resolve(EngineManager::class)
+            ->driver('stripe')
+            ->createCustomer([
+                'id'      => $user->id,
+                'email'   => $user->email,
+                'name'    => $user->settings->name ?? null,
+                'surname' => $user->settings->name ?? null,
+            ]);
+
+        return $customer->json()['id'];
+    }
+}
