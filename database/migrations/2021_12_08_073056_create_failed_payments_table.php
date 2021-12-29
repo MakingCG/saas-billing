@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDebtsTable extends Migration
+class CreateFailedPaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateDebtsTable extends Migration
      */
     public function up()
     {
-        Schema::create('debts', function (Blueprint $table) {
+        Schema::create('failed_payments', function (Blueprint $table) {
             $table->uuid('id')->index();
             $table->uuid('user_id')->index();
             $table->uuid('transaction_id');
             $table->decimal('amount');
             $table->string('currency');
+            $table->integer('attempts')->default(0);
+            $table->enum('source', ['balance', 'credit-card']);
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ class CreateDebtsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('debts');
+        Schema::dropIfExists('failed_payments');
     }
 }

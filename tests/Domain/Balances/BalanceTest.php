@@ -4,8 +4,8 @@ namespace Tests\Domain\Balances;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use VueFileManager\Subscription\Domain\Credits\Models\Debt;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
+use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 
 class BalanceTest extends TestCase
@@ -75,7 +75,7 @@ class BalanceTest extends TestCase
     /**
      * @test
      */
-    public function it_credit_balance_and_pay_user_debt()
+    public function it_credit_balance_and_pay_user_failed_payment()
     {
         $this->user->creditBalance(5.00, 'USD');
 
@@ -88,7 +88,7 @@ class BalanceTest extends TestCase
                 'status'   => 'error',
             ]);
 
-        Debt::factory()
+        FailedPayment::factory()
             ->create([
                 'transaction_id' => $transaction->id,
                 'user_id'        => $this->user->id,
@@ -113,7 +113,7 @@ class BalanceTest extends TestCase
                 'currency' => 'USD',
                 'amount'   => 10.25,
             ])
-            ->assertDatabaseCount('debts', 0);
+            ->assertDatabaseCount('failed_payments', 0);
     }
 
     /**

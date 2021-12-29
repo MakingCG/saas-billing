@@ -2,8 +2,6 @@
 namespace VueFileManager\Subscription\Domain\Credits\Traits;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use VueFileManager\Subscription\Domain\Credits\Models\Debt;
 use VueFileManager\Subscription\Domain\Credits\Models\Balance;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
@@ -13,11 +11,6 @@ trait Credits
     public function balance(): HasOne
     {
         return $this->hasOne(Balance::class, 'user_id', 'id');
-    }
-
-    public function debts(): HasMany
-    {
-        return $this->hasMany(Debt::class, 'user_id', 'id');
     }
 
     /**
@@ -39,22 +32,23 @@ trait Credits
         $this->balance()->increment('amount', $credit);
 
         // Proceed if user has debt
-        if ($this->debts()->exists()) {
+        // TODO: refactor to action
+        if ($this->failedPayments()->exists()) {
             $this
-                ->debts()
+                ->failedPayments()
                 ->orderByDesc('amount')
-                ->each(function ($debt) {
+                ->each(function ($failedPayment) {
                     try {
                         // Withdraw balance
-                        $this->withdrawBalance($debt->amount);
+                        $this->withdrawBalance($failedPayment->amount);
 
                         // Update transaction
-                        $debt->transaction->update([
+                        $failedPayment->transaction->update([
                             'status' => 'completed',
                         ]);
 
-                        // delete debt
-                        $debt->delete();
+                        // delete failed payment
+                        $failedPayment->delete();
                     } catch (InsufficientBalanceException $e) {
                         $this->notify(new InsufficientBalanceNotification());
                     }

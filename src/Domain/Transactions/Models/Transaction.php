@@ -7,8 +7,8 @@ use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use VueFileManager\Subscription\Domain\Credits\Models\Debt;
 use VueFileManager\Subscription\Database\Factories\TransactionFactory;
+use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 
 /**
  * @method static create(array $array)
@@ -48,9 +48,9 @@ class Transaction extends Model
         return $this->hasOne(config('auth.providers.users.model'), 'id', 'user_id');
     }
 
-    public function debt(): HasOne
+    public function failedPayment(): HasOne
     {
-        return $this->hasOne(Debt::class, 'transaction_id', 'id');
+        return $this->hasOne(FailedPayment::class, 'transaction_id', 'id');
     }
 
     protected static function boot()

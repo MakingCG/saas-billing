@@ -1,13 +1,13 @@
 <?php
-namespace VueFileManager\Subscription\Domain\Credits\Models;
+namespace VueFileManager\Subscription\Domain\FailedPayments\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use VueFileManager\Subscription\Database\Factories\DebtFactory;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
+use VueFileManager\Subscription\Database\Factories\FailedPaymentFactory;
 
 /**
  * @method static create(array $array)
@@ -16,10 +16,12 @@ use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
  * @property string transaction_id
  * @property float amount
  * @property string currency
+ * @property string source
+ * @property int attempts
  * @property Carbon created_at
  * @property Carbon updated_at
  */
-class Debt extends Model
+class FailedPayment extends Model
 {
     use HasFactory;
 
@@ -34,6 +36,11 @@ class Debt extends Model
 
     protected $keyType = 'string';
 
+    protected static function newFactory(): FailedPaymentFactory
+    {
+        return FailedPaymentFactory::new();
+    }
+
     public function user(): HasOne
     {
         return $this->hasOne(config('auth.providers.users.model'), 'id', 'user_id');
@@ -44,15 +51,10 @@ class Debt extends Model
         return $this->hasOne(Transaction::class, 'id', 'transaction_id');
     }
 
-    protected static function newFactory(): DebtFactory
-    {
-        return DebtFactory::new();
-    }
-
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(fn ($debt) => $debt->id = Str::uuid());
+        static::creating(fn ($failedPayment) => $failedPayment->id = Str::uuid());
     }
 }

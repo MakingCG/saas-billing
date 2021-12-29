@@ -115,7 +115,7 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
     /**
      * @test
      */
-    public function it_settle_subscription_after_end_of_current_period_from_credit_card_as_succeeded()
+    public function it_settle_subscription_after_end_of_current_period_from_credit_card_with_succeeded_result()
     {
         $user = User::factory()
             ->create();
@@ -369,7 +369,7 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
     /**
      * @test
      */
-    public function it_settle_subscription_after_end_of_current_period_from_credit_card_as_failed()
+    public function it_settle_subscription_after_end_of_current_period_from_credit_card_with_failed_result()
     {
         $user = User::factory()
             ->create();
@@ -716,8 +716,6 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
         // Settle pre-paid subscription
         resolve(SettlePrePaidSubscriptionPeriodSchedule::class)();
 
-        // TODO: store debt record
-
         $this
             ->assertDatabaseHas('subscriptions', [
                 'renews_at' => now()->addDays(30),
@@ -731,6 +729,14 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'amount'    => 3.37,
                 'driver'    => 'stripe',
                 'reference' => null,
+            ])
+            ->assertDatabaseHas('failed_payments', [
+                'user_id'        => $user->id,
+                'source'         => 'credit-card',
+                'transaction_id' => Transaction::first()->id,
+                'amount'         => 3.37,
+                'currency'       => 'USD',
+                'attempts'       => 0,
             ])
             ->assertEquals(0.00, Balance::first()->amount);
     }
@@ -793,11 +799,12 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
             ->assertDatabaseHas('subscriptions', [
                 'renews_at' => now()->addDays(30),
             ])
-            ->assertDatabaseHas('debts', [
+            ->assertDatabaseHas('failed_payments', [
                 'amount'         => 29.49,
                 'currency'       => 'USD',
                 'user_id'        => $user->id,
                 'transaction_id' => Transaction::first()->id,
+                'source'         => 'balance',
             ])
             ->assertDatabaseHas('transactions', [
                 'user_id'   => $user->id,

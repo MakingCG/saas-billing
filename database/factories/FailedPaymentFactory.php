@@ -3,11 +3,11 @@
 namespace VueFileManager\Subscription\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use VueFileManager\Subscription\Domain\Credits\Models\Debt;
+use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 
-class DebtFactory extends Factory
+class FailedPaymentFactory extends Factory
 {
-    protected $model = Debt::class;
+    protected $model = FailedPayment::class;
 
     public function definition(): array
     {
@@ -17,6 +17,7 @@ class DebtFactory extends Factory
             'transaction_id' => $this->faker->uuid,
             'amount'         => $this->faker->randomElement([12.23, 26.20, 31.39]),
             'currency'       => $this->faker->randomElement(['USD', 'EUR']),
+            'source'         => $this->faker->randomElement(['balance', 'credit-card']),
             'created_at'     => $this->faker->dateTimeBetween('-36 months'),
             'updated_at'     => $this->faker->dateTimeBetween('-36 months'),
         ];

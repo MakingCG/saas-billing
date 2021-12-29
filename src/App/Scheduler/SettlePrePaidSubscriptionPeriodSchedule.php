@@ -39,9 +39,7 @@ class SettlePrePaidSubscriptionPeriodSchedule
 
                 // Update next subscription period date
                 $subscription->update([
-                    'renews_at' => now()->addDays(
-                        config('subscription.settlement_period')
-                    ),
+                    'renews_at' => now()->addDays(config('subscription.settlement_period')),
                 ]);
 
                 // Reset alert if some exists
@@ -84,7 +82,7 @@ class SettlePrePaidSubscriptionPeriodSchedule
                 ]);
             } catch (ChargeFailedException $e) {
                 // Create transaction
-                $subscription->user->transactions()->create([
+                $transaction = $subscription->user->transactions()->create([
                     'reference' => null,
                     'type'      => 'charge',
                     'status'    => 'error',
@@ -94,7 +92,13 @@ class SettlePrePaidSubscriptionPeriodSchedule
                     'driver'    => 'stripe',
                 ]);
 
-                // TODO: store debt record
+                // Store failed payment record
+                $subscription->user->failedPayments()->create([
+                    'currency'       => $subscription->plan->currency,
+                    'amount'         => round($usageEstimates->sum('amount'), 2),
+                    'transaction_id' => $transaction->id,
+                    'source'         => 'credit-card',
+                ]);
             }
         }
     }
@@ -131,11 +135,12 @@ class SettlePrePaidSubscriptionPeriodSchedule
                 'note'     => now()->format('d. M') . ' - ' . now()->subDays(config('subscription.settlement_period'))->format('d. M'),
             ]);
 
-            // Store debt record
-            $subscription->user->debts()->create([
+            // Store failed payment record
+            $subscription->user->failedPayments()->create([
                 'currency'       => $subscription->plan->currency,
                 'amount'         => $usageEstimates->sum('amount'),
                 'transaction_id' => $transaction->id,
+                'source'         => 'balance',
             ]);
         }
     }
