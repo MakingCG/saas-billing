@@ -5,10 +5,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
-use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
 use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 
 trait Billable
 {

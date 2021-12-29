@@ -15,6 +15,7 @@ use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
+use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification;
 
 class SettlePrePaidSubscriptionPeriodTest extends TestCase
 {
@@ -739,6 +740,8 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'attempts'       => 0,
             ])
             ->assertEquals(0.00, Balance::first()->amount);
+
+        Notification::assertSentTo($user, ChargeFromCreditCardFailedNotification::class);
     }
 
     /**

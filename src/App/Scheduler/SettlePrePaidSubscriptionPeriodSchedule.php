@@ -8,6 +8,7 @@ use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAct
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Exceptions\ChargeFailedException;
+use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification;
 
 class SettlePrePaidSubscriptionPeriodSchedule
 {
@@ -81,6 +82,9 @@ class SettlePrePaidSubscriptionPeriodSchedule
                     'driver'    => 'stripe',
                 ]);
             } catch (ChargeFailedException $e) {
+                // Notify user
+                $subscription->user->notify(new ChargeFromCreditCardFailedNotification());
+
                 // Create transaction
                 $transaction = $subscription->user->transactions()->create([
                     'reference' => null,
