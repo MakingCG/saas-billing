@@ -154,10 +154,10 @@ class StripeEngine implements Engine
     public function updateCustomer(array $user): Response
     {
         // Get stripe customer id
-        $customer = User::find($user['id']);
+        $user = User::find($user['id']);
 
         // Update customer request
-        return $this->post("/customers/{$customer->customerId('stripe')}", [
+        return $this->post("/customers/{$user->customerId('stripe')}", [
             'email' => $user['email'],
             'name'  => $user['name'] . ' ' . $user['surname'],
             'phone' => $user['phone'] ?? null,

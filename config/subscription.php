@@ -11,7 +11,8 @@ return [
         'paypal',
         'stripe',
     ],
-    'metered_billing' => [
+    'metered_billing'   => [
+        'settlement_period' => 30,
         /*
          * Drivers which have native support for metered billing.
          * This native support doesn't use subscription package credit system, but prefer
@@ -21,7 +22,7 @@ return [
             'stripe',
         ],
     ],
-    'paystack' => [
+    'paystack'          => [
         /*
          * List of allowed ip address to verify paystack webhook request
          */
@@ -44,7 +45,7 @@ return [
             'secret'     => env('PAYSTACK_SECRET'),
             'public_key' => env('PAYSTACK_PUBLIC_KEY'),
         ],
-        'paypal' => [
+        'paypal'   => [
             'id'         => env('PAYPAL_CLIENT_ID'),
             'secret'     => env('PAYPAL_CLIENT_SECRET'),
             'webhook_id' => env('PAYPAL_WEBHOOK_ID'),

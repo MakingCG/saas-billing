@@ -108,9 +108,9 @@ class PayStackEngine implements Engine
     public function updateCustomer(array $user): Response
     {
         // Get paystack customer id
-        $customer = User::find($user['id']);
+        $user = User::find($user['id']);
 
-        return $this->put("/customer/{$customer->customerId('paystack')}", [
+        return $this->put("/customer/{$user->customerId('paystack')}", [
             'email'      => $user['email'],
             'first_name' => $user['name'],
             'last_name'  => $user['surname'],

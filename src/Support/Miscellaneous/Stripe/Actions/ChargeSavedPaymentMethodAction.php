@@ -11,20 +11,17 @@ class ChargeSavedPaymentMethodAction
      * It gets stored payment method and charge custom amount of money from customer
      * TODO: make a test
      */
-    public function __invoke()
+    public function __invoke($user, $amount)
     {
         // Get payment method
-        $paymentMethods = $this->get('/payment_methods?customer=cus_KpRxjQhC61rSgd&type=card');
-
-        // TODO: add functionality to handle multiple saved cards
-        $defaultPaymentMethodCode = $paymentMethods->json()['data'][0]['id'];
+        $paymentMethodCode = $user->creditCards()->first()->reference;
 
         // Create payment intent
         $paymentIntent = $this->post('/payment_intents', [
-            'amount'         => 1899,
-            'currency'       => 'usd',
-            'customer'       => 'cus_KpRxjQhC61rSgd',
-            'payment_method' => $defaultPaymentMethodCode,
+            'amount'         => $amount,
+            'currency'       => 'usd', // TODO: set currency
+            'customer'       => $user->customerId('stripe'),
+            'payment_method' => $paymentMethodCode,
             'off_session'    => 'true',
             'confirm'        => 'true',
         ]);
