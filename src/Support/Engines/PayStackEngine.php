@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Usage\Models\Usage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;

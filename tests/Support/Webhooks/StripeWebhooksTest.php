@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Support\Webhooks;
 
 use Carbon\Carbon;
@@ -727,7 +726,7 @@ class StripeWebhooksTest extends TestCase
             'status' => 'active',
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -949,7 +948,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1171,7 +1170,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => now(),
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1391,7 +1390,7 @@ class StripeWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1596,7 +1595,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => Carbon::createFromTimestamp(1641113362),
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -2058,65 +2057,65 @@ class StripeWebhooksTest extends TestCase
         ]);
 
         $payload = [
-            "created"          => 1326853478,
-            "livemode"         => false,
-            "id"               => "evt_00000000000000",
-            "type"             => "payment_method.attached",
-            "object"           => "event",
-            "request"          => null,
-            "pending_webhooks" => 1,
-            "api_version"      => "2020-08-27",
-            "data"             => [
-                "object" => [
-                    "id"              => "pm_00000000000000",
-                    "object"          => "payment_method",
-                    "billing_details" => [
-                        "address" => [
-                            "city"        => null,
-                            "country"     => null,
-                            "line1"       => null,
-                            "line2"       => null,
-                            "postal_code" => "94107",
-                            "state"       => null
+            'created'          => 1326853478,
+            'livemode'         => false,
+            'id'               => 'evt_00000000000000',
+            'type'             => 'payment_method.attached',
+            'object'           => 'event',
+            'request'          => null,
+            'pending_webhooks' => 1,
+            'api_version'      => '2020-08-27',
+            'data'             => [
+                'object' => [
+                    'id'              => 'pm_00000000000000',
+                    'object'          => 'payment_method',
+                    'billing_details' => [
+                        'address' => [
+                            'city'        => null,
+                            'country'     => null,
+                            'line1'       => null,
+                            'line2'       => null,
+                            'postal_code' => '94107',
+                            'state'       => null,
                         ],
-                        "email"   => "jenny@example.com",
-                        "name"    => null,
-                        "phone"   => "+15555555555"
+                        'email'   => 'jenny@example.com',
+                        'name'    => null,
+                        'phone'   => '+15555555555',
                     ],
-                    "card"            => [
-                        "brand"                => "visa",
-                        "checks"               => [
-                            "address_line1_check"       => null,
-                            "address_postal_code_check" => null,
-                            "cvc_check"                 => "pass"
+                    'card'            => [
+                        'brand'                => 'visa',
+                        'checks'               => [
+                            'address_line1_check'       => null,
+                            'address_postal_code_check' => null,
+                            'cvc_check'                 => 'pass',
                         ],
-                        "country"              => "US",
-                        "exp_month"            => 8,
-                        "exp_year"             => 2022,
-                        "fingerprint"          => "rQCgh6fjRkVkJKgr",
-                        "funding"              => "credit",
-                        "generated_from"       => null,
-                        "last4"                => "4242",
-                        "networks"             => [
-                            "available" => [
-                                "visa"
+                        'country'              => 'US',
+                        'exp_month'            => 8,
+                        'exp_year'             => 2022,
+                        'fingerprint'          => 'rQCgh6fjRkVkJKgr',
+                        'funding'              => 'credit',
+                        'generated_from'       => null,
+                        'last4'                => '4242',
+                        'networks'             => [
+                            'available' => [
+                                'visa',
                             ],
-                            "preferred" => null
+                            'preferred' => null,
                         ],
-                        "three_d_secure_usage" => [
-                            "supported" => true
+                        'three_d_secure_usage' => [
+                            'supported' => true,
                         ],
-                        "wallet"               => null
+                        'wallet'               => null,
                     ],
-                    "created"         => 123456789,
-                    "customer"        => 'cus_KrgRc2TH3yh3xC',
-                    "livemode"        => false,
-                    "metadata"        => [
-                        "order_id" => "123456789"
+                    'created'         => 123456789,
+                    'customer'        => 'cus_KrgRc2TH3yh3xC',
+                    'livemode'        => false,
+                    'metadata'        => [
+                        'order_id' => '123456789',
                     ],
-                    "type"            => "card"
-                ]
-            ]
+                    'type'            => 'card',
+                ],
+            ],
         ];
 
         $this

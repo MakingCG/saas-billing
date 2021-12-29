@@ -9,7 +9,6 @@ use Stripe\WebhookSignature;
 use Illuminate\Http\Client\Response;
 use Stripe\Exception\SignatureVerificationException;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Usage\Models\Usage;
 use VueFileManager\Subscription\Support\Webhooks\StripeWebhooks;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Services\StripeHttpClient;

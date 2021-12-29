@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Domain\CreditCards;
 
 use Tests\TestCase;

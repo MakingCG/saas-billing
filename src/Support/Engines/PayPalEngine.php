@@ -5,7 +5,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Usage\Models\Usage;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
 use VueFileManager\Subscription\Support\Services\PayPalHttpClient;

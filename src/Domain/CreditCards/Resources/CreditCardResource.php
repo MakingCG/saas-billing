@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\CreditCards\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;

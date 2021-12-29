@@ -16,7 +16,7 @@ class CreditCardFactory extends Factory
             'user_id'    => $this->faker->uuid,
             'last4'      => random_int(1111, 9999),
             'brand'      => $this->faker->randomElement(['visa', 'mastercard']),
-            'reference'  => 'PM_' . random_bytes(16),
+            'reference'  => 'pm_' . random_int(11111111, 99999999),
             'service'    => $this->faker->randomElement(['stripe']),
             'expiration' => $this->faker->dateTimeBetween('now', '+6 months'),
             'created_at' => $this->faker->dateTimeBetween('-36 months'),

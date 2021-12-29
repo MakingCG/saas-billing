@@ -18,6 +18,7 @@ use VueFileManager\Subscription\Domain\Transactions\Controllers\GetUserTransacti
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetAllSubscriptionsController;
 use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetUserSubscriptionController;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\CreateStripeSessionController;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\DeleteStripeCreditCardController;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\CreateStripeSetupIntentController;
 
 // System
@@ -28,6 +29,7 @@ Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api']], functio
 
 // Stripe
 Route::group(['prefix' => 'api/stripe', 'middleware' => ['api', 'auth:sanctum']], function () {
+    Route::delete('/credit-cards/{creditCard}', DeleteStripeCreditCardController::class);
     Route::get('/setup-intent', CreateStripeSetupIntentController::class);
     Route::post('/checkout', CreateStripeSessionController::class);
 });

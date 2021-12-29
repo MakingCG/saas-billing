@@ -1,11 +1,10 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\CreditCards\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use VueFileManager\Subscription\Database\Factories\CreditCardFactory;
 
@@ -17,8 +16,8 @@ use VueFileManager\Subscription\Database\Factories\CreditCardFactory;
  * @property string last4
  * @property string service
  * @property string reference
- * @property boolean is_expired
- * @property boolean is_before_expiration
+ * @property bool is_expired
+ * @property bool is_before_expiration
  * @property Carbon expiration
  * @property Carbon created_at
  * @property Carbon updated_at
@@ -35,7 +34,7 @@ class CreditCard extends Model
     ];
 
     protected $appends = [
-        'is_expired', 'is_before_expiration'
+        'is_expired', 'is_before_expiration',
     ];
 
     public $incrementing = false;
@@ -68,6 +67,6 @@ class CreditCard extends Model
     {
         parent::boot();
 
-        static::creating(fn($card) => $card->id = Str::uuid());
+        static::creating(fn ($card) => $card->id = Str::uuid());
     }
 }

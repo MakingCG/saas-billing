@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Carbon\Carbon;
