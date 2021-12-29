@@ -1,20 +1,21 @@
 <?php
-
 namespace App\Scheduler;
 
 use Illuminate\Support\Collection;
-use Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
 use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Exceptions\ChargeFailedException;
 
 class SettlePrePaidSubscriptionPeriodSchedule
 {
     public function __construct(
-        public SumUsageForCurrentPeriodAction     $sumUsageForCurrentPeriod,
+        public SumUsageForCurrentPeriodAction $sumUsageForCurrentPeriod,
         public ChargeFromSavedPaymentMethodAction $chargeFromSavedPaymentMethod,
-    ) {}
+    ) {
+    }
 
     public function __invoke()
     {
@@ -26,13 +27,13 @@ class SettlePrePaidSubscriptionPeriodSchedule
                 // Get usage estimates
                 $usageEstimates = ($this->sumUsageForCurrentPeriod)($subscription);
 
-                // Withdraw from card
+                // Withdraw from credit card
                 if ($subscription->user->creditCards()->exists()) {
                     $this->withdrawFromCreditCard($subscription, $usageEstimates);
                 }
 
                 // Withdraw from balance
-                if (!$subscription->user->creditCards()->exists()) {
+                if (! $subscription->user->creditCards()->exists()) {
                     $this->withdrawFromBalance($subscription, $usageEstimates);
                 }
 
@@ -43,7 +44,7 @@ class SettlePrePaidSubscriptionPeriodSchedule
                     ),
                 ]);
 
-                // Reset alert
+                // Reset alert if some exists
                 if ($subscription->user->billingAlert()->exists()) {
                     $subscription->user->billingAlert->update([
                         'triggered' => false,
@@ -58,16 +59,43 @@ class SettlePrePaidSubscriptionPeriodSchedule
     protected function withdrawFromCreditCard(Subscription $subscription, Collection $usageEstimates): void
     {
         // Withdraw from balance if user has more credits than usage
-        if ($subscription->user->balance->amount > $usageEstimates->sum('amount')) {
+        if ($subscription->user->balance->amount >= $usageEstimates->sum('amount')) {
             $this->withdrawFromBalance($subscription, $usageEstimates);
         }
 
         // Withdraw from credit card
         if ($subscription->user->balance->amount <= 1) {
-            ($this->chargeFromSavedPaymentMethod)(
-                user: $subscription->user,
-                amount: $usageEstimates->sum('amount')
-            );
+            try {
+                // Make charge
+                $charge = ($this->chargeFromSavedPaymentMethod)(
+                    user: $subscription->user,
+                    amount: round($usageEstimates->sum('amount'), 2)
+                );
+
+                // Create transaction
+                $subscription->user->transactions()->create([
+                    'reference' => $charge['charges']['data'][0]['id'],
+                    'type'      => 'charge',
+                    'status'    => 'completed',
+                    'note'      => now()->format('d. M') . ' - ' . now()->subDays(config('subscription.settlement_period'))->format('d. M'),
+                    'currency'  => $subscription->plan->currency,
+                    'amount'    => round($usageEstimates->sum('amount'), 2),
+                    'driver'    => 'stripe',
+                ]);
+            } catch (ChargeFailedException $e) {
+                // Create transaction
+                $subscription->user->transactions()->create([
+                    'reference' => null,
+                    'type'      => 'charge',
+                    'status'    => 'error',
+                    'note'      => now()->format('d. M') . ' - ' . now()->subDays(config('subscription.settlement_period'))->format('d. M'),
+                    'currency'  => $subscription->plan->currency,
+                    'amount'    => round($usageEstimates->sum('amount'), 2),
+                    'driver'    => 'stripe',
+                ]);
+
+                // TODO: store debt record
+            }
         }
     }
 
@@ -89,7 +117,6 @@ class SettlePrePaidSubscriptionPeriodSchedule
                 'driver'   => 'system',
                 'note'     => now()->format('d. M') . ' - ' . now()->subDays(config('subscription.settlement_period'))->format('d. M'),
             ]);
-
         } catch (InsufficientBalanceException $e) {
             // Notify user
             $subscription->user->notify(new InsufficientBalanceNotification());
