@@ -3,6 +3,7 @@ namespace VueFileManager\Subscription\App\User\Traits;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
 use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
@@ -18,6 +19,11 @@ trait Billable
     public function subscription(): HasOne
     {
         return $this->hasOne(Subscription::class);
+    }
+
+    public function creditCards(): HasMany
+    {
+        return $this->hasMany(CreditCard::class);
     }
 
     public function billingAlert(): HasOne

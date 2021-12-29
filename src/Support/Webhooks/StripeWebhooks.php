@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Carbon\Carbon;
@@ -172,6 +173,24 @@ trait StripeWebhooks
                 currency: $request->input('data.object.currency')
             ),
         ]));
+    }
+
+    public function handlePaymentMethodAttached(Request $request): void
+    {
+        // Get Stripe customer
+        $customer = Customer::where('driver_user_id', $request->input('data.object.customer'))
+            ->first();
+
+        $expirationDate = Carbon::parse($request->input('data.object.card.exp_year') . '-' . $request->input('data.object.card.exp_month') . '-01');
+
+        // Create credit card
+        $customer->user->creditCards()->create([
+            'brand'      => $request->input('data.object.card.brand'),
+            'last4'      => $request->input('data.object.card.last4'),
+            'reference'  => $request->input('data.object.id'),
+            'expiration' => $expirationDate,
+            'service'    => 'stripe',
+        ]);
     }
 
     /**
