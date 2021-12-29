@@ -257,31 +257,6 @@ class StripeEngine implements Engine
         return new \Symfony\Component\HttpFoundation\Response('Webhook Handled', 200);
     }
 
-    /*
-     * https://stripe.com/docs/api/usage_records/create
-     */
-    public function reportUsage(Usage $usage)
-    {
-        $subscriptionCode = $usage->subscription->driverId('stripe');
-
-        $subscription = cache()
-            ->remember($subscriptionCode, 60 * 60 * 24 * 7, fn () => $this->getSubscription($subscriptionCode));
-
-        $items = collect($subscription->json()['items']['data'])
-            ->map(fn ($item) => [
-                $item['plan']['nickname'] => $item['id'],
-            ])->collapse();
-
-        $res = $this->post("/subscription_items/{$items[$usage->feature->key]}/usage_records", [
-            'quantity' => $usage->quantity,
-            'action'   => 'set',
-        ]);
-
-        dd(
-            $res->json()
-        );
-    }
-
     public function updateSubscription(Subscription $subscription, ?Plan $plan = null): array
     {
         return [];

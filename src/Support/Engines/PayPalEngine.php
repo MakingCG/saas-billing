@@ -229,11 +229,6 @@ class PayPalEngine implements Engine
         return [];
     }
 
-    public function reportUsage(Usage $usage)
-    {
-        // TODO: Implement reportUsage() method.
-    }
-
     public function createSubscription(Plan $plan, $user = null): array
     {
         // TODO: Implement createSubscription() method.

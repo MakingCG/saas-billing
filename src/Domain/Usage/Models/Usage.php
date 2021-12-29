@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Database\Factories\UsageFactory;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
@@ -45,20 +44,5 @@ class Usage extends Model
     public function feature(): HasOne
     {
         return $this->hasOne(PlanMeteredFeature::class, 'id', 'metered_feature_id');
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($usage) {
-            $driver = $usage->subscription->driver->driver ?? null;
-
-            if (in_array($driver, config('subscription.metered_billing.native_support'))) {
-                resolve(EngineManager::class)
-                    ->driver($driver)
-                    ->reportUsage($usage);
-            }
-        });
     }
 }
