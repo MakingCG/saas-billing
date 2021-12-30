@@ -79,7 +79,7 @@ class BalanceTest extends TestCase
     {
         $this->user->creditBalance(5.00, 'USD');
 
-        $transaction = Transaction::factory()
+        Transaction::factory()
             ->create([
                 'user_id'  => $this->user->id,
                 'amount'   => 10.25,
@@ -90,7 +90,6 @@ class BalanceTest extends TestCase
 
         FailedPayment::factory()
             ->create([
-                'transaction_id' => $transaction->id,
                 'user_id'        => $this->user->id,
                 'amount'         => 10.25,
                 'currency'       => 'USD',

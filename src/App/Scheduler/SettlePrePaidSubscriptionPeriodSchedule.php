@@ -57,8 +57,11 @@ class SettlePrePaidSubscriptionPeriodSchedule
      */
     protected function withdrawFromCreditCard(Subscription $subscription, Collection $usageEstimates): void
     {
+        // Round charge amount
+        $chargeAmount = round($usageEstimates->sum('amount'), 2);
+
         // Withdraw from balance if user has more credits than usage
-        if ($subscription->user->balance->amount >= $usageEstimates->sum('amount')) {
+        if ($subscription->user->balance->amount >= $chargeAmount) {
             $this->withdrawFromBalance($subscription, $usageEstimates);
         }
 
@@ -68,7 +71,7 @@ class SettlePrePaidSubscriptionPeriodSchedule
                 // Make charge
                 $charge = ($this->chargeFromSavedPaymentMethod)(
                     user: $subscription->user,
-                    amount: round($usageEstimates->sum('amount'), 2)
+                    amount: $chargeAmount
                 );
 
                 // Create transaction
@@ -76,9 +79,9 @@ class SettlePrePaidSubscriptionPeriodSchedule
                     'reference' => $charge['charges']['data'][0]['id'],
                     'type'      => 'charge',
                     'status'    => 'completed',
-                    'note'      => now()->format('d. M') . ' - ' . now()->subDays(config('subscription.settlement_period'))->format('d. M'),
+                    'note'      => get_metered_charge_period(),
                     'currency'  => $subscription->plan->currency,
-                    'amount'    => round($usageEstimates->sum('amount'), 2),
+                    'amount'    => $chargeAmount,
                     'driver'    => 'stripe',
                 ]);
             } catch (ChargeFailedException $e) {
@@ -90,18 +93,18 @@ class SettlePrePaidSubscriptionPeriodSchedule
                     'reference' => null,
                     'type'      => 'charge',
                     'status'    => 'error',
-                    'note'      => now()->format('d. M') . ' - ' . now()->subDays(config('subscription.settlement_period'))->format('d. M'),
+                    'note'      => get_metered_charge_period(),
                     'currency'  => $subscription->plan->currency,
-                    'amount'    => round($usageEstimates->sum('amount'), 2),
+                    'amount'    => $chargeAmount,
                     'driver'    => 'stripe',
                 ]);
 
                 // Store failed payment record
                 $subscription->user->failedPayments()->create([
                     'currency'       => $subscription->plan->currency,
-                    'amount'         => round($usageEstimates->sum('amount'), 2),
-                    'transaction_id' => $transaction->id,
+                    'amount'         => $chargeAmount,
                     'source'         => 'credit-card',
+                    'note'           => get_metered_charge_period(),
                 ]);
             }
         }
@@ -112,18 +115,21 @@ class SettlePrePaidSubscriptionPeriodSchedule
      */
     protected function withdrawFromBalance(Subscription $subscription, Collection $usageEstimates): void
     {
+        // Round charge amount
+        $chargeAmount = round($usageEstimates->sum('amount'), 2);
+
         try {
             // Make withdrawal
-            $subscription->user->withdrawBalance($usageEstimates->sum('amount'));
+            $subscription->user->withdrawBalance($chargeAmount);
 
             // Create transaction
             $subscription->user->transactions()->create([
                 'type'     => 'withdrawal',
                 'status'   => 'completed',
                 'currency' => $subscription->plan->currency,
-                'amount'   => $usageEstimates->sum('amount'),
+                'amount'   => $chargeAmount,
                 'driver'   => 'system',
-                'note'     => now()->format('d. M') . ' - ' . now()->subDays(config('subscription.settlement_period'))->format('d. M'),
+                'note'     => get_metered_charge_period(),
             ]);
         } catch (InsufficientBalanceException $e) {
             // Notify user
@@ -134,17 +140,17 @@ class SettlePrePaidSubscriptionPeriodSchedule
                 'type'     => 'withdrawal',
                 'status'   => 'error',
                 'currency' => $subscription->plan->currency,
-                'amount'   => $usageEstimates->sum('amount'),
+                'amount'   => $chargeAmount,
                 'driver'   => 'system',
-                'note'     => now()->format('d. M') . ' - ' . now()->subDays(config('subscription.settlement_period'))->format('d. M'),
+                'note'     => get_metered_charge_period(),
             ]);
 
             // Store failed payment record
             $subscription->user->failedPayments()->create([
                 'currency'       => $subscription->plan->currency,
-                'amount'         => $usageEstimates->sum('amount'),
-                'transaction_id' => $transaction->id,
+                'amount'         => $chargeAmount,
                 'source'         => 'balance',
+                'note'           => get_metered_charge_period(),
             ]);
         }
     }

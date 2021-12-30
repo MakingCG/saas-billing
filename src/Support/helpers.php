@@ -11,3 +11,20 @@ if (! function_exists('format_currency')) {
         return numfmt_format_currency($formatter, $amount, $currency);
     }
 }
+
+if (! function_exists('get_metered_charge_period')) {
+    /**
+     * Format currency
+     */
+    function get_metered_charge_period(): string
+    {
+        $today = now()
+            ->format('d. M');
+
+        $startOfThePeriod = now()
+            ->subDays(config('subscription.settlement_period'))
+            ->format('d. M');
+
+        return "$today - $startOfThePeriod";
+    }
+}

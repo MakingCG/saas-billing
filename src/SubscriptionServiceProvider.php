@@ -8,6 +8,7 @@ use App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use VueFileManager\Subscription\Support\EngineManager;
 use App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
+use Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\App\Console\Commands\GenerateDemoPlansCommand;
 use VueFileManager\Subscription\App\Console\Commands\GenerateDemoContentCommand;
@@ -58,6 +59,10 @@ class SubscriptionServiceProvider extends PackageServiceProvider
 
             // Settle pre-paid subscriptions
             $schedule->call(SettlePrePaidSubscriptionPeriodSchedule::class)
+                ->daily();
+
+            // Try failed credit card charge again
+            $schedule->call(RetryChargeFromPaymentCardAction::class)
                 ->daily();
         });
     }

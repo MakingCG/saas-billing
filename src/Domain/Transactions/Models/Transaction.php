@@ -48,11 +48,6 @@ class Transaction extends Model
         return $this->hasOne(config('auth.providers.users.model'), 'id', 'user_id');
     }
 
-    public function failedPayment(): HasOne
-    {
-        return $this->hasOne(FailedPayment::class, 'transaction_id', 'id');
-    }
-
     protected static function boot()
     {
         parent::boot();

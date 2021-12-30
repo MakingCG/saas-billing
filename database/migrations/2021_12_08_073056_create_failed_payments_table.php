@@ -16,11 +16,11 @@ class CreateFailedPaymentsTable extends Migration
         Schema::create('failed_payments', function (Blueprint $table) {
             $table->uuid('id')->index();
             $table->uuid('user_id')->index();
-            $table->uuid('transaction_id');
             $table->decimal('amount');
             $table->string('currency');
             $table->integer('attempts')->default(0);
             $table->enum('source', ['balance', 'credit-card']);
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

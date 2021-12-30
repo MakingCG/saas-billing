@@ -17,6 +17,7 @@ use VueFileManager\Subscription\Database\Factories\FailedPaymentFactory;
  * @property float amount
  * @property string currency
  * @property string source
+ * @property string note
  * @property int attempts
  * @property Carbon created_at
  * @property Carbon updated_at
@@ -44,11 +45,6 @@ class FailedPayment extends Model
     public function user(): HasOne
     {
         return $this->hasOne(config('auth.providers.users.model'), 'id', 'user_id');
-    }
-
-    public function transaction(): HasOne
-    {
-        return $this->hasOne(Transaction::class, 'id', 'transaction_id');
     }
 
     protected static function boot()

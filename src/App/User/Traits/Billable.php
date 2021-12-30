@@ -3,6 +3,8 @@ namespace VueFileManager\Subscription\App\User\Traits;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use VueFileManager\Subscription\Domain\Credits\Models\Balance;
+use VueFileManager\Subscription\Domain\Credits\Traits\CreditHelpers;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
@@ -12,6 +14,8 @@ use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 
 trait Billable
 {
+    use CreditHelpers;
+
     public function hasSubscription(): bool
     {
         return $this->subscription && ($this->subscription->active() || $this->subscription->onGracePeriod());
@@ -20,6 +24,11 @@ trait Billable
     public function subscription(): HasOne
     {
         return $this->hasOne(Subscription::class);
+    }
+
+    public function balance(): HasOne
+    {
+        return $this->hasOne(Balance::class, 'user_id', 'id');
     }
 
     public function creditCards(): HasMany

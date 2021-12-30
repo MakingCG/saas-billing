@@ -1,196 +1,38 @@
 <?php
-namespace Tests\App\Scheduler;
+namespace Tests\Domain\FailedPayments;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
-use VueFileManager\Subscription\Domain\Credits\Models\Balance;
-use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
-use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
-use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
-use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
-use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
-use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification;
+use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
+use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification;
 
-class SettlePrePaidSubscriptionPeriodTest extends TestCase
+class FailedPaymentTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_settle_subscription_after_end_of_current_period_from_balance()
+    public function it_retry_charge_from_payment_card_with_success_result()
     {
         $user = User::factory()
             ->create();
-
-        $user->billingAlert()
-            ->create([
-                'amount'    => 5,
-                'triggered' => true,
-            ]);
-
-        $user->creditBalance(10.00, 'USD');
-
-        $plan = Plan::factory()
-            ->create([
-                'type'     => 'metered',
-                'currency' => 'USD',
-            ]);
-
-        PlanMeteredFeature::factory()
-            ->hasTiers([
-                'first_unit' => 1,
-                'last_unit'  => null,
-                'per_unit'   => 0.029,
-                'flat_fee'   => 2.49,
-            ])
-            ->create([
-                'plan_id'            => $plan->id,
-                'key'                => 'bandwidth',
-                'aggregate_strategy' => 'sum_of_usage',
-            ]);
-
-        PlanMeteredFeature::factory()
-            ->hasTiers([
-                'first_unit' => 1,
-                'last_unit'  => null,
-                'per_unit'   => 0.019,
-                'flat_fee'   => 0,
-            ])
-            ->create([
-                'plan_id'            => $plan->id,
-                'key'                => 'storage',
-                'aggregate_strategy' => 'maximum_usage',
-            ]);
-
-        $subscription = Subscription::factory()
-            ->create([
-                'type'       => 'pre-paid',
-                'status'     => 'active',
-                'plan_id'    => $plan->id,
-                'user_id'    => $user->id,
-                'renews_at'  => now(),
-                'created_at' => now()->subDays(30),
-                'ends_at'    => null,
-            ]);
-
-        foreach (range(1, 40) as $i) {
-            // Travel by time
-            $this->travel(-1)->days();
-
-            // Record usages - 3.645 total
-            $subscription->recordUsage('bandwidth', 1);
-            $subscription->recordUsage('storage', 0.5);
-        }
-
-        // Reset time to current
-        Carbon::setTestNow('1. January 2022');
-
-        // Settle pre-paid subscription
-        resolve(SettlePrePaidSubscriptionPeriodSchedule::class)();
-
-        $this
-            ->assertDatabaseHas('subscriptions', [
-                'renews_at' => now()->addDays(30),
-            ])
-            ->assertDatabaseHas('transactions', [
-                'user_id'   => $user->id,
-                'type'      => 'withdrawal',
-                'status'    => 'completed',
-                'note'      => '01. Jan - 02. Dec',
-                'currency'  => 'USD',
-                'amount'    => 3.3695,
-                'driver'    => 'system',
-                'reference' => null,
-            ])
-            ->assertDatabaseHas('billing_alerts', [
-                'triggered' => false,
-            ])
-            ->assertEquals(6.6305, Balance::first()->amount);
-    }
-
-    /**
-     * @test
-     */
-    public function it_settle_subscription_after_end_of_current_period_from_credit_card_with_succeeded_result()
-    {
-        $user = User::factory()
-            ->create();
-
-        // Create customer
-        Customer::factory()
-            ->create([
-                'user_id'        => $user->id,
-                'driver_user_id' => 'cus_KrgRc2TH3yh3xC',
-                'driver'         => 'stripe',
-            ]);
 
         CreditCard::factory()
             ->create([
-                'user_id'   => $user->id,
-                'reference' => 'card_1KC53vB9m4sTKy1qKACuKxY8',
+                'user_id' => $user->id,
             ]);
 
-        $user->creditBalance(0, 'USD');
-
-        $plan = Plan::factory()
+        $failedPayment = FailedPayment::factory()
             ->create([
-                'type'     => 'metered',
+                'user_id'  => $user->id,
                 'currency' => 'USD',
+                'amount'   => 24.59,
+                'source'   => 'credit-card',
+                'note'     => 'today',
             ]);
-
-        PlanMeteredFeature::factory()
-            ->hasTiers([
-                'first_unit' => 1,
-                'last_unit'  => null,
-                'per_unit'   => 0.029,
-                'flat_fee'   => 2.49,
-            ])
-            ->create([
-                'plan_id'            => $plan->id,
-                'key'                => 'bandwidth',
-                'aggregate_strategy' => 'sum_of_usage',
-            ]);
-
-        PlanMeteredFeature::factory()
-            ->hasTiers([
-                'first_unit' => 1,
-                'last_unit'  => null,
-                'per_unit'   => 0.019,
-                'flat_fee'   => 0,
-            ])
-            ->create([
-                'plan_id'            => $plan->id,
-                'key'                => 'storage',
-                'aggregate_strategy' => 'maximum_usage',
-            ]);
-
-        $subscription = Subscription::factory()
-            ->create([
-                'type'       => 'pre-paid',
-                'status'     => 'active',
-                'plan_id'    => $plan->id,
-                'user_id'    => $user->id,
-                'renews_at'  => now(),
-                'created_at' => now()->subDays(30),
-                'ends_at'    => null,
-            ]);
-
-        foreach (range(1, 40) as $i) {
-            // Travel by time
-            $this->travel(-1)->days();
-
-            // Record usages - 3.645 total
-            $subscription->recordUsage('bandwidth', 1);
-            $subscription->recordUsage('storage', 0.5);
-        }
-
-        // Reset time to current
-        Carbon::setTestNow('1. January 2022');
 
         Http::fake([
             'https://api.stripe.com/v1/payment_intents' => Http::response([
@@ -347,104 +189,44 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
             ]),
         ]);
 
-        // Settle pre-paid subscription
-        resolve(SettlePrePaidSubscriptionPeriodSchedule::class)();
+        // Retry charge
+        resolve(RetryChargeFromPaymentCardAction::class)($user, $failedPayment);
 
         $this
-            ->assertDatabaseHas('subscriptions', [
-                'renews_at' => now()->addDays(30),
-            ])
             ->assertDatabaseHas('transactions', [
                 'user_id'   => $user->id,
                 'type'      => 'charge',
                 'status'    => 'completed',
-                'note'      => '01. Jan - 02. Dec',
+                'note'      => 'today',
                 'currency'  => 'USD',
-                'amount'    => 3.37,
+                'amount'    => 24.59,
                 'driver'    => 'stripe',
                 'reference' => 'ch_3KBzpsB9m4sTKy1q1BAQe74u',
             ])
-            ->assertEquals(0.00, Balance::first()->amount);
+            ->assertModelMissing($failedPayment);
     }
 
     /**
      * @test
      */
-    public function it_settle_subscription_after_end_of_current_period_from_credit_card_with_failed_result()
+    public function it_retry_charge_from_payment_card_with_failed_result()
     {
         $user = User::factory()
             ->create();
 
-        // Create customer
-        Customer::factory()
-            ->create([
-                'user_id'        => $user->id,
-                'driver_user_id' => 'cus_KrgRc2TH3yh3xC',
-                'driver'         => 'stripe',
-            ]);
-
         CreditCard::factory()
             ->create([
-                'user_id'   => $user->id,
-                'reference' => 'card_1KC53vB9m4sTKy1qKACuKxY8',
+                'user_id' => $user->id,
             ]);
 
-        $user->creditBalance(0, 'USD');
-
-        $plan = Plan::factory()
+        $failedPayment = FailedPayment::factory()
             ->create([
-                'type'     => 'metered',
-                'currency' => 'USD',
-            ]);
-
-        PlanMeteredFeature::factory()
-            ->hasTiers([
-                'first_unit' => 1,
-                'last_unit'  => null,
-                'per_unit'   => 0.029,
-                'flat_fee'   => 2.49,
-            ])
-            ->create([
-                'plan_id'            => $plan->id,
-                'key'                => 'bandwidth',
-                'aggregate_strategy' => 'sum_of_usage',
-            ]);
-
-        PlanMeteredFeature::factory()
-            ->hasTiers([
-                'first_unit' => 1,
-                'last_unit'  => null,
-                'per_unit'   => 0.019,
-                'flat_fee'   => 0,
-            ])
-            ->create([
-                'plan_id'            => $plan->id,
-                'key'                => 'storage',
-                'aggregate_strategy' => 'maximum_usage',
-            ]);
-
-        $subscription = Subscription::factory()
-            ->create([
-                'type'       => 'pre-paid',
-                'status'     => 'active',
-                'plan_id'    => $plan->id,
                 'user_id'    => $user->id,
-                'renews_at'  => now(),
-                'created_at' => now()->subDays(30),
-                'ends_at'    => null,
+                'currency'   => 'USD',
+                'amount'     => 24.59,
+                'source'     => 'credit-card',
+                'attempts'   => 2,
             ]);
-
-        foreach (range(1, 40) as $i) {
-            // Travel by time
-            $this->travel(-1)->days();
-
-            // Record usages - 3.645 total
-            $subscription->recordUsage('bandwidth', 1);
-            $subscription->recordUsage('storage', 0.5);
-        }
-
-        // Reset time to current
-        Carbon::setTestNow('1. January 2022');
 
         Http::fake([
             'https://api.stripe.com/v1/payment_intents' => Http::response([
@@ -714,111 +496,13 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
             ]),
         ]);
 
-        // Settle pre-paid subscription
-        resolve(SettlePrePaidSubscriptionPeriodSchedule::class)();
+        // Retry charge
+        resolve(RetryChargeFromPaymentCardAction::class)($user, $failedPayment);
 
-        $this
-            ->assertDatabaseHas('subscriptions', [
-                'renews_at' => now()->addDays(30),
-            ])
-            ->assertDatabaseHas('transactions', [
-                'user_id'   => $user->id,
-                'type'      => 'charge',
-                'status'    => 'error',
-                'note'      => '01. Jan - 02. Dec',
-                'currency'  => 'USD',
-                'amount'    => 3.37,
-                'driver'    => 'stripe',
-                'reference' => null,
-            ])
-            ->assertDatabaseHas('failed_payments', [
-                'user_id'        => $user->id,
-                'source'         => 'credit-card',
-                'amount'         => 3.37,
-                'currency'       => 'USD',
-                'attempts'       => 0,
-            ])
-            ->assertEquals(0.00, Balance::first()->amount);
+        $this->assertDatabaseHas('failed_payments', [
+            'attempts' => 3,
+        ]);
 
-        Notification::assertSentTo($user, ChargeFromCreditCardFailedNotification::class);
-    }
-
-    /**
-     * @test
-     */
-    public function it_try_withdraw_from_insufficient_balance()
-    {
-        $user = User::factory()
-            ->create();
-
-        $user->creditBalance(20.00, 'USD');
-
-        $plan = Plan::factory()
-            ->create([
-                'type'     => 'metered',
-                'currency' => 'USD',
-            ]);
-
-        PlanMeteredFeature::factory()
-            ->hasTiers([
-                'first_unit' => 1,
-                'last_unit'  => null,
-                'per_unit'   => 0.90,
-                'flat_fee'   => 2.49,
-            ])
-            ->create([
-                'plan_id'            => $plan->id,
-                'key'                => 'bandwidth',
-                'aggregate_strategy' => 'sum_of_usage',
-            ]);
-
-        $subscription = Subscription::factory()
-            ->create([
-                'type'       => 'pre-paid',
-                'status'     => 'active',
-                'plan_id'    => $plan->id,
-                'user_id'    => $user->id,
-                'renews_at'  => now(),
-                'created_at' => now()->subDays(30),
-                'ends_at'    => null,
-            ]);
-
-        foreach (range(1, 30) as $i) {
-            // Travel by time
-            $this->travel(-1)->days();
-
-            // Record usages - 3.645 total
-            $subscription->recordUsage('bandwidth', 1);
-        }
-
-        // Reset time to current
-        Carbon::setTestNow('1. January 2022');
-
-        // Settle pre-paid subscription
-        resolve(SettlePrePaidSubscriptionPeriodSchedule::class)();
-
-        $this
-            ->assertDatabaseHas('subscriptions', [
-                'renews_at' => now()->addDays(30),
-            ])
-            ->assertDatabaseHas('failed_payments', [
-                'amount'         => 29.49,
-                'currency'       => 'USD',
-                'user_id'        => $user->id,
-                'source'         => 'balance',
-            ])
-            ->assertDatabaseHas('transactions', [
-                'user_id'   => $user->id,
-                'type'      => 'withdrawal',
-                'status'    => 'error',
-                'note'      => '01. Jan - 02. Dec',
-                'currency'  => 'USD',
-                'amount'    => 29.49,
-                'driver'    => 'system',
-                'reference' => null,
-            ])
-            ->assertEquals(20.00, Balance::first()->amount);
-
-        Notification::assertSentTo($user, InsufficientBalanceNotification::class);
+        Notification::assertSentTo($user, ChargeFromCreditCardFailedAgainNotification::class);
     }
 }

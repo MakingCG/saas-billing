@@ -14,10 +14,10 @@ class FailedPaymentFactory extends Factory
         return [
             'id'             => $this->faker->uuid,
             'user_id'        => $this->faker->uuid,
-            'transaction_id' => $this->faker->uuid,
             'amount'         => $this->faker->randomElement([12.23, 26.20, 31.39]),
             'currency'       => $this->faker->randomElement(['USD', 'EUR']),
             'source'         => $this->faker->randomElement(['balance', 'credit-card']),
+            'note'           => $this->faker->words(5),
             'created_at'     => $this->faker->dateTimeBetween('-36 months'),
             'updated_at'     => $this->faker->dateTimeBetween('-36 months'),
         ];
