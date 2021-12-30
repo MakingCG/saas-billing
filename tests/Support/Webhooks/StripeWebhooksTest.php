@@ -4,7 +4,7 @@ namespace Tests\Support\Webhooks;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Tests\Models\User;
-use Stripe\WebhookSignature;
+use Tests\Helpers\StripeTestHelpers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
@@ -19,6 +19,8 @@ use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\Confi
 
 class StripeWebhooksTest extends TestCase
 {
+    use StripeTestHelpers;
+
     /**
      * @test
      */
@@ -2131,19 +2133,5 @@ class StripeWebhooksTest extends TestCase
             'reference'  => 'pm_00000000000000',
             'service'    => 'stripe',
         ]);
-    }
-
-    /**
-     * Generate Stripe signature for test purpose
-     */
-    private function generateTestSignature(array $payload): string
-    {
-        $timestamp = \time();
-        $scheme = WebhookSignature::EXPECTED_SCHEME;
-
-        $signedPayload = $timestamp . '.' . json_encode($payload);
-        $signature = \hash_hmac('sha256', $signedPayload, config('subscription.credentials.stripe.secret'));
-
-        return "t={$timestamp},{$scheme}={$signature}";
     }
 }

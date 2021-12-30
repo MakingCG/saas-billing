@@ -11,6 +11,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
+use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification;
 
 trait StripeWebhooks
@@ -180,6 +181,7 @@ trait StripeWebhooks
         $customer = Customer::where('driver_user_id', $request->input('data.object.customer'))
             ->first();
 
+        // Parse card expiration date
         $expirationDate = Carbon::parse($request->input('data.object.card.exp_year') . '-' . $request->input('data.object.card.exp_month') . '-01');
 
         // Create credit card
@@ -190,6 +192,11 @@ trait StripeWebhooks
             'expiration' => $expirationDate,
             'service'    => 'stripe',
         ]);
+
+        // Check if user has failed payments, if yes, retry charge
+        if ($customer->user->failedPayments()->exists()) {
+            resolve(RetryChargeFromPaymentCardAction::class)($customer->user);
+        }
     }
 
     /**

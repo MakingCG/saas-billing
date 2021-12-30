@@ -2,8 +2,8 @@
 namespace VueFileManager\Subscription\Domain\FailedPayments\Actions;
 
 use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
-use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Exceptions\ChargeFailedException;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
 use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification;
 
 class RetryChargeFromPaymentCardAction
@@ -13,9 +13,10 @@ class RetryChargeFromPaymentCardAction
     ) {
     }
 
-    public function __invoke()
+    public function __invoke($user = null)
     {
         FailedPayment::where('source', 'credit-card')
+            ->when($user, fn ($query) => $query->where('user_id', $user->id))
             ->cursor()
             ->each(function (FailedPayment $payment) {
                 try {

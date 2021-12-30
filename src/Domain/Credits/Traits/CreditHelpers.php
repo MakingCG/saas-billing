@@ -1,8 +1,8 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Credits\Traits;
 
-use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryWithdrawnFromBalanceAction;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
+use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryWithdrawnFromBalanceAction;
 
 trait CreditHelpers
 {
