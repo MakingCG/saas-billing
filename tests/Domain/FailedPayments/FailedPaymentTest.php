@@ -221,11 +221,11 @@ class FailedPaymentTest extends TestCase
 
         $failedPayment = FailedPayment::factory()
             ->create([
-                'user_id'    => $user->id,
-                'currency'   => 'USD',
-                'amount'     => 24.59,
-                'source'     => 'credit-card',
-                'attempts'   => 2,
+                'user_id'  => $user->id,
+                'currency' => 'USD',
+                'amount'   => 24.59,
+                'source'   => 'credit-card',
+                'attempts' => 2,
             ]);
 
         Http::fake([
@@ -504,5 +504,44 @@ class FailedPaymentTest extends TestCase
         ]);
 
         Notification::assertSentTo($user, ChargeFromCreditCardFailedAgainNotification::class);
+    }
+
+    /**
+     * @test
+     */
+    public function it_retry_withdrawn_after_balance_was_increased()
+    {
+        $user = User::factory()
+            ->hasBalance([
+                'amount'   => 5.00,
+                'currency' => 'USD',
+            ])
+            ->create();
+
+        FailedPayment::factory()
+            ->create([
+                'user_id'  => $user->id,
+                'amount'   => 10.25,
+                'currency' => 'USD',
+                'note'     => 'today is payday!',
+            ]);
+
+        $user->creditBalance(50.00, 'USD');
+
+        $this
+            ->assertDatabaseHas('balances', [
+                'user_id'  => $user->id,
+                'amount'   => 44.75,
+                'currency' => 'USD',
+            ])
+            ->assertDatabaseHas('transactions', [
+                'user_id'  => $user->id,
+                'type'     => 'withdrawal',
+                'status'   => 'completed',
+                'currency' => 'USD',
+                'amount'   => 10.25,
+                'note'     => 'today is payday!',
+            ])
+            ->assertDatabaseCount('failed_payments', 0);
     }
 }

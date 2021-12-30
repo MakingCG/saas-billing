@@ -6,26 +6,32 @@ use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalance
 
 class RetryWithdrawnFromBalanceAction
 {
-    public function __invoke()
+    public function __invoke($user)
     {
-        // Proceed if user has debt
-        $this
+        // Get failed payments and try pay it
+        $user
             ->failedPayments()
             ->orderByDesc('amount')
-            ->each(function ($failedPayment) {
+            ->each(function ($failedPayment) use ($user) {
                 try {
                     // Withdraw balance
-                    $this->withdrawBalance($failedPayment->amount);
+                    $user->withdrawBalance($failedPayment->amount);
 
-                    // Update transaction
-                    $failedPayment->transaction->update([
-                        'status' => 'completed',
+                    // Create transaction
+                    $failedPayment->user->transactions()->create([
+                        'type'      => 'withdrawal',
+                        'status'    => 'completed',
+                        'note'      => $failedPayment->note,
+                        'currency'  => $failedPayment->currency,
+                        'amount'    => $failedPayment->amount,
+                        'driver'    => 'system',
                     ]);
 
                     // delete failed payment
                     $failedPayment->delete();
                 } catch (InsufficientBalanceException $e) {
-                    $this->notify(new InsufficientBalanceNotification());
+                    // Send notification
+                    $user->notify(new InsufficientBalanceNotification());
                 }
             });
     }

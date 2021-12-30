@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use VueFileManager\Subscription\Database\Factories\TransactionFactory;
-use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 
 /**
  * @method static create(array $array)

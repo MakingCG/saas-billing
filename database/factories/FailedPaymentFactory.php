@@ -17,7 +17,7 @@ class FailedPaymentFactory extends Factory
             'amount'         => $this->faker->randomElement([12.23, 26.20, 31.39]),
             'currency'       => $this->faker->randomElement(['USD', 'EUR']),
             'source'         => $this->faker->randomElement(['balance', 'credit-card']),
-            'note'           => $this->faker->words(5),
+            'note'           => $this->faker->text(40),
             'created_at'     => $this->faker->dateTimeBetween('-36 months'),
             'updated_at'     => $this->faker->dateTimeBetween('-36 months'),
         ];

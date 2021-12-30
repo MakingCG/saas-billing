@@ -4,8 +4,6 @@ namespace Tests\Domain\Balances;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
-use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 
 class BalanceTest extends TestCase
@@ -70,49 +68,6 @@ class BalanceTest extends TestCase
             'amount'   => 50.00,
             'currency' => 'USD',
         ]);
-    }
-
-    /**
-     * @test
-     */
-    public function it_credit_balance_and_pay_user_failed_payment()
-    {
-        $this->user->creditBalance(5.00, 'USD');
-
-        Transaction::factory()
-            ->create([
-                'user_id'  => $this->user->id,
-                'amount'   => 10.25,
-                'currency' => 'USD',
-                'type'     => 'withdrawal',
-                'status'   => 'error',
-            ]);
-
-        FailedPayment::factory()
-            ->create([
-                'user_id'        => $this->user->id,
-                'amount'         => 10.25,
-                'currency'       => 'USD',
-            ]);
-
-        $this->user->refresh();
-
-        $this->user->creditBalance(50.00, 'USD');
-
-        $this
-            ->assertDatabaseHas('balances', [
-                'user_id'  => $this->user->id,
-                'amount'   => 44.75,
-                'currency' => 'USD',
-            ])
-            ->assertDatabaseHas('transactions', [
-                'user_id'  => $this->user->id,
-                'type'     => 'withdrawal',
-                'status'   => 'completed',
-                'currency' => 'USD',
-                'amount'   => 10.25,
-            ])
-            ->assertDatabaseCount('failed_payments', 0);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Credits\Traits;
 
+use Domain\FailedPayments\Actions\RetryWithdrawnFromBalanceAction;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 
 trait CreditHelpers
@@ -12,16 +13,18 @@ trait CreditHelpers
     {
         // Create balance record if not exist
         if ($this->balance()->doesntExist()) {
-            $this
-                ->balance()
-                ->create([
-                    'currency' => $currency,
-                ])
-                ->refresh();
+            $this->balance()->create([
+                'currency' => $currency,
+            ])->refresh();
         }
 
-        // Increment balance for new value
+        // Increase balance for new value
         $this->balance()->increment('amount', $credit);
+
+        // Check if user has failed payment, if yes, withdraw it
+        if ($this->failedPayments()->exists()) {
+            resolve(RetryWithdrawnFromBalanceAction::class)($this);
+        }
     }
 
     /**
@@ -36,7 +39,7 @@ trait CreditHelpers
             throw new InsufficientBalanceException();
         }
 
-        // Decrement balance
+        // Decrease balance
         $this->balance()->decrement('amount', $balance);
     }
 }

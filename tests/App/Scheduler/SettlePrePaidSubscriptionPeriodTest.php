@@ -12,7 +12,6 @@ use VueFileManager\Subscription\Domain\Credits\Models\Balance;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
-use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
 use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification;
@@ -103,14 +102,14 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'status'    => 'completed',
                 'note'      => '01. Jan - 02. Dec',
                 'currency'  => 'USD',
-                'amount'    => 3.3695,
+                'amount'    => 3.37,
                 'driver'    => 'system',
                 'reference' => null,
             ])
             ->assertDatabaseHas('billing_alerts', [
                 'triggered' => false,
             ])
-            ->assertEquals(6.6305, Balance::first()->amount);
+            ->assertEquals(6.63, Balance::first()->amount);
     }
 
     /**
