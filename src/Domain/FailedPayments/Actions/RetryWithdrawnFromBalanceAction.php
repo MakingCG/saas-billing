@@ -1,5 +1,5 @@
 <?php
-namespace Domain\FailedPayments\Actions;
+namespace VueFileManager\Subscription\Domain\FailedPayments\Actions;
 
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;

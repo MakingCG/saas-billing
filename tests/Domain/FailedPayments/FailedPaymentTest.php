@@ -5,9 +5,9 @@ use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
-use Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
+use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification;
 
 class FailedPaymentTest extends TestCase

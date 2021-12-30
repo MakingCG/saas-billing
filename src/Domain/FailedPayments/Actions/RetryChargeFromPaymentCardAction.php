@@ -1,8 +1,8 @@
 <?php
-namespace Domain\FailedPayments\Actions;
+namespace VueFileManager\Subscription\Domain\FailedPayments\Actions;
 
 use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
-use Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Exceptions\ChargeFailedException;
 use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification;
 

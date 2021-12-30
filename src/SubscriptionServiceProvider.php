@@ -8,7 +8,7 @@ use App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use VueFileManager\Subscription\Support\EngineManager;
 use App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
-use Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
+use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\App\Console\Commands\GenerateDemoPlansCommand;
 use VueFileManager\Subscription\App\Console\Commands\GenerateDemoContentCommand;

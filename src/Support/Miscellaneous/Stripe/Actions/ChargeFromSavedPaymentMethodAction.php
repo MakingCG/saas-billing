@@ -1,5 +1,5 @@
 <?php
-namespace Support\Miscellaneous\Stripe\Actions;
+namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Actions;
 
 use VueFileManager\Subscription\Support\Services\StripeHttpClient;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Exceptions\ChargeFailedException;

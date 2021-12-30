@@ -3,7 +3,7 @@ namespace App\Scheduler;
 
 use Illuminate\Support\Collection;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
-use Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
+use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
 use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
