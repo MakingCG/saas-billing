@@ -65,6 +65,8 @@ class SettlePrePaidSubscriptionPeriodSchedule
             $this->withdrawFromBalance($subscription, $usageEstimates);
         }
 
+        // TODO: Combine withdrawal from balance and credit card
+
         // Withdraw from credit card
         if ($subscription->user->balance->amount <= 1) {
             try {
