@@ -4,6 +4,7 @@ namespace VueFileManager\Subscription\App\Console\Commands;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class GenerateDemoSubscriptionsCommand extends Command
@@ -173,13 +174,26 @@ class GenerateDemoSubscriptionsCommand extends Command
                     ])
                 );
 
-                // Add default user balance
+                // Make fake credit card
+                $creditCard = CreditCard::factory()
+                    ->make();
+
+                // 6. Store credit card
+                $user->creditCards()->create([
+                    'brand'      => $creditCard->brand,
+                    'last4'      => $creditCard->last4,
+                    'service'    => $creditCard->service,
+                    'reference'  => $creditCard->reference,
+                    'expiration' => $creditCard->expiration,
+                ]);
+
+                // 7. Add default user balance
                 $user->balance()->create([
                     'currency' => 'USD',
                     'amount'   => $isHowdy ? 30.60 : random_int(20, 60),
                 ]);
 
-                // Create billing alert
+                // 8. Create billing alert
                 $user->billingAlert()->create([
                     'amount'   => $isHowdy ? 25 : random_int(30, 80),
                 ]);
@@ -297,8 +311,21 @@ class GenerateDemoSubscriptionsCommand extends Command
         );
 
         $howdySubscription->driver()->create([
-            'driver'                 => 'paypal',
+            'driver'                 => 'stripe',
             'driver_subscription_id' => Str::random(),
+        ]);
+
+        // Make fake credit card
+        $creditCard = CreditCard::factory()
+            ->make();
+
+        // 6. Store credit card
+        $howdy->creditCards()->create([
+            'brand'      => $creditCard->brand,
+            'last4'      => $creditCard->last4,
+            'service'    => $creditCard->service,
+            'reference'  => $creditCard->reference,
+            'expiration' => $creditCard->expiration,
         ]);
 
         $aliceSubscription->driver()->create([
