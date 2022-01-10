@@ -6,11 +6,6 @@ use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 
 class StoreMeteredPlanAction
 {
-    public function __construct(
-        public CreateMeteredPlansViaDriversAPIAction $createPlansViaDriversAPI,
-    ) {
-    }
-
     public function __invoke(CreateMeteredPlanData $meteredPlanData)
     {
         // Store plan
@@ -38,11 +33,6 @@ class StoreMeteredPlanAction
                 ])
             );
         }
-
-        // Create plan in available gateways
-        $this->createPlansViaDriversAPI
-            ->onQueue()
-            ->execute($meteredPlanData, $plan);
 
         return $plan;
     }

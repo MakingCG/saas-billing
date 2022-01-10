@@ -3,7 +3,6 @@ namespace Tests\Domain\Plans;
 
 use Tests\TestCase;
 use Tests\Models\User;
-use Tests\Mocking\Stripe\CreateMeteredPlanStripeMocksClass;
 
 class MeteredPlanTest extends TestCase
 {
@@ -14,8 +13,6 @@ class MeteredPlanTest extends TestCase
     {
         $user = User::factory()
             ->create();
-
-        resolve(CreateMeteredPlanStripeMocksClass::class)();
 
         $this
             ->actingAs($user)
@@ -56,17 +53,6 @@ class MeteredPlanTest extends TestCase
                 'name' => 'Basic Plan',
                 'type' => 'metered',
             ]);
-
-        // Check only drivers which have native support for metered billing
-        collect(config('subscription.metered_billing.native_support'))
-            ->each(function ($driver) {
-                if (in_array($driver, config('subscription.available_drivers'))) {
-                    $this
-                        ->assertDatabaseHas('plan_drivers', [
-                            'driver' => $driver,
-                        ]);
-                }
-            });
 
         $this
             ->assertDatabaseHas('plans', [

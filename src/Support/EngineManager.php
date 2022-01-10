@@ -11,7 +11,6 @@ use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 
 /**
  * @method createFixedPlan(CreateFixedPlanData $data)
- * @method createMeteredPlan(CreateFixedPlanData $data)
  * @method createCustomer(array $user)
  * @method webhook(Request $request)
  */

@@ -9,7 +9,6 @@ use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Support\Webhooks\PayPalWebhooks;
 use VueFileManager\Subscription\Support\Services\PayPalHttpClient;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 
@@ -221,11 +220,6 @@ class PayPalEngine implements Engine
     public function updateCustomer(array $user): null|Response
     {
         return null;
-    }
-
-    public function createMeteredPlan(CreateMeteredPlanData $data): array
-    {
-        return [];
     }
 
     public function createSubscription(Plan $plan, $user = null): array

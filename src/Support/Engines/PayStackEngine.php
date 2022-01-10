@@ -12,7 +12,6 @@ use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Webhooks\PayStackWebhooks;
 use VueFileManager\Subscription\Support\Services\PayStackHttpClient;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreateMeteredPlanData;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 
@@ -197,11 +196,6 @@ class PayStackEngine implements Engine
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
         //TODO: frontend implementation
-    }
-
-    public function createMeteredPlan(CreateMeteredPlanData $data): array
-    {
-        return [];
     }
 
     public function createSubscription(Plan $plan, $user = null): array
