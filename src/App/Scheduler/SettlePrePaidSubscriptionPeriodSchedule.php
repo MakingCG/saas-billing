@@ -40,7 +40,7 @@ class SettlePrePaidSubscriptionPeriodSchedule
 
                 // Update next subscription period date
                 $subscription->update([
-                    'renews_at' => now()->addDays(config('subscription.settlement_period')),
+                    'renews_at' => now()->addDays(config('subscription.metered_billing.settlement_period')),
                 ]);
 
                 // Reset alert if some exists

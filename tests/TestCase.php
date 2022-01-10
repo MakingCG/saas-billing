@@ -44,7 +44,7 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
         config()->set('auth.providers.users.model', User::class);
 
-        config()->set('subscription.settlement_period', 30);
+        config()->set('subscription.metered_billing.settlement_period', 30);
 
         config()->set('subscription.credentials.paypal.id', 'AX96WuhfdCT1bgwUo6uGtAefvdufFaKh0XVRTFUDoh_rTV7RpRGX8ipENIweybNY_fnp0MqqSIvZRp8t');
         config()->set('subscription.credentials.paypal.secret', 'EKJ7GV2zz5iSlvulPPb7kbqum3GN8Rb1kUCMnhhkmQEGftmVhUVz5_BpLwFvqcMH9v-qQmNhcaaRzsfl');

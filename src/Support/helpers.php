@@ -22,7 +22,7 @@ if (! function_exists('get_metered_charge_period')) {
             ->format('d. M');
 
         $startOfThePeriod = now()
-            ->subDays(config('subscription.settlement_period'))
+            ->subDays(config('subscription.metered_billing.settlement_period'))
             ->format('d. M');
 
         return "$today - $startOfThePeriod";
