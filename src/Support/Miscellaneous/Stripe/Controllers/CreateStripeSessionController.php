@@ -34,15 +34,12 @@ class CreateStripeSessionController
 
     private function getPlanPrices(): array
     {
-        $plan = resolve(EngineManager::class)
-            ->driver('stripe')
-            ->getPlan(request()->input('planCode'));
-
-        return collect($plan['prices']['data'])
-            ->map(fn ($price) => [
-                'price'    => $price['id'],
+        return [
+            [
+                'price'    => request()->input('planCode'),
                 'quantity' => 1,
-            ])->toArray();
+            ]
+        ];
     }
 
     private function createCustomer($user)

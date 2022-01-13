@@ -55,5 +55,6 @@ class TestCase extends Orchestra
 
         config()->set('subscription.credentials.stripe.secret', 'sk_test_51K1tczB9m4sTKy1qT03hg6jAP5CT0ERS7WJLY0FutMc45vqF1jxtqiAxdi9qXIEjEsp5rF0y4pHTCCwhafNgjZIT00CC4ZzW6N');
         config()->set('subscription.credentials.stripe.public_key', 'pk_test_51K1tczB9m4sTKy1qbG6iOguMBDJsGUBFjhQ5rOXphms6oqRtfduUIhxA4f7Vif0nCeHdn2oJ0c56OBBZjF1jfigb00ONWOAHDQ');
+        config()->set('subscription.credentials.stripe.webhook_key', 'whsec_0zNjKnxyQldSNvRfy2HLwWrjJ9joZOHa');
     }
 }

@@ -49,7 +49,7 @@ class StripeEngine implements Engine
         ]);
 
         // Next create subscription plan
-        $this->post('/prices', [
+        $price = $this->post('/prices', [
             'product'     => $product->json()['id'],
             'currency'    => strtolower($data->currency),
             'unit_amount' => $data->amount * 100,
@@ -59,7 +59,7 @@ class StripeEngine implements Engine
         ]);
 
         return [
-            'id'   => $product->json()['id'],
+            'id'   => $price->json()['id'],
             'name' => $data->name,
         ];
     }

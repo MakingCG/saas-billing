@@ -14,7 +14,7 @@ trait StripeTestHelpers
         $scheme = WebhookSignature::EXPECTED_SCHEME;
 
         $signedPayload = $timestamp . '.' . json_encode($payload);
-        $signature = \hash_hmac('sha256', $signedPayload, config('subscription.credentials.stripe.secret'));
+        $signature = \hash_hmac('sha256', $signedPayload, config('subscription.credentials.stripe.webhook_key'));
 
         return "t={$timestamp},{$scheme}={$signature}";
     }

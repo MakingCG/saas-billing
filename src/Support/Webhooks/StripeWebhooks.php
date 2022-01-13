@@ -18,7 +18,6 @@ trait StripeWebhooks
 {
     public function handleCustomerSubscriptionCreated(Request $request): void
     {
-        $productCode = $request->input('data.object.items.data.0.plan.product');
         $customerCode = $request->input('data.object.customer');
         $subscriptionCode = $request->input('data.object.id');
         $planCode = $request->input('data.object.plan.id');
@@ -28,33 +27,17 @@ trait StripeWebhooks
             ->where('driver_user_id', $customerCode)
             ->first();
 
-        // Proceed as pre-paid subscription
-        if (is_null($planCode)) {
-            $planDriver = PlanDriver::where('driver_plan_id', $productCode)
-                ->first();
-
-            $subscription = Subscription::create([
-                'type'    => 'pre-paid',
-                'status'  => 'inactive',
-                'plan_id' => $planDriver->plan->id,
-                'user_id' => $customer->user_id,
-                'name'    => $planDriver->plan->name,
-            ]);
-        }
-
         // Proceed as fixed subscription
-        if ($planCode) {
-            $planDriver = PlanDriver::where('driver_plan_id', $planCode)
-                ->first();
+        $planDriver = PlanDriver::where('driver_plan_id', $planCode)
+            ->first();
 
-            $subscription = Subscription::create([
-                'type'    => 'fixed',
-                'status'  => 'inactive',
-                'plan_id' => $planDriver->plan->id,
-                'user_id' => $customer->user_id,
-                'name'    => $planDriver->plan->name,
-            ]);
-        }
+        $subscription = Subscription::create([
+            'type'    => 'fixed',
+            'status'  => 'inactive',
+            'plan_id' => $planDriver->plan->id,
+            'user_id' => $customer->user_id,
+            'name'    => $planDriver->plan->name,
+        ]);
 
         // Store subscription pivot to gateway
         $subscription
