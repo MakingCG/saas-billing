@@ -21,8 +21,7 @@ class PlansController extends Controller
      */
     public function index(): PlanCollection
     {
-        $plans = Plan::where('status', 'active')
-            ->sortable(['created_at' => 'desc'])
+        $plans = Plan::sortable(['created_at' => 'desc'])
             ->paginate(20);
 
         return new PlanCollection($plans);

@@ -48,14 +48,15 @@ class PlanResource extends JsonResource
     private function getMeteredAttributes(): array
     {
         return [
-            'name'          => $this->name,
-            'type'          => $this->type,
-            'visible'       => $this->visible,
-            'currency'      => $this->currency,
-            'interval'      => $this->interval,
-            'description'   => $this->description,
-            'subscribers'   => $this->subscriptions->count(),
-            'features'      => $this->meteredFeatures->mapWithKeys(fn ($price) => [
+            'name'        => $this->name,
+            'status'      => $this->status,
+            'type'        => $this->type,
+            'visible'     => $this->visible,
+            'currency'    => $this->currency,
+            'interval'    => $this->interval,
+            'description' => $this->description,
+            'subscribers' => $this->subscriptions->count(),
+            'features'    => $this->meteredFeatures->mapWithKeys(fn($price) => [
                 $price['key'] => [
                     'aggregate_strategy' => $price['aggregate_strategy'],
                     'tiers'              => $price['tiers'],
