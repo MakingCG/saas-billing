@@ -206,7 +206,7 @@ class StripeEngine implements Engine
             WebhookSignature::verifyHeader(
                 $request->getContent(),
                 $request->header('Stripe-Signature'),
-                config('subscription.credentials.stripe.secret'),
+                config('subscription.credentials.stripe.webhook_key'),
                 300
             );
         } catch (SignatureVerificationException $exception) {
