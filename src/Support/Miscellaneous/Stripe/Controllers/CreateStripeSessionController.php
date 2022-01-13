@@ -19,8 +19,8 @@ class CreateStripeSessionController
         $customerId = $user->customerId('stripe') ?? $this->createCustomer($user);
 
         $session = $this->post('/checkout/sessions', [
-            'success_url' => url('/platform/files'),
-            'cancel_url'  => url('/platform/files'),
+            'success_url' => url('/user/settings/billing'),
+            'cancel_url'  => url('/user/settings/billing'),
             'line_items'  => $this->getPlanPrices(),
             'mode'        => 'subscription',
             'customer'    => $customerId,
