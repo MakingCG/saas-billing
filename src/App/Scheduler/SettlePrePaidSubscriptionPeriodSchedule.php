@@ -1,5 +1,5 @@
 <?php
-namespace App\Scheduler;
+namespace VueFileManager\Subscription\App\Scheduler;
 
 use Illuminate\Support\Collection;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;

@@ -3,7 +3,7 @@ namespace Tests\App\Scheduler;
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\Event;
-use App\Scheduler\HaltExpiredSubscriptionsSchedule;
+use VueFileManager\Subscription\App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 

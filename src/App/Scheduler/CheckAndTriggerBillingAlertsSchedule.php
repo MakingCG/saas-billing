@@ -1,5 +1,5 @@
 <?php
-namespace App\Scheduler;
+namespace VueFileManager\Subscription\App\Scheduler;
 
 use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
 use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
