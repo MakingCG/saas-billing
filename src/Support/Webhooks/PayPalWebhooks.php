@@ -129,6 +129,7 @@ trait PayPalWebhooks
             'status'    => 'completed',
             'type'      => 'charge',
             'driver'    => 'paypal',
+            'note'      => 'Account Fund',
             'reference' => $request->input('resource.id'),
             'currency'  => $request->input('resource.amount.currency_code'),
             'amount'    => $request->input('resource.amount.value'),
