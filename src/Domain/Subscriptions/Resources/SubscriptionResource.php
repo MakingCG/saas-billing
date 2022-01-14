@@ -40,6 +40,7 @@ class SubscriptionResource extends JsonResource
                                 'type'       => 'users',
                                 'attributes' => [
                                     'avatar'     => $this->user->settings->avatar,
+                                    'name'       => $this->user->settings->name,
                                     'first_name' => $this->user->settings->first_name,
                                     'last_name'  => $this->user->settings->last_name,
                                     'color'      => $this->user->settings->color,

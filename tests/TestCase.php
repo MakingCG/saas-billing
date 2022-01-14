@@ -49,6 +49,7 @@ class TestCase extends Orchestra
         config()->set('subscription.credentials.paypal.id', 'AX96WuhfdCT1bgwUo6uGtAefvdufFaKh0XVRTFUDoh_rTV7RpRGX8ipENIweybNY_fnp0MqqSIvZRp8t');
         config()->set('subscription.credentials.paypal.secret', 'EKJ7GV2zz5iSlvulPPb7kbqum3GN8Rb1kUCMnhhkmQEGftmVhUVz5_BpLwFvqcMH9v-qQmNhcaaRzsfl');
         config()->set('subscription.credentials.paypal.webhook_id', '5US38870H49278334');
+        config()->set('subscription.credentials.paypal.is_live', false);
 
         config()->set('subscription.credentials.paystack.secret', 'sk_test_5917169d64e9a5aa41f0b07eb43e3f143bc36f08');
         config()->set('subscription.credentials.paystack.public_key', 'pk_test_5d69324328b8904cdd3cad17ff60892c93abfe89');

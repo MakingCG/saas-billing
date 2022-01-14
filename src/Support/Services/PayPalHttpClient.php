@@ -18,7 +18,9 @@ trait PayPalHttpClient
         $this->secret = config('subscription.credentials.paypal.secret');
         $this->id = config('subscription.credentials.paypal.id');
 
-        $this->api = 'https://api-m.sandbox.paypal.com/v1';
+        $this->api = config('subscription.credentials.paypal.is_live')
+            ? 'https://api-m.paypal.com/v1'
+            : 'https://api-m.sandbox.paypal.com/v1';
     }
 
     public function get($url): PromiseInterface|Response

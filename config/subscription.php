@@ -38,8 +38,8 @@ return [
      */
     'credentials'       => [
         'stripe'   => [
-            'secret'     => env('STRIPE_SECRET_KEY'),
-            'public_key' => env('STRIPE_PUBLIC_KEY'),
+            'secret'      => env('STRIPE_SECRET_KEY'),
+            'public_key'  => env('STRIPE_PUBLIC_KEY'),
             'webhook_key' => env('STRIPE_WEBHOOK_SECRET'),
         ],
         'paystack' => [
@@ -50,6 +50,7 @@ return [
             'id'         => env('PAYPAL_CLIENT_ID'),
             'secret'     => env('PAYPAL_CLIENT_SECRET'),
             'webhook_id' => env('PAYPAL_WEBHOOK_ID'),
+            'is_live'    => env('PAYPAL_IS_LIVE'),
         ],
     ],
 ];
