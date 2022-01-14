@@ -19,9 +19,10 @@ class SubscriptionResource extends JsonResource
                 'id'            => $this->id,
                 'type'          => 'subscription',
                 'attributes'    => [
+                    'is_cancelled' => $this->cancelled(),
+                    'driver'        => $this->driverName(),
                     'name'          => $this->name,
                     'status'        => $this->status,
-                    'driver'        => $this->driverName(),
                     'trial_ends_at' => $this->trial_ends_at,
                     'updated_at'    => $this->updated_at->formatLocalized('%d. %b. %Y'),
                     'created_at'    => $this->created_at->formatLocalized('%d. %b. %Y'),

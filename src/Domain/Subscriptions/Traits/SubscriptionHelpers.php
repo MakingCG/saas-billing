@@ -69,7 +69,7 @@ trait SubscriptionHelpers
     }
 
     /**
-     * Check if subscription is on grace period
+     * Check if subscription ended
      */
     public function ended(): bool
     {
