@@ -49,8 +49,8 @@ class CreateStripeSessionController
             ->createCustomer([
                 'id'      => $user->id,
                 'email'   => $user->email,
-                'name'    => $user->settings->name ?? null,
-                'surname' => $user->settings->name ?? null,
+                'name'    => $user->settings->first_name ?? null,
+                'surname' => $user->settings->last_name ?? null,
             ]);
 
         return $customer->json()['id'];
