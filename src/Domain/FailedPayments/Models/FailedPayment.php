@@ -11,6 +11,7 @@ use VueFileManager\Subscription\Database\Factories\FailedPaymentFactory;
 
 /**
  * @method static create(array $array)
+ * @property Model user
  * @property string id
  * @property string user_id
  * @property string transaction_id
@@ -18,6 +19,7 @@ use VueFileManager\Subscription\Database\Factories\FailedPaymentFactory;
  * @property string currency
  * @property string source
  * @property string note
+ * @property array metadata
  * @property int attempts
  * @property Carbon created_at
  * @property Carbon updated_at
@@ -29,8 +31,9 @@ class FailedPayment extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'id'     => 'string',
-        'amount' => 'float',
+        'id'       => 'string',
+        'amount'   => 'float',
+        'metadata' => 'array',
     ];
 
     public $incrementing = false;

@@ -25,6 +25,13 @@ class FailedPaymentTest extends TestCase
                 'amount'   => 10.25,
                 'currency' => 'USD',
                 'note'     => 'today is payday!',
+                'metadata' => [
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 10.25,
+                        'usage'   => 30,
+                    ],
+                ],
             ]);
 
         $user->creditBalance(50.00, 'USD');
@@ -42,6 +49,13 @@ class FailedPaymentTest extends TestCase
                 'currency' => 'USD',
                 'amount'   => 10.25,
                 'note'     => 'today is payday!',
+                'metadata' => json_encode([
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 10.25,
+                        'usage'   => 30,
+                    ],
+                ]),
             ])
             ->assertModelMissing($failedPayment);
     }

@@ -85,13 +85,14 @@ class SettlePrePaidSubscriptionPeriodSchedule
                     'currency'  => $subscription->plan->currency,
                     'amount'    => $chargeAmount,
                     'driver'    => 'stripe',
+                    'metadata'  => $usageEstimates,
                 ]);
             } catch (ChargeFailedException $e) {
                 // Notify user
                 $subscription->user->notify(new ChargeFromCreditCardFailedNotification());
 
                 // Create transaction
-                $transaction = $subscription->user->transactions()->create([
+                $subscription->user->transactions()->create([
                     'reference' => null,
                     'type'      => 'charge',
                     'status'    => 'error',
@@ -103,10 +104,11 @@ class SettlePrePaidSubscriptionPeriodSchedule
 
                 // Store failed payment record
                 $subscription->user->failedPayments()->create([
-                    'currency'       => $subscription->plan->currency,
-                    'amount'         => $chargeAmount,
-                    'source'         => 'credit-card',
-                    'note'           => get_metered_charge_period(),
+                    'currency' => $subscription->plan->currency,
+                    'amount'   => $chargeAmount,
+                    'source'   => 'credit-card',
+                    'note'     => get_metered_charge_period(),
+                    'metadata' => $usageEstimates,
                 ]);
             }
         }
@@ -132,13 +134,14 @@ class SettlePrePaidSubscriptionPeriodSchedule
                 'amount'   => $chargeAmount,
                 'driver'   => 'system',
                 'note'     => get_metered_charge_period(),
+                'metadata' => $usageEstimates,
             ]);
         } catch (InsufficientBalanceException $e) {
             // Notify user
             $subscription->user->notify(new InsufficientBalanceNotification());
 
             // Create error transaction
-            $transaction = $subscription->user->transactions()->create([
+            $subscription->user->transactions()->create([
                 'type'     => 'withdrawal',
                 'status'   => 'error',
                 'currency' => $subscription->plan->currency,
@@ -149,10 +152,11 @@ class SettlePrePaidSubscriptionPeriodSchedule
 
             // Store failed payment record
             $subscription->user->failedPayments()->create([
-                'currency'       => $subscription->plan->currency,
-                'amount'         => $chargeAmount,
-                'source'         => 'balance',
-                'note'           => get_metered_charge_period(),
+                'currency' => $subscription->plan->currency,
+                'amount'   => $chargeAmount,
+                'source'   => 'balance',
+                'note'     => get_metered_charge_period(),
+                'metadata' => $usageEstimates,
             ]);
         }
     }

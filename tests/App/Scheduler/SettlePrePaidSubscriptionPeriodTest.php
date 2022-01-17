@@ -7,12 +7,12 @@ use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\Domain\Credits\Models\Balance;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
 use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification;
 
@@ -105,6 +105,18 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'amount'    => 3.37,
                 'driver'    => 'system',
                 'reference' => null,
+                'metadata'  => json_encode([
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 3.36,
+                        'usage'   => 30,
+                    ],
+                    [
+                        'feature' => 'storage',
+                        'amount'  => 0.0095,
+                        'usage'   => 0.5,
+                    ],
+                ]),
             ])
             ->assertDatabaseHas('billing_alerts', [
                 'triggered' => false,
@@ -362,6 +374,18 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'amount'    => 3.37,
                 'driver'    => 'stripe',
                 'reference' => 'ch_3KBzpsB9m4sTKy1q1BAQe74u',
+                'metadata'  => json_encode([
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 3.36,
+                        'usage'   => 30,
+                    ],
+                    [
+                        'feature' => 'storage',
+                        'amount'  => 0.0095,
+                        'usage'   => 0.5,
+                    ],
+                ]),
             ])
             ->assertEquals(0.00, Balance::first()->amount);
     }
@@ -729,13 +753,26 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'amount'    => 3.37,
                 'driver'    => 'stripe',
                 'reference' => null,
+                'metadata'  => null,
             ])
             ->assertDatabaseHas('failed_payments', [
-                'user_id'        => $user->id,
-                'source'         => 'credit-card',
-                'amount'         => 3.37,
-                'currency'       => 'USD',
-                'attempts'       => 0,
+                'user_id'  => $user->id,
+                'source'   => 'credit-card',
+                'amount'   => 3.37,
+                'currency' => 'USD',
+                'attempts' => 0,
+                'metadata' => json_encode([
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 3.36,
+                        'usage'   => 30,
+                    ],
+                    [
+                        'feature' => 'storage',
+                        'amount'  => 0.0095,
+                        'usage'   => 0.5,
+                    ],
+                ]),
             ])
             ->assertEquals(0.00, Balance::first()->amount);
 
@@ -801,10 +838,17 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'renews_at' => now()->addDays(30),
             ])
             ->assertDatabaseHas('failed_payments', [
-                'amount'         => 29.49,
-                'currency'       => 'USD',
-                'user_id'        => $user->id,
-                'source'         => 'balance',
+                'amount'   => 29.49,
+                'currency' => 'USD',
+                'user_id'  => $user->id,
+                'source'   => 'balance',
+                'metadata' => json_encode([
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 29.49,
+                        'usage'   => 30,
+                    ],
+                ]),
             ])
             ->assertDatabaseHas('transactions', [
                 'user_id'   => $user->id,
@@ -815,6 +859,7 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
                 'amount'    => 29.49,
                 'driver'    => 'system',
                 'reference' => null,
+                'metadata'  => null,
             ])
             ->assertEquals(20.00, Balance::first()->amount);
 

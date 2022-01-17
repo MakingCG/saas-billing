@@ -23,6 +23,7 @@ class CreateTransactionsTable extends Migration
             $table->string('reference')->nullable();
             $table->decimal('amount');
             $table->text('currency');
+            $table->longText('metadata')->nullable();
             $table->timestamps();
         });
     }

@@ -19,7 +19,7 @@ class SubscriptionResource extends JsonResource
                 'id'            => $this->id,
                 'type'          => 'subscription',
                 'attributes'    => [
-                    'is_cancelled' => $this->cancelled(),
+                    'is_cancelled'  => $this->cancelled(),
                     'driver'        => $this->driverName(),
                     'name'          => $this->name,
                     'status'        => $this->status,

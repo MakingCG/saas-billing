@@ -38,7 +38,7 @@ class CreateStripeSessionController
             [
                 'price'    => request()->input('planCode'),
                 'quantity' => 1,
-            ]
+            ],
         ];
     }
 

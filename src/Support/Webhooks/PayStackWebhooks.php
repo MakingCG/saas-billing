@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ trait PayStackWebhooks
             ->where('driver_user_id', $customerCode)
             ->first();
 
-        if (!$customer) {
+        if (! $customer) {
             // Get user by email
             $user = config('auth.providers.users.model')::where('email', $customerEmail)
                 ->first();
@@ -73,7 +72,7 @@ trait PayStackWebhooks
         }
 
         // Create new subscription
-        if (!$customer->user->subscription) {
+        if (! $customer->user->subscription) {
             $subscription = Subscription::create([
                 'type'    => 'fixed',
                 'plan_id' => $planDriver->plan->id,
@@ -141,7 +140,7 @@ trait PayStackWebhooks
         }
 
         // Proceed as subscription charge
-        if (!empty($plan)) {
+        if (! empty($plan)) {
             $user->transactions()->create([
                 'status'    => 'completed',
                 'type'      => 'charge',

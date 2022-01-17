@@ -4,10 +4,10 @@ namespace Tests\App\Scheduler;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Notification;
-use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\Domain\BillingAlerts\Notifications\BillingAlertTriggered;
 
 class CheckAndTriggerBillingAlertsScheduleTest extends TestCase

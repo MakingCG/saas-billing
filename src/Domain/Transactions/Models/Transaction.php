@@ -30,7 +30,8 @@ class Transaction extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'id' => 'string',
+        'id'       => 'string',
+        'metadata' => 'array',
     ];
 
     public $incrementing = false;

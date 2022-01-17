@@ -21,6 +21,7 @@ class CreateFailedPaymentsTable extends Migration
             $table->integer('attempts')->default(0);
             $table->enum('source', ['balance', 'credit-card']);
             $table->text('note')->nullable();
+            $table->longText('metadata')->nullable();
             $table->timestamps();
         });
     }

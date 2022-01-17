@@ -27,7 +27,7 @@ class SumUsageForCurrentPeriodAction
 
                 return [
                     'feature' => $feature->key,
-                    'amount'  => ($tier->per_unit * $usage) + $tier->flat_fee,
+                    'amount'  => round(($tier->per_unit * $usage) + $tier->flat_fee, 4),
                     'usage'   => $usage,
                 ];
             });

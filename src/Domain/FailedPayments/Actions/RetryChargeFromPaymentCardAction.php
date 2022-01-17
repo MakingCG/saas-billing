@@ -35,6 +35,7 @@ class RetryChargeFromPaymentCardAction
                         'currency'  => $payment->currency,
                         'amount'    => $payment->amount,
                         'driver'    => 'stripe',
+                        'metadata'  => $payment->metadata,
                     ]);
 
                     // Delete failed payment record

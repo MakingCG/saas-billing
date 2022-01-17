@@ -336,6 +336,13 @@ class StripeFailedPaymentTest extends TestCase
                 'amount'   => 24.59,
                 'source'   => 'credit-card',
                 'note'     => 'today',
+                'metadata' => [
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 24.59,
+                        'usage'   => 30,
+                    ],
+                ],
             ]);
 
         Http::fake([
@@ -506,6 +513,13 @@ class StripeFailedPaymentTest extends TestCase
                 'amount'    => 24.59,
                 'driver'    => 'stripe',
                 'reference' => 'ch_3KBzpsB9m4sTKy1q1BAQe74u',
+                'metadata'  => json_encode([
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 24.59,
+                        'usage'   => 30,
+                    ],
+                ]),
             ])
             ->assertModelMissing($failedPayment);
     }
@@ -531,6 +545,13 @@ class StripeFailedPaymentTest extends TestCase
                 'amount'    => 24.59,
                 'source'    => 'credit-card',
                 'note'      => 'today',
+                'metadata'  => [
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 24.59,
+                        'usage'   => 30,
+                    ],
+                ],
             ]);
 
         Http::fake([
@@ -765,6 +786,13 @@ class StripeFailedPaymentTest extends TestCase
                 'amount'    => 24.59,
                 'driver'    => 'stripe',
                 'reference' => 'ch_3KBzpsB9m4sTKy1q1BAQe74u',
+                'metadata'  => json_encode([
+                    [
+                        'feature' => 'bandwidth',
+                        'amount'  => 24.59,
+                        'usage'   => 30,
+                    ],
+                ]),
             ])
             ->assertModelMissing($failedPayment);
     }
