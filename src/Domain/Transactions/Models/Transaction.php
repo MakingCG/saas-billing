@@ -19,6 +19,7 @@ use VueFileManager\Subscription\Database\Factories\TransactionFactory;
  * @property int amount
  * @property string driver
  * @property string reference
+ * @property array metadata
  * @property Carbon created_at
  * @property Carbon updated_at
  */
@@ -30,8 +31,9 @@ class Transaction extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'id'       => 'string',
-        'metadata' => 'array',
+        'id'         => 'string',
+        'metadata'   => 'array',
+        'created_at' => 'datetime',
     ];
 
     public $incrementing = false;

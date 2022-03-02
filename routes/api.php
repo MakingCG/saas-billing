@@ -57,12 +57,12 @@ Route::group(['prefix' => 'api/subscriptions/admin', 'middleware' => ['api', 'au
     Route::apiResource('/plans', PlansController::class);
 
     // User data
-    Route::get('/users/{id}/transactions', GetUserTransactionsController::class);
+    //Route::get('/users/{id}/transactions', GetUserTransactionsController::class);
     Route::get('/users/{id}/subscription', GetUserSubscriptionController::class);
     Route::post('/users/{id}/credit', CreditUserBalanceController::class);
 
     // Transactions
-    Route::get('/transactions', GetAllTransactionsController::class);
+    //Route::get('/transactions', GetAllTransactionsController::class);
 
     // Subscriptions
     Route::get('/', GetAllSubscriptionsController::class);

@@ -13,8 +13,8 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'         => $this->faker->uuid,
-            'user_id'    => $this->faker->uuid,
+            'id'         => $this->faker->uuid(),
+            'user_id'    => $this->faker->uuid(),
             'type'       => $this->faker->randomElement(['charge', 'credit', 'withdrawal']),
             'status'     => $this->faker->randomElement(['completed', 'error', 'cancelled']),
             'note'  => $this->faker->randomElement(['Basic Pack', 'Professional Pack', 'Business Pack']),
