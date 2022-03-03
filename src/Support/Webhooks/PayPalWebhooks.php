@@ -81,6 +81,10 @@ trait PayPalWebhooks
         }
     }
 
+
+    /**
+     * Record transaction for subscription payment
+     */
     public function handlePaymentSaleCompleted(Request $request): void
     {
         // Get subscription code from received webhook
@@ -113,6 +117,9 @@ trait PayPalWebhooks
         ]);
     }
 
+    /**
+     * Record transaction for single charge payment
+     */
     public function handlePaymentCaptureCompleted(Request $request): void
     {
         // Get our user

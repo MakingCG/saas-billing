@@ -120,12 +120,12 @@ class PayPalWebhooksTest extends TestCase
 
         // Send webhook
         $this->postJson('/api/subscriptions/paypal/webhooks', [
-            'id'               => 'WH-5W900153L71312432-5CW911939G6805917',
-            'create_time'      => '2021-11-16T10:50:47.259Z',
-            'resource_type'    => 'subscription',
-            'event_type'       => 'BILLING.SUBSCRIPTION.UPDATED',
-            'summary'          => 'Subscription updated',
-            'resource'         => [
+            'id'            => 'WH-5W900153L71312432-5CW911939G6805917',
+            'create_time'   => '2021-11-16T10:50:47.259Z',
+            'resource_type' => 'subscription',
+            'event_type'    => 'BILLING.SUBSCRIPTION.UPDATED',
+            'summary'       => 'Subscription updated',
+            'resource'      => [
                 'quantity'           => '1',
                 'subscriber'         => [
                     'email_address'    => 'ernest@azet.sk',
@@ -251,12 +251,12 @@ class PayPalWebhooksTest extends TestCase
 
         // Send webhook
         $this->postJson('/api/subscriptions/paypal/webhooks', [
-            'id'               => 'WH-UY687577TY25889J9-2R6T55435R66168Y6',
-            'create_time'      => '2018-19-12T22:20:32.000Z',
-            'resource_type'    => 'subscription',
-            'event_type'       => 'BILLING.SUBSCRIPTION.CANCELLED',
-            'summary'          => 'A billing subscription was cancelled.',
-            'resource'         => [
+            'id'            => 'WH-UY687577TY25889J9-2R6T55435R66168Y6',
+            'create_time'   => '2018-19-12T22:20:32.000Z',
+            'resource_type' => 'subscription',
+            'event_type'    => 'BILLING.SUBSCRIPTION.CANCELLED',
+            'summary'       => 'A billing subscription was cancelled.',
+            'resource'      => [
                 'quantity'           => '20',
                 'subscriber'         => [
                     'name'             => [
@@ -474,46 +474,66 @@ class PayPalWebhooksTest extends TestCase
         resolve(VerifyWebhookPayPalMocksClass::class)();
 
         $this->postJson('/api/subscriptions/paypal/webhooks', [
-            'id'            => 'WH-9XV66238KD489590N-2R389597JR522592U',
-            'create_time'   => '2021-11-18T07:58:41.727Z',
+            'id'            => 'WH-1T716926534839215-2GJ19575AK355574E',
+            'event_version' => '1.0',
+            'create_time'   => '2022-03-02T16:43:32.666Z',
             'resource_type' => 'sale',
             'event_type'    => 'PAYMENT.SALE.COMPLETED',
-            'summary'       => 'Payment completed for $ 10.0 USD',
+            'summary'       => 'Payment completed for $ 29.99 USD',
             'resource'      => [
-                'amount'                      => [
-                    'total'    => '10.00',
-                    'currency' => 'USD',
-                    'details'  => [
-                        'subtotal' => '10.00',
+                'amount'                      =>
+                    [
+                        'total'    => '29.99',
+                        'currency' => 'USD',
+                        'details'  =>
+                            [
+                                'subtotal' => '29.99',
+                            ],
                     ],
-                ],
                 'payment_mode'                => 'INSTANT_TRANSFER',
-                'create_time'                 => '2021-11-18T07:58:19Z',
+                'create_time'                 => '2022-03-02T16:43:15Z',
                 'custom'                      => $user->id,
-                'transaction_fee'             => [
-                    'currency' => 'USD',
-                    'value'    => '0.64',
-                ],
+                'transaction_fee'             =>
+                    [
+                        'currency' => 'USD',
+                        'value'    => '1.47',
+                    ],
                 'billing_agreement_id'        => 'I-6W1M3FWTVL19',
-                'update_time'                 => '2021-11-18T07:58:19Z',
-                'soft_descriptor'             => 'PAYPAL *MAKINGCG',
+                'update_time'                 => '2022-03-02T16:43:15Z',
                 'protection_eligibility_type' => 'ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE',
                 'protection_eligibility'      => 'ELIGIBLE',
-                'links'                       => [
+                'links'                       =>
                     [
-                        'method' => 'GET',
-                        'rel'    => 'self',
-                        'href'   => 'https://api.sandbox.paypal.com/v1/payments/sale/25S0310919017921W',
+                        0 =>
+                            [
+                                'method' => 'GET',
+                                'rel'    => 'self',
+                                'href'   => 'https://api.sandbox.paypal.com/v1/payments/sale/4XF54837E41172519',
+                            ],
+                        1 =>
+                            [
+                                'method' => 'POST',
+                                'rel'    => 'refund',
+                                'href'   => 'https://api.sandbox.paypal.com/v1/payments/sale/4XF54837E41172519/refund',
+                            ],
                     ],
-                    [
-                        'method' => 'POST',
-                        'rel'    => 'refund',
-                        'href'   => 'https://api.sandbox.paypal.com/v1/payments/sale/25S0310919017921W/refund',
-                    ],
-                ],
-                'id'                          => '25S0310919017921W',
+                'id'                          => '4XF54837E41172519',
                 'state'                       => 'completed',
-                'invoice_number'              => '',
+                'invoice_number'              => null,
+            ],
+            'links'         => [
+                0 =>
+                    [
+                        'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-1T716926534839215-2GJ19575AK355574E',
+                        'rel'    => 'self',
+                        'method' => 'GET',
+                    ],
+                1 =>
+                    [
+                        'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-1T716926534839215-2GJ19575AK355574E/resend',
+                        'rel'    => 'resend',
+                        'method' => 'POST',
+                    ],
             ],
         ])
             ->assertOk();
@@ -524,7 +544,7 @@ class PayPalWebhooksTest extends TestCase
             'status'    => 'completed',
             'note'      => $plan->name,
             'currency'  => 'USD',
-            'amount'    => 10,
+            'amount'    => 29.99,
             'driver'    => 'paypal',
             'reference' => 'I-6W1M3FWTVL19',
         ]);
@@ -541,12 +561,12 @@ class PayPalWebhooksTest extends TestCase
         resolve(VerifyWebhookPayPalMocksClass::class)();
 
         $this->postJson('/api/subscriptions/paypal/webhooks', [
-            'id'               => 'WH-83V83050EE416880M-36871424CH1549020',
-            'create_time'      => '2021-12-08T14:34:47.401Z',
-            'resource_type'    => 'capture',
-            'event_type'       => 'PAYMENT.CAPTURE.COMPLETED',
-            'summary'          => 'Payment completed for $ 10.49 USD',
-            'resource'         => [
+            'id'            => 'WH-83V83050EE416880M-36871424CH1549020',
+            'create_time'   => '2021-12-08T14:34:47.401Z',
+            'resource_type' => 'capture',
+            'event_type'    => 'PAYMENT.CAPTURE.COMPLETED',
+            'summary'       => 'Payment completed for $ 10.49 USD',
+            'resource'      => [
                 'amount'                      => [
                     'value'         => '10.49',
                     'currency_code' => 'USD',
