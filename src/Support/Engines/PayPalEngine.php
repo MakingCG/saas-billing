@@ -163,6 +163,7 @@ class PayPalEngine implements Engine
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         // Verify PayPal webhook
+        // TODO: temporarily disabled, it's been issue there when if PaymentSaleCompleted webhook is sent, verification will be failed, who know why
         /*$response = $this->post('/notifications/verify-webhook-signature', [
             'auth_algo'         => $request->header('PAYPAL-AUTH-ALGO'),
             'cert_url'          => $request->header('PAYPAL-CERT-URL'),
