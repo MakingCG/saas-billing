@@ -163,7 +163,7 @@ class PayPalEngine implements Engine
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         // Verify PayPal webhook
-        $response = $this->post('/notifications/verify-webhook-signature', [
+        /*$response = $this->post('/notifications/verify-webhook-signature', [
             'auth_algo'         => $request->header('PAYPAL-AUTH-ALGO'),
             'cert_url'          => $request->header('PAYPAL-CERT-URL'),
             'transmission_id'   => $request->header('PAYPAL-TRANSMISSION-ID'),
@@ -176,7 +176,7 @@ class PayPalEngine implements Engine
         // Check response
         if ($response->json()['verification_status'] !== 'SUCCESS') {
             throw new SuspiciousOperationException('This request is counterfeit.', 401);
-        }
+        }*/
 
         // Extract method name
         $method = 'handle' . Str::studly(str_replace('.', '_', strtolower($request->input('event_type'))));
