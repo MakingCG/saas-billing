@@ -102,8 +102,7 @@ trait PayPalWebhooks
             ->plan;
 
         // Get our user
-        $user = config('auth.providers.users.model')::find($request->input('resource.custom'))
-            ->first();
+        $user = config('auth.providers.users.model')::find($request->input('resource.custom'));
 
         // Store transaction
         $user->transactions()->create([
@@ -123,8 +122,7 @@ trait PayPalWebhooks
     public function handlePaymentCaptureCompleted(Request $request): void
     {
         // Get our user
-        $user = config('auth.providers.users.model')::find($request->input('resource.custom_id'))
-            ->first();
+        $user = config('auth.providers.users.model')::find($request->input('resource.custom_id'));
 
         $user->creditBalance(
             credit: $request->input('resource.amount.value'),

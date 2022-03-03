@@ -182,6 +182,8 @@ class PayPalEngine implements Engine
 
         if (method_exists($this, $method)) {
             $this->{$method}($request);
+        } else {
+            Log::error("Method: $method didn't exists!");
         }
 
         return new \Symfony\Component\HttpFoundation\Response('Webhook Handled', 200);

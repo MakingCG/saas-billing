@@ -2,7 +2,6 @@
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Exception;
-use Tests\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
@@ -107,7 +106,7 @@ class PayStackEngine implements Engine
     public function updateCustomer(array $user): Response
     {
         // Get paystack customer id
-        $user = User::find($user['id']);
+        $user = config('auth.providers.users.model')::find($user['id']);
 
         return $this->put("/customer/{$user->customerId('paystack')}", [
             'email'      => $user['email'],
