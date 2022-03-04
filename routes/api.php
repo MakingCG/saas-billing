@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Support\Miscellaneous\Paystack\Controllers\CreatePaystackTransactionController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
@@ -32,6 +33,11 @@ Route::group(['prefix' => 'api/stripe', 'middleware' => ['api', 'auth:sanctum']]
     Route::delete('/credit-cards/{creditCard}', DeleteStripeCreditCardController::class);
     Route::get('/setup-intent', CreateStripeSetupIntentController::class);
     Route::post('/checkout', CreateStripeSessionController::class);
+});
+
+// Paystack
+Route::group(['prefix' => 'api/paystack', 'middleware' => ['api', 'auth:sanctum']], function () {
+    Route::post('/checkout', CreatePaystackTransactionController::class);
 });
 
 // User
