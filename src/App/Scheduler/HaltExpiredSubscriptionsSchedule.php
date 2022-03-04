@@ -9,6 +9,7 @@ class HaltExpiredSubscriptionsSchedule
     public function __invoke()
     {
         Subscription::where('status', 'cancelled')
+            ->where('type', 'fixed')
             ->whereDate('ends_at', today())
             ->get()
             ->each(function ($subscription) {

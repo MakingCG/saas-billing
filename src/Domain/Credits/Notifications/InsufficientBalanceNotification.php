@@ -21,6 +21,6 @@ class InsufficientBalanceNotification extends Notification implements ShouldQueu
             ->subject(__('Uh-oh! Your credit withdrawal for your pre-paid subscription failed'))
             ->greeting(__('Hi there'))
             ->line(__("It looks like your subscription credit withdrawal for your account didn't go through. Please make sure you have sufficient funds on your account and we'll give it another try!"))
-            ->action(__('Fund Your Account'), url('/user/settings/subscription'));
+            ->action(__('Fund Your Account'), url('/user/settings/billing'));
     }
 }

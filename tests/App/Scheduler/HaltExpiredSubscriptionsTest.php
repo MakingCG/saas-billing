@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\App\Scheduler;
 
 use Tests\TestCase;
@@ -21,8 +22,9 @@ class HaltExpiredSubscriptionsTest extends TestCase
         $subscription = Subscription::factory()
             ->hasDriver()
             ->create([
-                'status'     => 'cancelled',
-                'ends_at'    => now(),
+                'type'    => 'fixed',
+                'status'  => 'cancelled',
+                'ends_at' => now(),
             ]);
 
         // Run scheduler

@@ -112,7 +112,7 @@ class PayPalEngine implements Engine
         return $this->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
             'plan_id'             => $plan->driverId('paypal'),
             'application_context' => [
-                'url' => url('/user/settings/subscription'),
+                'url' => url('/user/settings/billing'),
             ],
         ]);
     }
@@ -125,7 +125,7 @@ class PayPalEngine implements Engine
         $response = $this->post("/billing/subscriptions/{$subscription->driverId()}/revise", [
             'plan_id'             => $plan->driverId('paypal'),
             'application_context' => [
-                'return_url' => url('/user/settings/subscription'),
+                'return_url' => url('/user/settings/billing'),
             ],
         ]);
 
