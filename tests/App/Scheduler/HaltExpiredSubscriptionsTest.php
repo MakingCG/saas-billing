@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\App\Scheduler;
 
 use Tests\TestCase;

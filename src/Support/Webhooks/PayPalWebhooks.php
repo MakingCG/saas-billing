@@ -81,7 +81,6 @@ trait PayPalWebhooks
         }
     }
 
-
     /**
      * Record transaction for subscription payment
      */

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use VueFileManager\Subscription\Support\Miscellaneous\Paystack\Controllers\CreatePaystackTransactionController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
@@ -21,6 +20,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Controllers\GetUserSubscrip
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\CreateStripeSessionController;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\DeleteStripeCreditCardController;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers\CreateStripeSetupIntentController;
+use VueFileManager\Subscription\Support\Miscellaneous\Paystack\Controllers\CreatePaystackTransactionController;
 
 // System
 Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api']], function () {

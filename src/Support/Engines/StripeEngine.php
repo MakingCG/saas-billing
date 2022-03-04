@@ -2,7 +2,6 @@
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Carbon\Carbon;
-use Tests\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Stripe\WebhookSignature;
