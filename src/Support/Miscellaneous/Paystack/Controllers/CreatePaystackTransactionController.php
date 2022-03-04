@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\Miscellaneous\Paystack\Controllers;
+namespace VueFileManager\Subscription\Support\Miscellaneous\Paystack\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

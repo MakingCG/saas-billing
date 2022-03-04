@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Support\Miscellaneous\Paystack\Controllers\CreatePaystackTransactionController;
+use VueFileManager\Subscription\Support\Miscellaneous\Paystack\Controllers\CreatePaystackTransactionController;
 use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
