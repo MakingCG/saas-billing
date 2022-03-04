@@ -117,8 +117,10 @@ trait PayPalWebhooks
 
     /**
      * Record transaction for single charge payment
+     *
+     * TODO: review if single charge has handlePaymentCaptureCompleted
      */
-    public function handlePaymentCaptureCompleted(Request $request): void
+    public function handleCheckoutOrderApproved(Request $request): void
     {
         // Get our user
         $user = config('auth.providers.users.model')::find($request->input('resource.custom_id'));
