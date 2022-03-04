@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
@@ -87,7 +88,7 @@ class PayPalWebhooksTest extends TestCase
             'driver_subscription_id' => 'I-KHY6B042F1YA',
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -223,7 +224,7 @@ class PayPalWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -343,7 +344,7 @@ class PayPalWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -561,72 +562,106 @@ class PayPalWebhooksTest extends TestCase
         resolve(VerifyWebhookPayPalMocksClass::class)();
 
         $this->postJson('/api/subscriptions/paypal/webhooks', [
-            'id'            => 'WH-83V83050EE416880M-36871424CH1549020',
-            'create_time'   => '2021-12-08T14:34:47.401Z',
-            'resource_type' => 'capture',
-            'event_type'    => 'PAYMENT.CAPTURE.COMPLETED',
-            'summary'       => 'Payment completed for $ 10.49 USD',
-            'resource'      => [
-                'amount'                      => [
-                    'value'         => '10.49',
-                    'currency_code' => 'USD',
-                ],
-                'seller_protection'           => [
-                    'dispute_categories' => [
-                        'ITEM_NOT_RECEIVED',
-                        'UNAUTHORIZED_TRANSACTION',
-                    ],
-                    'status'             => 'ELIGIBLE',
-                ],
-                'supplementary_data'          => [
-                    'related_ids' => [
-                        'order_id' => '3L909709RA4092508',
-                    ],
-                ],
-                'update_time'                 => '2021-12-08T14:34:42Z',
-                'create_time'                 => '2021-12-08T14:34:42Z',
-                'final_capture'               => true,
-                'seller_receivable_breakdown' => [
-                    'paypal_fee'   => [
-                        'value'         => '0.71',
-                        'currency_code' => 'USD',
-                    ],
-                    'gross_amount' => [
-                        'value'         => '10.49',
-                        'currency_code' => 'USD',
-                    ],
-                    'net_amount'   => [
-                        'value'         => '9.78',
-                        'currency_code' => 'USD',
-                    ],
-                ],
-                'links'                       => [
+            'id'               => 'WH-59T06126UF194714E-4G3970566J739735U',
+            'event_version'    => '1.0',
+            'create_time'      => '2022-03-04T16:10:12.392Z',
+            'resource_type'    => 'checkout-order',
+            'resource_version' => '2.0',
+            'event_type'       => 'CHECKOUT.ORDER.APPROVED',
+            'summary'          => 'An order has been approved by buyer',
+            'resource'         => [
+                'create_time'    => '2022-03-04T16:09:55Z',
+                'purchase_units' => [
                     [
-                        'method' => 'GET',
-                        'rel'    => 'self',
-                        'href'   => 'https://api.sandbox.paypal.com/v2/payments/captures/5WS14661GG734453U',
-                    ],
-                    [
-                        'method' => 'POST',
-                        'rel'    => 'refund',
-                        'href'   => 'https://api.sandbox.paypal.com/v2/payments/captures/5WS14661GG734453U/refund',
-                    ],
-                    [
-                        'method' => 'GET',
-                        'rel'    => 'up',
-                        'href'   => 'https://api.sandbox.paypal.com/v2/checkout/orders/3L909709RA4092508',
+                        'reference_id' => 'default',
+                        'amount'       =>
+                            [
+                                'currency_code' => 'USD',
+                                'value'         => '12.49',
+                            ],
+                        'payee'        =>
+                            [
+                                'email_address' => 'sb-i2vj711567306@business.example.com',
+                                'merchant_id'   => 'LV8KBHAFXJMPJ',
+                            ],
+                        'custom_id'    => $user->id,
+                        'shipping'     =>
+                            [
+                                'name'    =>
+                                    [
+                                        'full_name' => 'Michal Kamenicky',
+                                    ],
+                                'address' =>
+                                    [
+                                        'address_line_1' => '1 Main St',
+                                        'admin_area_2'   => 'San Jose',
+                                        'admin_area_1'   => 'CA',
+                                        'postal_code'    => '95131',
+                                        'country_code'   => 'US',
+                                    ],
+                            ],
                     ],
                 ],
-                'id'                          => '5WS14661GG734453U',
-                'status'                      => 'COMPLETED',
-                'custom_id'                   => $user->id,
+                'links'          =>
+                    [
+                        0 =>
+                            [
+                                'href'   => 'https://api.sandbox.paypal.com/v2/checkout/orders/32649052UT384661G',
+                                'rel'    => 'self',
+                                'method' => 'GET',
+                            ],
+                        1 =>
+                            [
+                                'href'   => 'https://api.sandbox.paypal.com/v2/checkout/orders/32649052UT384661G',
+                                'rel'    => 'update',
+                                'method' => 'PATCH',
+                            ],
+                        2 =>
+                            [
+                                'href'   => 'https://api.sandbox.paypal.com/v2/checkout/orders/32649052UT384661G/capture',
+                                'rel'    => 'capture',
+                                'method' => 'POST',
+                            ],
+                    ],
+                'id'             => '32649052UT384661G',
+                'intent'         => 'CAPTURE',
+                'payer'          =>
+                    [
+                        'name'          =>
+                            [
+                                'given_name' => 'Michal',
+                                'surname'    => 'Kamenicky',
+                            ],
+                        'email_address' => 'ernest@azet.sk',
+                        'payer_id'      => 'XEBW65LBRMPMA',
+                        'address'       =>
+                            [
+                                'country_code' => 'US',
+                            ],
+                    ],
+                'status'         => 'APPROVED',
             ],
+            'links'            =>
+                [
+                    0 =>
+                        [
+                            'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-59T06126UF194714E-4G3970566J739735U',
+                            'rel'    => 'self',
+                            'method' => 'GET',
+                        ],
+                    1 =>
+                        [
+                            'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-59T06126UF194714E-4G3970566J739735U/resend',
+                            'rel'    => 'resend',
+                            'method' => 'POST',
+                        ],
+                ],
         ])->assertOk();
 
         $this
             ->assertDatabaseHas('balances', [
                 'user_id'  => $user->id,
-                'amount'   => 10.49,
+                'amount'   => 12.49,
                 'currency' => 'USD',
             ])
             ->assertDatabaseHas('transactions', [
@@ -634,9 +669,9 @@ class PayPalWebhooksTest extends TestCase
                 'type'      => 'charge',
                 'status'    => 'completed',
                 'currency'  => 'USD',
-                'amount'    => 10.49,
+                'amount'    => 12.49,
                 'driver'    => 'paypal',
-                'reference' => '5WS14661GG734453U',
+                'reference' => '32649052UT384661G',
             ]);
     }
 }

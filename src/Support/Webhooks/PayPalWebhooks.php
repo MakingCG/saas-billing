@@ -123,11 +123,11 @@ trait PayPalWebhooks
     public function handleCheckoutOrderApproved(Request $request): void
     {
         // Get our user
-        $user = config('auth.providers.users.model')::find($request->input('resource.custom_id'));
+        $user = config('auth.providers.users.model')::find($request->input('resource.purchase_units.0.custom_id'));
 
         $user->creditBalance(
-            credit: $request->input('resource.amount.value'),
-            currency: $request->input('resource.amount.currency_code'),
+            credit: $request->input('resource.purchase_units.0.amount.value'),
+            currency: $request->input('resource.purchase_units.0.amount.currency_code'),
         );
 
         // Store transaction
@@ -137,8 +137,8 @@ trait PayPalWebhooks
             'driver'    => 'paypal',
             'note'      => 'Account Fund',
             'reference' => $request->input('resource.id'),
-            'currency'  => $request->input('resource.amount.currency_code'),
-            'amount'    => $request->input('resource.amount.value'),
+            'currency'  => $request->input('resource.purchase_units.0.amount.currency_code'),
+            'amount'    => $request->input('resource.purchase_units.0.amount.value'),
         ]);
     }
 }
