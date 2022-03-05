@@ -25,13 +25,7 @@ class StripeEngine implements Engine
      */
     public function getPlan(string $planId): array
     {
-        $product = $this->get("/products/$planId");
-        $prices = $this->get("/prices?product=$planId");
-
-        return [
-            'product' => $product->json(),
-            'prices'  => $prices->json(),
-        ];
+        return $this->get("/prices/$planId")->json();
     }
 
     /*
@@ -80,14 +74,13 @@ class StripeEngine implements Engine
      */
     public function deletePlan(string $planId): void
     {
-        $product = $this->getPlan($planId);
+        $price = $this->getPlan($planId);
 
-        // Delete product prices
-        collect($product['prices']['data'])
-            ->map(fn ($price) => $this->delete("/plans/{$price['id']}"));
+        // Delete product price
+        $this->delete("/plans/$planId");
 
         // Delete product
-        $this->delete("/products/{$planId}");
+        $this->delete("/products/{$price['product']}");
     }
 
     /*
@@ -166,13 +159,13 @@ class StripeEngine implements Engine
         $stripeSubscription = $this->getSubscription($subscription->driverId());
 
         // Get product to obtain price id
-        $product = $this->getPlan($plan->driverId('stripe'));
+        $originalPlan = $this->getPlan($plan->driverId('stripe'));
 
         return $this->post("/subscriptions/{$subscription->driverId()}", [
             'items' => [
                 [
                     'id'    => $stripeSubscription->json()['items']['data'][0]['id'],
-                    'price' => $product['prices']['data'][0]['id'],
+                    'price' => $originalPlan['id'],
                 ],
             ],
         ]);

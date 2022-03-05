@@ -65,6 +65,8 @@ trait StripeWebhooks
                 'status' => mapStripeStatus($status),
             ]);
 
+            $driver->subscription->refresh();
+
             // Emit SubscriptionWasCreated
             SubscriptionWasCreated::dispatch($driver->subscription);
         }
@@ -76,6 +78,8 @@ trait StripeWebhooks
                 'ends_at' => Carbon::createFromTimestamp($currentPeriodEndsAt),
             ]);
 
+            $driver->subscription->refresh();
+
             SubscriptionWasCancelled::dispatch($driver->subscription);
         }
 
@@ -85,6 +89,8 @@ trait StripeWebhooks
                 'status'  => 'completed',
                 'ends_at' => now(),
             ]);
+
+            $driver->subscription->refresh();
 
             SubscriptionWasExpired::dispatch($driver->subscription);
         }
@@ -99,6 +105,8 @@ trait StripeWebhooks
                     'name'    => $planDriver->plan->name,
                     'plan_id' => $planDriver->plan->id,
                 ]);
+
+                $driver->subscription->refresh();
 
                 SubscriptionWasUpdated::dispatch($driver->subscription);
             }
@@ -118,7 +126,9 @@ trait StripeWebhooks
                 'ends_at' => Carbon::createFromTimestamp($request->input('data.object.current_period_end')),
             ]);
 
-            SubscriptionWasExpired::dispatch($driver->subscription);
+            $driver->subscription->refresh();
+
+            SubscriptionWasCancelled::dispatch($driver->subscription);
         }
     }
 

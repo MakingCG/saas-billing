@@ -107,6 +107,8 @@ trait PayStackWebhooks
                 'ends_at' => $endsAt,
             ]);
 
+            $driver->subscription->refresh();
+
             SubscriptionWasCancelled::dispatch($driver->subscription);
         }
     }

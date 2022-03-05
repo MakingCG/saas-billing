@@ -59,6 +59,8 @@ trait PayPalWebhooks
                 'plan_id' => $planDriver->plan->id,
             ]);
 
+            $subscriptionDriver->subscription->refresh();
+
             SubscriptionWasUpdated::dispatch($subscriptionDriver->subscription);
         }
     }
@@ -76,6 +78,8 @@ trait PayPalWebhooks
                 'status'  => 'cancelled',
                 'ends_at' => $endsAt,
             ]);
+
+            $driver->subscription->refresh();
 
             SubscriptionWasCancelled::dispatch($driver->subscription);
         }
