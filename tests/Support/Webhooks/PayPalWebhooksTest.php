@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
@@ -88,7 +87,7 @@ class PayPalWebhooksTest extends TestCase
             'driver_subscription_id' => 'I-KHY6B042F1YA',
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -224,7 +223,7 @@ class PayPalWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -344,7 +343,7 @@ class PayPalWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
