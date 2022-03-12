@@ -4,7 +4,9 @@ namespace Tests\Domain\Balances;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
+use VueFileManager\Subscription\Domain\Credits\Notifications\AdminBonusAddedNotification;
 
 class BalanceTest extends TestCase
 {
@@ -54,6 +56,8 @@ class BalanceTest extends TestCase
                 'amount'   => 70.00,
                 'currency' => 'USD',
             ]);
+
+        Notification::assertSentTo($this->user, AdminBonusAddedNotification::class);
     }
 
     /**

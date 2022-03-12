@@ -44,6 +44,10 @@ class PlansController extends Controller
         StoreFixedPlanAction $storeFixedPlan,
         StoreMeteredPlanAction $storeMeteredPlan,
     ): Response {
+        if (is_demo()) {
+            return response('Done', 201);
+        }
+
         // Create fixed Plan
         if ($request->input('type') === 'fixed') {
             // Map data into DTO
@@ -72,6 +76,10 @@ class PlansController extends Controller
         UpdatePlanRequest $request,
         Plan $plan,
     ): Response {
+        if (is_demo()) {
+            return response(new PlanResource($plan), 200);
+        }
+
         $plan->update($request->all());
 
         return response(new PlanResource($plan), 200);
@@ -84,6 +92,10 @@ class PlansController extends Controller
         Plan $plan,
         DeletePlansFromPaymentServiceAction $deletePlansFromPaymentService
     ): Response {
+        if (is_demo()) {
+            return response('Deleted', 204);
+        }
+
         $deletePlansFromPaymentService($plan);
 
         $plan->update([

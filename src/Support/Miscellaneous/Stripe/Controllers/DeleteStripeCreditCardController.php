@@ -12,6 +12,10 @@ class DeleteStripeCreditCardController extends Controller
 
     public function __invoke(Request $request, CreditCard $creditCard)
     {
+        if (is_demo_account()) {
+            return response('Done', 204);
+        }
+
         // Detach credit card from stripe
         $this->post("/payment_methods/{$creditCard->reference}/detach", []);
 

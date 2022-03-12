@@ -12,6 +12,10 @@ class BillingAlertController extends Controller
 {
     public function store(Request $request): Response|Application|ResponseFactory
     {
+        if (is_demo_account()) {
+            return response('Done', 201);
+        }
+
         $request
             ->user()
             ->billingAlert()
@@ -24,6 +28,10 @@ class BillingAlertController extends Controller
 
     public function update(Request $request, BillingAlert $billingAlert): Response|Application|ResponseFactory
     {
+        if (is_demo_account()) {
+            return response('Done', 204);
+        }
+
         $billingAlert->update(
             $request->only('amount')
         );
@@ -33,6 +41,10 @@ class BillingAlertController extends Controller
 
     public function destroy(BillingAlert $billingAlert): Response|Application|ResponseFactory
     {
+        if (is_demo_account()) {
+            return response('Done', 204);
+        }
+
         $billingAlert->delete();
 
         return response('Done', 204);

@@ -7,7 +7,7 @@ use VueFileManager\Subscription\Domain\Subscriptions\Resources\SubscriptionColle
 
 class GetAllSubscriptionsController extends Controller
 {
-    public function __invoke()
+    public function __invoke(): SubscriptionCollection
     {
         $subscriptions = Subscription::sortable(['created_at' => 'desc'])
             ->paginate(20);

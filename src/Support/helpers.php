@@ -28,3 +28,23 @@ if (! function_exists('get_metered_charge_period')) {
         return "$today - $startOfThePeriod";
     }
 }
+
+if (! function_exists('is_demo')) {
+    /**
+     * Check if is demo
+     */
+    function is_demo(): bool
+    {
+        return config('subscription.is_demo');
+    }
+}
+
+if (! function_exists('is_demo_account')) {
+    /**
+     * Check if is demo environment
+     */
+    function is_demo_account(): bool
+    {
+        return config('subscription.is_demo') && auth()->user()->email === 'howdy@hi5ve.digital';
+    }
+}

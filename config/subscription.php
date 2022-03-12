@@ -3,6 +3,8 @@
 return [
     'driver'            => env('SUBSCRIPTION_DRIVER', 'stripe'),
 
+    'is_demo' => env('APP_DEMO', false),
+
     /*
      * Activate drivers to handle subscription
      */
