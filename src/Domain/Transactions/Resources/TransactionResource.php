@@ -41,7 +41,7 @@ class TransactionResource extends JsonResource
                                     'last_name'  => $this->user->settings->last_name,
                                     'name'       => $this->user->settings->name,
                                     'color'      => $this->user->settings->color,
-                                    'email'      => $this->user->email,
+                                    'email'      => is_demo() ? obfuscate_email($this->user->email) : $this->user->email,
                                 ],
                             ],
                         ],
