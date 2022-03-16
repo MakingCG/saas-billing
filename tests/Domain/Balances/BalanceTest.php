@@ -3,10 +3,11 @@ namespace Tests\Domain\Balances;
 
 use Tests\TestCase;
 use Tests\Models\User;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Notification;
+use VueFileManager\Subscription\Support\Events\AdminBonusAddedEvent;
+use VueFileManager\Subscription\Support\Events\InsufficientBalanceEvent;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
-use VueFileManager\Subscription\Domain\Credits\Notifications\AdminBonusAddedNotification;
 
 class BalanceTest extends TestCase
 {
@@ -25,6 +26,10 @@ class BalanceTest extends TestCase
      */
     public function admin_credit_user_balance()
     {
+        Event::fake([
+            AdminBonusAddedEvent::class,
+        ]);
+
         $admin = User::factory()
             ->create([
                 'role' => 'admin',
@@ -57,7 +62,7 @@ class BalanceTest extends TestCase
                 'currency' => 'USD',
             ]);
 
-        Notification::assertSentTo($this->user, AdminBonusAddedNotification::class);
+        Event::assertDispatched(AdminBonusAddedEvent::class);
     }
 
     /**
@@ -115,6 +120,10 @@ class BalanceTest extends TestCase
      */
     public function it_try_to_withdraw_more_than_current_user_balance()
     {
+        Event::fake([
+            InsufficientBalanceEvent::class,
+        ]);
+
         $this->expectException(InsufficientBalanceException::class);
 
         $this->user->balance()->create([
@@ -123,5 +132,7 @@ class BalanceTest extends TestCase
         ]);
 
         $this->user->withdrawBalance(20.00);
+
+        Event::assertDispatched(InsufficientBalanceEvent::class);
     }
 }

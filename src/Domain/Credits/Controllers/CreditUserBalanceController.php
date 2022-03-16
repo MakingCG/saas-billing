@@ -3,7 +3,7 @@ namespace VueFileManager\Subscription\Domain\Credits\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use VueFileManager\Subscription\Domain\Credits\Notifications\AdminBonusAddedNotification;
+use VueFileManager\Subscription\Support\Events\AdminBonusAddedEvent;
 
 class CreditUserBalanceController extends Controller
 {
@@ -32,7 +32,7 @@ class CreditUserBalanceController extends Controller
         // Send user bonus notification
         $bonus = format_currency($request->input('amount'), $user->balance->currency);
 
-        $user->notify(new AdminBonusAddedNotification($bonus));
+        AdminBonusAddedEvent::dispatch($user, $bonus);
 
         return response('Done', 204);
     }
