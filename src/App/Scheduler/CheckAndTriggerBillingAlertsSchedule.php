@@ -2,7 +2,6 @@
 namespace VueFileManager\Subscription\App\Scheduler;
 
 use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
-use VueFileManager\Subscription\Support\Events\BillingAlertTriggeredEvent;
 use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
 
 class CheckAndTriggerBillingAlertsSchedule
@@ -25,8 +24,11 @@ class CheckAndTriggerBillingAlertsSchedule
                         'triggered' => true,
                     ]);
 
-                    // Trigger event
-                    BillingAlertTriggeredEvent::dispatch($alert);
+                    // Get notification
+                    $BillingAlertTriggeredNotification = config('subscription.notifications.BillingAlertTriggeredNotification');
+
+                    // Notify user
+                    $alert->user->notify(new $BillingAlertTriggeredNotification());
                 }
             });
     }

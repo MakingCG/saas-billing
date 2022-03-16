@@ -2,13 +2,11 @@
 namespace VueFileManager\Subscription\App\Scheduler;
 
 use Illuminate\Support\Collection;
-use VueFileManager\Subscription\Support\Events\InsufficientBalanceEvent;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Exceptions\ChargeFailedException;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
-use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification;
 
 class SettlePrePaidSubscriptionPeriodSchedule
 {
@@ -88,8 +86,11 @@ class SettlePrePaidSubscriptionPeriodSchedule
                     'metadata'  => $usageEstimates,
                 ]);
             } catch (ChargeFailedException $e) {
+                // Get notification
+                $ChargeFromCreditCardFailedNotification = config('subscription.notifications.ChargeFromCreditCardFailedNotification');
+
                 // Notify user
-                $subscription->user->notify(new ChargeFromCreditCardFailedNotification());
+                $subscription->user->notify(new $ChargeFromCreditCardFailedNotification());
 
                 // Create transaction
                 $subscription->user->transactions()->create([
@@ -137,8 +138,11 @@ class SettlePrePaidSubscriptionPeriodSchedule
                 'metadata' => $usageEstimates,
             ]);
         } catch (InsufficientBalanceException $e) {
+            // Get notification
+            $InsufficientBalanceNotification = config('subscription.notifications.InsufficientBalanceNotification');
+
             // Notify user
-            InsufficientBalanceEvent::dispatch($subscription->user);
+            $subscription->user->notify(new $InsufficientBalanceNotification());
 
             // Create error transaction
             $subscription->user->transactions()->create([

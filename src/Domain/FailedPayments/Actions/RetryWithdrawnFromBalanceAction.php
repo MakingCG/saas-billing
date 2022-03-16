@@ -1,7 +1,6 @@
 <?php
 namespace VueFileManager\Subscription\Domain\FailedPayments\Actions;
 
-use VueFileManager\Subscription\Support\Events\InsufficientBalanceEvent;
 use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 
@@ -32,8 +31,12 @@ class RetryWithdrawnFromBalanceAction
                     // delete failed payment
                     $failedPayment->delete();
                 } catch (InsufficientBalanceException $e) {
-                    // Send notification
-                    InsufficientBalanceEvent::dispatch($user);
+
+                    // Get notification
+                    $InsufficientBalanceNotification = config('subscription.notifications.InsufficientBalanceNotification');
+
+                    // Notify user
+                    $user->notify(new $InsufficientBalanceNotification());
                 }
             });
     }

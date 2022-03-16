@@ -5,14 +5,13 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
+use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Credits\Models\Balance;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
-use VueFileManager\Subscription\Support\Events\InsufficientBalanceEvent;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification;
@@ -785,10 +784,6 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
      */
     public function it_try_withdraw_from_insufficient_balance()
     {
-        Event::fake([
-            InsufficientBalanceEvent::class,
-        ]);
-
         $user = User::factory()
             ->create();
 
@@ -868,6 +863,6 @@ class SettlePrePaidSubscriptionPeriodTest extends TestCase
             ])
             ->assertEquals(20.00, Balance::first()->amount);
 
-        Event::assertDispatched(InsufficientBalanceEvent::class);
+        Notification::assertSentTo($user, InsufficientBalanceNotification::class);
     }
 }

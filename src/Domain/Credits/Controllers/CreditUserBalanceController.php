@@ -32,7 +32,11 @@ class CreditUserBalanceController extends Controller
         // Send user bonus notification
         $bonus = format_currency($request->input('amount'), $user->balance->currency);
 
-        AdminBonusAddedEvent::dispatch($user, $bonus);
+        // Get notification
+        $BonusCreditAddedNotification = config('subscription.notifications.BonusCreditAddedNotification');
+
+        // Notify user
+        $user->notify(new $BonusCreditAddedNotification($bonus));
 
         return response('Done', 204);
     }

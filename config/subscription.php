@@ -1,40 +1,6 @@
 <?php
 
 return [
-    'driver'            => env('SUBSCRIPTION_DRIVER', 'stripe'),
-
-    'is_demo' => env('APP_DEMO', false),
-
-    /*
-     * Activate drivers to handle subscription
-     */
-    'available_drivers' => [
-        'paystack',
-        'paypal',
-        'stripe',
-    ],
-    'metered_billing'   => [
-        'settlement_period' => 30,
-        /*
-         * Drivers which have native support for metered billing.
-         * This native support doesn't use subscription package credit system, but prefer
-         * auto-renew and maintain metered subscription on behalf of external service.
-         */
-        'native_support' => [
-            'stripe',
-        ],
-    ],
-    'paystack'          => [
-        /*
-         * List of allowed ip address to verify paystack webhook request
-         */
-        'allowed_ips' => [
-            '52.214.14.220',
-            '52.49.173.169',
-            '52.31.139.75',
-        ],
-    ],
-
     /*
      * Get gateway credentials
      */
@@ -55,4 +21,41 @@ return [
             'is_live'    => env('PAYPAL_IS_LIVE'),
         ],
     ],
+
+    'notifications' => [
+        'ChargeFromCreditCardFailedAgainNotification' => \VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification::class,
+        'ChargeFromCreditCardFailedNotification' => \VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification::class,
+        'ConfirmStripePaymentNotification' => \VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification::class,
+        'BillingAlertTriggeredNotification' => \VueFileManager\Subscription\Domain\BillingAlerts\Notifications\BillingAlertTriggeredNotification::class,
+        'InsufficientBalanceNotification' => \VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification::class,
+        'BonusCreditAddedNotification' => \VueFileManager\Subscription\Domain\Credits\Notifications\BonusCreditAddedNotification::class,
+    ],
+
+    /*
+     * Active drivers to handle subscription
+     */
+    'available_drivers' => [
+        'paystack',
+        'paypal',
+        'stripe',
+    ],
+
+    'metered_billing'   => [
+        'settlement_period' => 30,
+    ],
+
+    'paystack'          => [
+        /*
+         * List of allowed ip address to verify paystack webhook request
+         */
+        'allowed_ips' => [
+            '52.214.14.220',
+            '52.49.173.169',
+            '52.31.139.75',
+        ],
+    ],
+
+    'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
+
+    'is_demo' => env('APP_DEMO', false),
 ];

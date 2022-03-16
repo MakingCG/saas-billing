@@ -22,7 +22,6 @@ class ConfirmStripePaymentNotification extends Notification implements ShouldQue
 
     public function toMail(): MailMessage
     {
-        // TODO: replace string with VueFileManager language function
         return (new MailMessage)
             ->subject(__('Confirm Payment'))
             ->greeting(__('Confirm your :amount payment', ['amount' => $this->payload['amount']]))

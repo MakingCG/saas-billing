@@ -156,10 +156,15 @@ trait StripeWebhooks
 
     public function handleInvoicePaymentActionRequired(Request $request): void
     {
+        // Get Stripe customer
         $customer = Customer::where('driver_user_id', $request->input('data.object.customer'))
             ->first();
 
-        $customer->user->notify(new ConfirmStripePaymentNotification([
+        // Get notification
+        $ConfirmStripePaymentNotification = config('subscription.notifications.ConfirmStripePaymentNotification');
+
+        // Send notification
+        $customer->user->notify(new $ConfirmStripePaymentNotification([
             'url'    => $request->input('data.object.hosted_invoice_url'),
             'amount' => format_currency(
                 amount: $request->input('data.object.amount_remaining') / 100,

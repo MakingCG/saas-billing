@@ -1,13 +1,13 @@
 <?php
 namespace Tests\App\Scheduler;
 
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Tests\Models\User;
-use Illuminate\Support\Facades\Event;
+use VueFileManager\Subscription\Domain\BillingAlerts\Notifications\BillingAlertTriggeredNotification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
-use VueFileManager\Subscription\Support\Events\BillingAlertTriggeredEvent;
 use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 
 class CheckAndTriggerBillingAlertsScheduleTest extends TestCase
@@ -17,10 +17,6 @@ class CheckAndTriggerBillingAlertsScheduleTest extends TestCase
      */
     public function it_trigger_billing_alert_and_dispatch_event()
     {
-        Event::fake([
-            BillingAlertTriggeredEvent::class,
-        ]);
-
         $user = User::factory()
             ->create();
 
@@ -88,6 +84,6 @@ class CheckAndTriggerBillingAlertsScheduleTest extends TestCase
             'triggered' => true,
         ]);
 
-        Event::assertDispatched(BillingAlertTriggeredEvent::class);
+        Notification::assertSentTo($user, BillingAlertTriggeredNotification::class);
     }
 }

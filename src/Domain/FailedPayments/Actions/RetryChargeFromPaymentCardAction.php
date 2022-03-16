@@ -4,7 +4,6 @@ namespace VueFileManager\Subscription\Domain\FailedPayments\Actions;
 use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Exceptions\ChargeFailedException;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Actions\ChargeFromSavedPaymentMethodAction;
-use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification;
 
 class RetryChargeFromPaymentCardAction
 {
@@ -46,7 +45,10 @@ class RetryChargeFromPaymentCardAction
 
                     // Send new reminder
                     if ($payment->attempts === 3) {
-                        $payment->user->notify(new ChargeFromCreditCardFailedAgainNotification());
+                        // Get notification
+                        $ChargeFromCreditCardFailedAgainNotification = config('subscription.notifications.ChargeFromCreditCardFailedAgainNotification');
+
+                        $payment->user->notify(new $ChargeFromCreditCardFailedAgainNotification());
                     }
                 }
             });
