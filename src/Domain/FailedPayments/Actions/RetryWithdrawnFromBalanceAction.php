@@ -31,7 +31,6 @@ class RetryWithdrawnFromBalanceAction
                     // delete failed payment
                     $failedPayment->delete();
                 } catch (InsufficientBalanceException $e) {
-
                     // Get notification
                     $InsufficientBalanceNotification = config('subscription.notifications.InsufficientBalanceNotification');
 

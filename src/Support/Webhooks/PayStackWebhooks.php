@@ -88,6 +88,12 @@ trait PayStackWebhooks
                     'driver_subscription_id' => $subscriptionCode,
                 ]);
 
+            // Get notification
+            $SubscriptionWasCreatedNotification = config('subscription.notifications.SubscriptionWasCreatedNotification');
+
+            // Notify user
+            $subscription->user->notify(new $SubscriptionWasCreatedNotification($subscription));
+
             // Emit SubscriptionWasCreated
             SubscriptionWasCreated::dispatch($subscription);
         }

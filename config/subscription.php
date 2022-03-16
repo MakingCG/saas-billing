@@ -24,11 +24,12 @@ return [
 
     'notifications' => [
         'ChargeFromCreditCardFailedAgainNotification' => \VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification::class,
-        'ChargeFromCreditCardFailedNotification' => \VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification::class,
-        'ConfirmStripePaymentNotification' => \VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification::class,
-        'BillingAlertTriggeredNotification' => \VueFileManager\Subscription\Domain\BillingAlerts\Notifications\BillingAlertTriggeredNotification::class,
-        'InsufficientBalanceNotification' => \VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification::class,
-        'BonusCreditAddedNotification' => \VueFileManager\Subscription\Domain\Credits\Notifications\BonusCreditAddedNotification::class,
+        'ChargeFromCreditCardFailedNotification'      => \VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification::class,
+        'ConfirmStripePaymentNotification'            => \VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification::class,
+        'SubscriptionWasCreatedNotification'          => \VueFileManager\Subscription\Domain\Subscriptions\Notifications\SubscriptionWasCreatedNotification::class,
+        'BillingAlertTriggeredNotification'           => \VueFileManager\Subscription\Domain\BillingAlerts\Notifications\BillingAlertTriggeredNotification::class,
+        'InsufficientBalanceNotification'             => \VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification::class,
+        'BonusCreditAddedNotification'                => \VueFileManager\Subscription\Domain\Credits\Notifications\BonusCreditAddedNotification::class,
     ],
 
     /*

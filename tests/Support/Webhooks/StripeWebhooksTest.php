@@ -14,6 +14,7 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\Subscriptions\Notifications\SubscriptionWasCreatedNotification;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification;
 
 class StripeWebhooksTest extends TestCase
@@ -250,6 +251,9 @@ class StripeWebhooksTest extends TestCase
             SubscriptionWasCreated::class,
         ]);
 
+        $user = User::factory()
+            ->create();
+
         $plan = Plan::factory()
             ->hasDrivers([
                 'driver' => 'stripe',
@@ -262,6 +266,7 @@ class StripeWebhooksTest extends TestCase
                 'driver_subscription_id' => 'sub_1K2AykB9m4sTKy1q9qkQPiZ1',
             ])
             ->create([
+                'user_id' => $user->id,
                 'plan_id' => $plan->id,
                 'status'  => 'inactive',
                 'ends_at' => null,
@@ -455,6 +460,8 @@ class StripeWebhooksTest extends TestCase
         $this->assertDatabaseHas('subscriptions', [
             'status' => 'active',
         ]);
+
+        Notification::assertSentTo($user, SubscriptionWasCreatedNotification::class);
 
         Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }

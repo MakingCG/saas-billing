@@ -3,7 +3,6 @@ namespace VueFileManager\Subscription\Domain\Credits\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use VueFileManager\Subscription\Support\Events\AdminBonusAddedEvent;
 
 class CreditUserBalanceController extends Controller
 {

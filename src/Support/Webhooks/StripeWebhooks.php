@@ -12,7 +12,6 @@ use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\SubscriptionDriver;
 use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
-use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification;
 
 trait StripeWebhooks
 {
@@ -66,6 +65,12 @@ trait StripeWebhooks
             ]);
 
             $driver->subscription->refresh();
+
+            // Get notification
+            $SubscriptionWasCreatedNotification = config('subscription.notifications.SubscriptionWasCreatedNotification');
+
+            // Notify user
+            $driver->subscription->user->notify(new $SubscriptionWasCreatedNotification($driver->subscription));
 
             // Emit SubscriptionWasCreated
             SubscriptionWasCreated::dispatch($driver->subscription);

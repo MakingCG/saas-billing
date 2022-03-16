@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Credits\Notifications;
 
 use Illuminate\Bus\Queueable;

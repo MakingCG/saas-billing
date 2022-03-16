@@ -5,12 +5,14 @@ use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use Tests\Mocking\PayPal\VerifyWebhookPayPalMocksClass;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasUpdated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCancelled;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\Subscriptions\Notifications\SubscriptionWasCreatedNotification;
 
 class PayPalWebhooksTest extends TestCase
 {
@@ -86,6 +88,8 @@ class PayPalWebhooksTest extends TestCase
         $this->assertDatabaseHas('subscription_drivers', [
             'driver_subscription_id' => 'I-KHY6B042F1YA',
         ]);
+
+        Notification::assertSentTo($user, SubscriptionWasCreatedNotification::class);
 
         Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }

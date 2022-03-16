@@ -1,13 +1,13 @@
 <?php
 namespace Tests\Domain\Balances;
 
-use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Tests\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Notification;
+use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 use VueFileManager\Subscription\Domain\Credits\Notifications\BonusCreditAddedNotification;
 use VueFileManager\Subscription\Domain\Credits\Notifications\InsufficientBalanceNotification;
-use VueFileManager\Subscription\Domain\Credits\Exceptions\InsufficientBalanceException;
 
 class BalanceTest extends TestCase
 {
