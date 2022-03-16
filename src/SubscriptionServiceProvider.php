@@ -5,10 +5,10 @@ use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\App\Scheduler\HaltExpiredSubscriptionsSchedule;
+use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 

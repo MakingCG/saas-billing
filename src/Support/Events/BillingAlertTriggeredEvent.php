@@ -11,5 +11,6 @@ class BillingAlertTriggeredEvent
 
     public function __construct(
         public BillingAlert $alert
-    ) {}
+    ) {
+    }
 }
