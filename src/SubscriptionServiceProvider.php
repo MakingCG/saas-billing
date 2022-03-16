@@ -5,6 +5,7 @@ use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\App\Scheduler\HaltExpiredSubscriptionsSchedule;
@@ -53,6 +54,10 @@ class SubscriptionServiceProvider extends PackageServiceProvider
 
             // Settle pre-paid subscriptions
             $schedule->call(SettlePrePaidSubscriptionPeriodSchedule::class)
+                ->daily();
+
+            // Check billing alerts
+            $schedule->call(CheckAndTriggerBillingAlertsSchedule::class)
                 ->daily();
 
             // Try failed credit card charge again

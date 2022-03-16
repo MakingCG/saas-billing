@@ -32,9 +32,10 @@ class BillingAlertController extends Controller
             return response('Done', 204);
         }
 
-        $billingAlert->update(
-            $request->only('amount')
-        );
+        $billingAlert->update([
+            'amount'    => $request->input('amount'),
+            'triggered' => false,
+        ]);
 
         return response('Done', 204);
     }
