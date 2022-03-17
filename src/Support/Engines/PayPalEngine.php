@@ -105,7 +105,6 @@ class PayPalEngine implements Engine
 
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_revise
-     * TODO: confirm subscription change on frontend
      */
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
@@ -228,6 +227,6 @@ class PayPalEngine implements Engine
 
     public function createSubscription(Plan $plan, $user = null): array
     {
-        // TODO: Implement createSubscription() method.
+        return [];
     }
 }

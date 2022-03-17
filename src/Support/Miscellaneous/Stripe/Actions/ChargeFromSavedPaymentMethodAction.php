@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Actions;
 
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\Services\StripeHttpClient;
 use VueFileManager\Subscription\Support\Miscellaneous\Stripe\Exceptions\ChargeFailedException;
 
@@ -18,10 +19,15 @@ class ChargeFromSavedPaymentMethodAction
         // Get payment method
         $paymentMethodCode = $user->creditCards()->first()->reference;
 
+        // Get plan
+        $plan = Plan::where('type', 'metered')
+            ->where('status', 'active')
+            ->first();
+
         // Create payment intent
         $paymentIntent = $this->post('/payment_intents', [
             'amount'         => $amount * 100,
-            'currency'       => 'usd', // TODO: set currency
+            'currency'       => strtolower($plan->currency),
             'customer'       => $user->customerId('stripe'),
             'payment_method' => $paymentMethodCode,
             'off_session'    => 'true',

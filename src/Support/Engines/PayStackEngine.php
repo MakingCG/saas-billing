@@ -194,11 +194,11 @@ class PayStackEngine implements Engine
 
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
-        //TODO: frontend implementation
+        //
     }
 
     public function createSubscription(Plan $plan, $user = null): array
     {
-        // TODO: Implement createSubscription() method.
+        return [];
     }
 }
