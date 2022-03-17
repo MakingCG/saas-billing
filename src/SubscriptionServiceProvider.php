@@ -1,6 +1,8 @@
 <?php
 namespace VueFileManager\Subscription;
 
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Routing\Router;
 use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
@@ -35,6 +37,12 @@ class SubscriptionServiceProvider extends PackageServiceProvider
 
     public function bootingPackage()
     {
+        $router = $this->app->make(Router::class);
+
+        // Register middleware
+        $router->aliasMiddleware('admin', config('subscription.middlewares.admin'));
+
+        // Load migrations
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         // Register validator

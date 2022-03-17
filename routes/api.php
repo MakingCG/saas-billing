@@ -56,7 +56,7 @@ Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api', 'auth:san
 });
 
 // Admin
-Route::group(['prefix' => 'api/subscriptions/admin', 'middleware' => ['api', 'auth:sanctum']], function () {
+Route::group(['prefix' => 'api/subscriptions/admin', 'middleware' => ['api', 'auth:sanctum', 'admin']], function () {
     // Plans
     Route::get('/plans/{plan}/subscribers', GetPlanSubscribersController::class);
     Route::patch('/plans/{plan}/features', UpdatePlanFixedItemAction::class);

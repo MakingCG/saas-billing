@@ -71,7 +71,9 @@ class FixedPlansTest extends TestCase
     public function it_create_fixed_plan()
     {
         $user = User::factory()
-            ->create();
+            ->create([
+                'role' => 'admin',
+            ]);
 
         $plan = Plan::factory()
             ->make();
@@ -135,7 +137,9 @@ class FixedPlansTest extends TestCase
     public function it_update_plan()
     {
         $user = User::factory()
-            ->create();
+            ->create([
+                'role' => 'admin',
+            ]);
 
         $plan = Plan::factory()
             ->create();
@@ -230,7 +234,9 @@ class FixedPlansTest extends TestCase
     public function it_delete_plan()
     {
         $user = User::factory()
-            ->create();
+            ->create([
+                'role' => 'admin',
+            ]);
 
         $plan = Plan::factory()
             ->hasFixedFeatures(1)
