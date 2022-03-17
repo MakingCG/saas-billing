@@ -1136,7 +1136,7 @@ class StripeWebhooksTest extends TestCase
     public function stripe_webhook_deleted_subscription()
     {
         Event::fake([
-            SubscriptionWasExpired::class,
+            SubscriptionWasCancelled::class,
         ]);
 
         $subscription = Subscription::factory()
@@ -1332,7 +1332,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => Carbon::createFromTimestamp(1641113362),
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**

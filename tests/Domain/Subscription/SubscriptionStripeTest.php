@@ -27,7 +27,8 @@ class SubscriptionStripeTest extends TestCase
 
         $plan = Plan::factory()
             ->hasDrivers([
-                'driver' => 'stripe',
+                'driver'         => 'stripe',
+                'driver_plan_id' => 'price_1K4pY4B9m4sTKy1qdtaZQjhM',
             ])
             ->create();
 
@@ -175,7 +176,7 @@ class SubscriptionStripeTest extends TestCase
     /**
      * @test
      */
-    public function it_swap_paypal_subscription()
+    public function it_swap_stripe_subscription()
     {
         $user = User::factory()
             ->create();
@@ -289,57 +290,30 @@ class SubscriptionStripeTest extends TestCase
                 'trial_start'                       => null,
             ])
             ->push([
-                'id'                   => 'prod_KkKCKsfkSYPhcj',
-                'object'               => 'product',
-                'active'               => true,
-                'attributes'           => [],
-                'created'              => 1639067568,
-                'description'          => 'Best for all your needs',
-                'images'               => [],
-                'livemode'             => false,
-                'metadata'             => [],
-                'name'                 => 'Elite Pack',
-                'package_dimensions'   => null,
-                'shippable'            => null,
-                'statement_descriptor' => null,
-                'tax_code'             => null,
-                'type'                 => 'service',
-                'unit_label'           => null,
-                'updated'              => 1639067568,
-                'url'                  => 'http://localhost',
-            ])
-            ->push([
-                'object'   => 'list',
-                'data'     => [
-                    [
-                        'id'                  => 'price_1K4pY4B9m4sTKy1qdtaZQjhM',
-                        'object'              => 'price',
-                        'active'              => true,
-                        'billing_scheme'      => 'per_unit',
-                        'created'             => 1639067568,
-                        'currency'            => 'usd',
-                        'livemode'            => false,
-                        'lookup_key'          => null,
-                        'metadata'            => [],
-                        'nickname'            => null,
-                        'product'             => 'prod_KkKCKsfkSYPhcj',
-                        'recurring'           => [
-                            'aggregate_usage'   => null,
-                            'interval'          => 'month',
-                            'interval_count'    => 1,
-                            'trial_period_days' => null,
-                            'usage_type'        => 'licensed',
-                        ],
-                        'tax_behavior'        => 'unspecified',
-                        'tiers_mode'          => null,
-                        'transform_quantity'  => null,
-                        'type'                => 'recurring',
-                        'unit_amount'         => 5999,
-                        'unit_amount_decimal' => '5999',
-                    ],
+                'id'                  => 'price_1K4pY4B9m4sTKy1qdtaZQjhM',
+                'object'              => 'price',
+                'active'              => true,
+                'billing_scheme'      => 'per_unit',
+                'created'             => 1647440806,
+                'currency'            => 'usd',
+                'livemode'            => false,
+                'lookup_key'          => null,
+                'metadata'            => [
                 ],
-                'has_more' => false,
-                'url'      => '/v1/prices',
+                'nickname'            => 'default',
+                'product'             => 'prod_KkKCKsfkSYPhcj',
+                'recurring'           => [
+                    'aggregate_usage' => null,
+                    'interval'        => 'month',
+                    'interval_count'  => 1,
+                    'usage_type'      => 'licensed',
+                ],
+                'tax_behavior'        => 'unspecified',
+                'tiers_mode'          => null,
+                'transform_quantity'  => null,
+                'type'                => 'recurring',
+                'unit_amount'         => 55,
+                'unit_amount_decimal' => '55',
             ])
             ->push([
                 'id'                                => 'sub_1K2IVuB9m4sTKy1qBfK8l0A8',
@@ -479,6 +453,6 @@ class SubscriptionStripeTest extends TestCase
                 'id' => $planHigher->driverId('stripe'),
             ]);
 
-        Http::assertSentCount(4);
+        Http::assertSentCount(3);
     }
 }
