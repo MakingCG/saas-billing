@@ -15,7 +15,7 @@ class CheckAndTriggerBillingAlertsScheduleTest extends TestCase
     /**
      * @test
      */
-    public function it_trigger_billing_alert_and_dispatch_event()
+    public function it_trigger_billing_alert_and_send_notification()
     {
         $user = User::factory()
             ->create();
