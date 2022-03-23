@@ -7,7 +7,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 class CreateMeteredPlanData extends DataTransferObject
 {
     public array|Collection $meters;
-    public string $description;
+    public ?string $description = null;
     public string $currency;
     public string $name;
     public string $type;

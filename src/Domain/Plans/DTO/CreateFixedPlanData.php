@@ -11,7 +11,7 @@ class CreateFixedPlanData extends DataTransferObject
     public float $amount;
     public string $currency;
     public string $interval;
-    public string $description;
+    public ?string $description = null;
     public array|Collection $features;
 
     public static function fromRequest($request): self
