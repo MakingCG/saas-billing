@@ -27,7 +27,7 @@ class TransactionsTest extends TestCase
     {
         $user = User::factory()
             ->hasTransactions(2)
-            ->create();
+            ->create(['role' => 'admin']);
 
         $this
             ->actingAs($user)

@@ -27,6 +27,17 @@ class CreateStripeSetupIntentController extends Controller
             ],
         ]);
 
+        // Return error response if request failed
+        if ($paymentIntent->failed()) {
+            abort(
+                response()->json([
+                    'type'    => 'setup-intent-creation-error',
+                    'title'   => "Your setup intent couldn't be created",
+                    'message' => $paymentIntent->json()['error']['message'],
+                ], 500)
+            );
+        }
+
         return response([
             'client_secret' => $paymentIntent->json()['client_secret'],
         ], 201);

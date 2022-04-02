@@ -18,7 +18,7 @@ class EngineManager extends Manager
 {
     public function getDefaultDriver(): string
     {
-        return $this->config->get('subscription.driver');
+        return 'stripe';
     }
 
     public function createStripeDriver(): Engine

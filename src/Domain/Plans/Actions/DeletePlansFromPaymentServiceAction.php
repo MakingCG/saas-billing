@@ -11,20 +11,16 @@ class DeletePlansFromPaymentServiceAction
 
     public function __construct(
         public EngineManager $subscription
-    ) {
-    }
+    ) {}
 
-    public function __invoke(Plan $plan)
+    public function __invoke(Plan $plan): void
     {
         // Delete plan from all available payment gateways
-        collect(config('subscription.available_drivers'))
-            ->each(function ($driver) use ($plan) {
-                // Check if external driver exist
-                if ($plan->driverId($driver)) {
-                    $this->subscription
-                        ->driver($driver)
-                        ->deletePlan($plan->driverId($driver));
-                }
-            });
+        collect($plan->drivers->pluck('driver'))
+            ->each(fn($driver) => $this->subscription
+                ->driver($driver)
+                ->deletePlan(
+                    $plan->driverId($driver)
+                ));
     }
 }

@@ -18,6 +18,7 @@ use Tests\Mocking\PayStack\UpdatePlanPaystackMocksClass;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanFixedFeature;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class FixedPlansTest extends TestCase
 {
@@ -102,7 +103,7 @@ class FixedPlansTest extends TestCase
                 'name' => $plan->name,
             ]);
 
-        collect(config('subscription.available_drivers'))
+        collect(getActiveDrivers())
             ->each(
                 fn ($driver) => $this
                     ->assertDatabaseHas('plan_drivers', [
@@ -155,7 +156,7 @@ class FixedPlansTest extends TestCase
             );
 
         // Create plan drivers
-        collect(config('subscription.available_drivers'))
+        collect(getActiveDrivers())
             ->each(
                 fn ($driver) => PlanDriver::create([
                     'driver'         => $driver,
@@ -231,7 +232,7 @@ class FixedPlansTest extends TestCase
     /**
      * @test
      */
-    public function it_delete_plan()
+    public function it_delete_plan_as_archived()
     {
         $user = User::factory()
             ->create([
@@ -242,8 +243,16 @@ class FixedPlansTest extends TestCase
             ->hasFixedFeatures(1)
             ->create();
 
+        Subscription::factory()
+            ->create([
+                'type'       => 'fixed',
+                'status'     => 'active',
+                'plan_id'    => $plan->id,
+                'user_id'    => $user->id,
+            ]);
+
         // Create plan drivers
-        collect(config('subscription.available_drivers'))
+        collect(getActiveDrivers())
             ->each(
                 fn ($driver) => PlanDriver::create([
                     'driver'         => $driver,
@@ -263,18 +272,54 @@ class FixedPlansTest extends TestCase
             ->delete("/api/subscriptions/admin/plans/{$plan->id}")
             ->assertNoContent();
 
-        // TODO: this can't be fixed, must be flexible for new gateway development
-        /*$this
-            ->assertDatabaseCount('plan_fixed_features', 2)
-            ->assertDatabaseCount('plan_drivers', 2);*/
-
         $this->assertDatabaseHas('plans', [
             'type'        => 'fixed',
             'id'          => $plan->id,
             'status'      => 'archived',
         ]);
+    }
 
-        // TODO: this can't be fixed, must be flexible for new gateway development
-        //Http::assertSentCount(6);
+    /**
+     * @test
+     */
+    public function it_delete_plan_hardly()
+    {
+        $user = User::factory()
+            ->create([
+                'role' => 'admin',
+            ]);
+
+        $plan = Plan::factory()
+            ->hasFixedFeatures(1)
+            ->create();
+
+        // Create plan drivers
+        collect(getActiveDrivers())
+            ->each(
+                fn($driver) => PlanDriver::create([
+                    'driver'         => $driver,
+                    'plan_id'        => $plan->id,
+                    'driver_plan_id' => Str::random(),
+                ])
+            );
+
+        resolve(GetPlanStripeMocksClass::class)($plan);
+        resolve(DeletePlanPayPalMocksClass::class)($plan);
+        resolve(DeletePlanStripeMocksClass::class)($plan);
+        resolve(DeletePlanPaystackMocksClass::class)($plan);
+
+        // 2. delete plans
+        $this
+            ->actingAs($user)
+            ->delete("/api/subscriptions/admin/plans/{$plan->id}")
+            ->assertNoContent();
+
+        $this
+            ->assertDatabaseCount('plan_fixed_features', 0)
+            ->assertDatabaseCount('plan_drivers', 0)
+            ->assertDatabaseMissing('plans', [
+                'type' => 'fixed',
+                'id'   => $plan->id,
+            ]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
+use ErrorException;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,6 +21,8 @@ class PayPalEngine implements Engine
 
     /**
      * https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create
+     *
+     * @throws ErrorException
      */
     public function createFixedPlan(CreateFixedPlanData $data): array
     {
@@ -51,6 +54,11 @@ class PayPalEngine implements Engine
                 'payment_failure_threshold' => 3,
             ],
         ]);
+
+        // Check if there is any error
+        if ($plan->failed()) {
+            throw new ErrorException($plan->json()['message']);
+        }
 
         return [
             'id'   => $plan->json()['id'],
@@ -193,6 +201,8 @@ class PayPalEngine implements Engine
     /**
      * If isn't any product created, create them. If there is
      * some product, then get his id.
+     *
+     * @throws ErrorException
      */
     private function getOrCreateProductId(): string
     {
@@ -211,6 +221,11 @@ class PayPalEngine implements Engine
             'type'        => 'SERVICE',
             'category'    => 'SOFTWARE',
         ]);
+
+        // Check if there is any error
+        if ($response->failed()) {
+            throw new ErrorException($response->json()['message']);
+        }
 
         return $response->json()['id'];
     }

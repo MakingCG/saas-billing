@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
+use ErrorException;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -21,10 +22,13 @@ class PayStackEngine implements Engine
 
     /**
      * https://paystack.com/docs/api/#plan-create
+     *
+     * @throws ErrorException
      */
     public function createFixedPlan(CreateFixedPlanData $data): array
     {
         // Get supported currency by paystack
+        // TODO: check this
         $supportedCurrencies = ['ZAR'];
 
         // Check currency availability form plan
@@ -36,6 +40,11 @@ class PayStackEngine implements Engine
             'amount'   => $data->amount * 100,
             'interval' => mapPaystackIntervals($data->interval),
         ]);
+
+        // Check if there is any error
+        if ($response->json()['status'] === false) {
+            throw new ErrorException($response->json()['message']);
+        }
 
         return [
             'id'   => $response->json()['data']['plan_code'],

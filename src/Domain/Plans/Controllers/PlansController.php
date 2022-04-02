@@ -96,11 +96,20 @@ class PlansController extends Controller
             return response('Deleted', 204);
         }
 
-        $deletePlansFromPaymentService($plan);
+        // Delete via API when plan type is fixed
+        if ($plan->type === 'fixed') {
+            $deletePlansFromPaymentService($plan);
+        }
 
-        $plan->update([
-            'status' => 'archived',
-        ]);
+        // Archive plan if there are some subscribed customers
+        if ($plan->subscriptions()->exists()) {
+            $plan->update(['status' => 'archived']);
+        }
+
+        // Delete plan if there isn't any subscribed customer
+        if ($plan->subscriptions()->doesntExist()) {
+            $plan->delete();
+        }
 
         return response('Deleted', 204);
     }

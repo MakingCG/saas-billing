@@ -12,7 +12,7 @@ class MeteredPlanTest extends TestCase
     public function it_create_metered_plan()
     {
         $user = User::factory()
-            ->create();
+            ->create(['role' => 'admin']);
 
         $this
             ->actingAs($user)

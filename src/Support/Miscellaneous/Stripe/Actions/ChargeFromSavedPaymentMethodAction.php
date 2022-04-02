@@ -19,15 +19,13 @@ class ChargeFromSavedPaymentMethodAction
         // Get payment method
         $paymentMethodCode = $user->creditCards()->first()->reference;
 
-        // Get plan
-        $plan = Plan::where('type', 'metered')
-            ->where('status', 'active')
-            ->first();
+        // Get plan currency
+        $currency = $user->subscription->plan->currency;
 
         // Create payment intent
         $paymentIntent = $this->post('/payment_intents', [
             'amount'         => $amount * 100,
-            'currency'       => strtolower($plan->currency),
+            'currency'       => strtolower($currency),
             'customer'       => $user->customerId('stripe'),
             'payment_method' => $paymentMethodCode,
             'off_session'    => 'true',

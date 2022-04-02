@@ -11,6 +11,8 @@ use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeFailedPaymentTest extends TestCase
 {
@@ -23,6 +25,20 @@ class StripeFailedPaymentTest extends TestCase
     {
         $user = User::factory()
             ->create();
+
+        $plan = Plan::factory()
+            ->create([
+                'type'     => 'metered',
+                'currency' => 'USD',
+            ]);
+
+        Subscription::factory()
+            ->create([
+                'type'       => 'pre-paid',
+                'status'     => 'active',
+                'plan_id'    => $plan->id,
+                'user_id'    => $user->id,
+            ]);
 
         CreditCard::factory()
             ->create([
@@ -324,6 +340,20 @@ class StripeFailedPaymentTest extends TestCase
         $user = User::factory()
             ->create();
 
+        $plan = Plan::factory()
+            ->create([
+                'type'     => 'metered',
+                'currency' => 'USD',
+            ]);
+
+        Subscription::factory()
+            ->create([
+                'type'       => 'pre-paid',
+                'status'     => 'active',
+                'plan_id'    => $plan->id,
+                'user_id'    => $user->id,
+            ]);
+
         CreditCard::factory()
             ->create([
                 'user_id' => $user->id,
@@ -531,6 +561,20 @@ class StripeFailedPaymentTest extends TestCase
     {
         $user = User::factory()
             ->create();
+
+        $plan = Plan::factory()
+            ->create([
+                'type'     => 'metered',
+                'currency' => 'USD',
+            ]);
+
+        Subscription::factory()
+            ->create([
+                'type'       => 'pre-paid',
+                'status'     => 'active',
+                'plan_id'    => $plan->id,
+                'user_id'    => $user->id,
+            ]);
 
         Customer::create([
             'user_id'        => $user->id,

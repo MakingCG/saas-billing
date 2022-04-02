@@ -2,6 +2,8 @@
 namespace Tests;
 
 use Carbon\Carbon;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Tests\Models\User;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Illuminate\Support\Facades\Notification;
@@ -39,23 +41,19 @@ class TestCase extends Orchestra
         ];
     }
 
-    public function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        $this->loadDefaultEnv($app);
+
         config()->set('auth.providers.users.model', User::class);
-
         config()->set('subscription.metered_billing.settlement_period', 30);
+    }
 
-        config()->set('subscription.credentials.paypal.id', 'AX96WuhfdCT1bgwUo6uGtAefvdufFaKh0XVRTFUDoh_rTV7RpRGX8ipENIweybNY_fnp0MqqSIvZRp8t');
-        config()->set('subscription.credentials.paypal.secret', 'EKJ7GV2zz5iSlvulPPb7kbqum3GN8Rb1kUCMnhhkmQEGftmVhUVz5_BpLwFvqcMH9v-qQmNhcaaRzsfl');
-        config()->set('subscription.credentials.paypal.webhook_id', '5US38870H49278334');
-        config()->set('subscription.credentials.paypal.is_live', false);
+    protected function loadDefaultEnv(Application $app): void
+    {
+        $app->useEnvironmentPath(__DIR__ . '/..');
+        $app->bootstrapWith([LoadEnvironmentVariables::class]);
 
-        config()->set('subscription.credentials.paystack.secret', 'sk_test_5917169d64e9a5aa41f0b07eb43e3f143bc36f08');
-        config()->set('subscription.credentials.paystack.public_key', 'pk_test_5d69324328b8904cdd3cad17ff60892c93abfe89');
-
-        config()->set('subscription.credentials.stripe.secret', 'sk_test_51K1tczB9m4sTKy1qT03hg6jAP5CT0ERS7WJLY0FutMc45vqF1jxtqiAxdi9qXIEjEsp5rF0y4pHTCCwhafNgjZIT00CC4ZzW6N');
-        config()->set('subscription.credentials.stripe.public_key', 'pk_test_51K1tczB9m4sTKy1qbG6iOguMBDJsGUBFjhQ5rOXphms6oqRtfduUIhxA4f7Vif0nCeHdn2oJ0c56OBBZjF1jfigb00ONWOAHDQ');
-        config()->set('subscription.credentials.stripe.webhook_key', 'whsec_0zNjKnxyQldSNvRfy2HLwWrjJ9joZOHa');
+        parent::getEnvironmentSetUp($app);
     }
 }

@@ -14,9 +14,7 @@ class CustomerFactory extends Factory
     {
         return [
             'user_id'        => Str::uuid(),
-            'driver'         => $this->faker->randomElement(
-                config('subscription.available_drivers')
-            ),
+            'driver'         => $this->faker->randomElement(getActiveDrivers()),
             'driver_user_id' => 'CUS_' . Str::random(15),
             'created_at'     => $this->faker->dateTimeBetween('-36 months'),
         ];

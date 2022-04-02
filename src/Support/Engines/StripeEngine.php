@@ -2,6 +2,7 @@
 namespace VueFileManager\Subscription\Support\Engines;
 
 use Carbon\Carbon;
+use ErrorException;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Stripe\WebhookSignature;
@@ -28,9 +29,11 @@ class StripeEngine implements Engine
         return $this->get("/prices/$planId")->json();
     }
 
-    /*
+    /**
      * https://stripe.com/docs/api/products/create?lang=php
      * https://stripe.com/docs/api/prices/create?lang=php
+     *
+     * @throws ErrorException
      */
     public function createFixedPlan(CreateFixedPlanData $data): array
     {
@@ -41,6 +44,11 @@ class StripeEngine implements Engine
             'description' => $data->description,
         ]);
 
+        // Check if there is any error
+        if ($product->failed()) {
+            throw new ErrorException($product->json()['error']['message']);
+        }
+
         // Next create subscription plan
         $price = $this->post('/prices', [
             'product'     => $product->json()['id'],
@@ -50,6 +58,11 @@ class StripeEngine implements Engine
                 'interval' => $data->interval,
             ],
         ]);
+
+        // Check if there is any error
+        if ($price->failed()) {
+            throw new ErrorException($price->json()['error']['message']);
+        }
 
         return [
             'id'   => $price->json()['id'],
@@ -83,8 +96,10 @@ class StripeEngine implements Engine
         $this->delete("/products/{$price['product']}");
     }
 
-    /*
+    /**
      * https://stripe.com/docs/api/customers/create
+     *
+     * @throws ErrorException
      */
     public function createCustomer(array $user): Response
     {
@@ -96,6 +111,11 @@ class StripeEngine implements Engine
             'name'     => $user['name'] . ' ' . $user['surname'],
             'phone'    => $user['phone'] ?? null,
         ]);
+
+        // Check if there is any error
+        if ($response->failed()) {
+            throw new ErrorException($response->json()['error']['message']);
+        }
 
         // Store customer id to the database
         Customer::create([

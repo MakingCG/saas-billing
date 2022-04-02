@@ -1,15 +1,17 @@
 <?php
+
 namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
+use ErrorException;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
+use VueFileManager\Subscription\Support\EngineManager;
 
 class StoreFixedPlanAction
 {
     public function __construct(
-        private CreateFixedPlansViaDriversAPIAction $createPlansViaDriversAPI,
-    ) {
-    }
+        private EngineManager $subscription,
+    ) {}
 
     public function __invoke(CreateFixedPlanData $data)
     {
@@ -32,9 +34,36 @@ class StoreFixedPlanAction
         }
 
         // Create plan in available gateways
-        $this->createPlansViaDriversAPI
-            ->onQueue()
-            ->execute($data, $plan);
+        collect(getActiveDrivers())
+            ->each(function ($driver) use ($data, $plan) {
+                try {
+                    // Create plan via gateway api
+                    $driverPlan = $this->subscription
+                        ->driver($driver)
+                        ->createFixedPlan($data);
+
+                    // Attach driver plan id into internal plan record
+                    $plan
+                        ->drivers()
+                        ->create([
+                            'driver_plan_id' => $driverPlan['id'],
+                            'driver'         => $driver,
+                        ]);
+                } catch (ErrorException $error) {
+
+                    // Delete previously created plan
+                    $plan->delete();
+
+                    // Return error response
+                    abort(
+                        response()->json([
+                            'type'    => 'plan-creation-error',
+                            'title'   => "Plan couldn't be created",
+                            'message' => $error->getMessage(),
+                        ], 500)
+                    );
+                }
+            });
 
         return $plan;
     }

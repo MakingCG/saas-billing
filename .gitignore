@@ -6,7 +6,7 @@ build
 composer.lock
 coverage
 docs
-phpunit.xml
+phpunit.xml.dist
 psalm.xml
 testbench.yaml
 vendor

@@ -42,15 +42,6 @@ return [
         'BonusCreditAddedNotification'                => \VueFileManager\Subscription\Domain\Credits\Notifications\BonusCreditAddedNotification::class,
     ],
 
-    /*
-     * Active drivers to handle subscription
-     */
-    'available_drivers' => [
-        'paystack',
-        'paypal',
-        'stripe',
-    ],
-
     'metered_billing'   => [
         'settlement_period' => 30,
     ],
@@ -65,8 +56,6 @@ return [
             '52.31.139.75',
         ],
     ],
-
-    'driver' => env('SUBSCRIPTION_DRIVER', 'stripe'),
 
     'is_demo' => env('APP_DEMO', false),
 ];

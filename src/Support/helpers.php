@@ -1,5 +1,32 @@
 <?php
 
+if (! function_exists('getActiveDrivers')) {
+    /**
+     * Get active drivers
+     */
+    function getActiveDrivers(): array
+    {
+        $isStripe = config('subscription.credentials.stripe.secret')
+            && config('subscription.credentials.stripe.public_key')
+            && config('subscription.credentials.stripe.webhook_key');
+
+        $isPayPal = config('subscription.credentials.paypal.id')
+            && config('subscription.credentials.paypal.secret')
+            && config('subscription.credentials.paypal.webhook_id');
+
+        $isPaystack = config('subscription.credentials.paystack.secret')
+            && config('subscription.credentials.paystack.public_key');
+
+        $activeDrivers = array_filter([
+            'paystack' => $isPaystack,
+            'paypal' => $isPayPal,
+            'stripe' => $isStripe,
+        ], fn($driver) => $driver);
+
+        return array_keys($activeDrivers);
+    }
+}
+
 if (! function_exists('format_currency')) {
     /**
      * Format currency

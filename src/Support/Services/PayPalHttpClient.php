@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Services;
 
+use ErrorException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -60,6 +61,10 @@ trait PayPalHttpClient
                     'Accept'          => 'application/json',
                     'Accept-Language' => 'en_US',
                 ])->post("$this->api/oauth2/token");
+
+            if ($response->failed()) {
+                throw new ErrorException($response->json()['error_description']);
+            }
 
             return $response->json()['access_token'];
         });
