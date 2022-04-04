@@ -18,7 +18,7 @@ return [
             'id'         => env('PAYPAL_CLIENT_ID'),
             'secret'     => env('PAYPAL_CLIENT_SECRET'),
             'webhook_id' => env('PAYPAL_WEBHOOK_ID'),
-            'is_live'    => env('PAYPAL_IS_LIVE'),
+            'is_live'    => env('PAYPAL_IS_LIVE', false),
         ],
     ],
 

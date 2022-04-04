@@ -1,8 +1,11 @@
 <?php
+
 namespace VueFileManager\Subscription\App\Console\Commands;
 
+use ErrorException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
@@ -14,7 +17,8 @@ class SynchronizePlansCommand extends Command
 
     public function __construct(
         private EngineManager $subscription,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -30,19 +34,76 @@ class SynchronizePlansCommand extends Command
         }
 
         // Don't synchronize plans
-        if (! $canSynchronizePlans) {
+        if (!$canSynchronizePlans) {
             $this->info('Nothing to synchronize.');
         }
     }
 
     public function synchronizePlans()
     {
+        // Check if there are some uncreated plans
+        Plan::where('status', 'active')
+            ->where('type', 'fixed')
+            ->cursor()
+            ->each(function ($plan) {
+                $driversToSynchronize = array_diff(
+                    getActiveDrivers(), $plan->drivers()->pluck('driver')->toArray()
+                );
+
+                // Create missing plans
+                foreach ($driversToSynchronize as $driver) {
+                    try {
+                        // Format message
+                        $message = "Creating plan {$plan->name}... for $driver";
+
+                        // Console log
+                        $this->info($message);
+
+                        // Error log
+                        Log::info($message);
+
+                        // Format data
+                        $data = CreateFixedPlanData::fromArray([
+                            'type'        => 'fixed',
+                            'name'        => $plan->name,
+                            'description' => $plan->description,
+                            'interval'    => $plan->interval,
+                            'amount'      => $plan->amount,
+                            'currency'    => $plan->currency,
+                            'features'    => [],
+                        ]);
+
+                        $newPlan = $this->subscription
+                            ->driver($driver)
+                            ->createFixedPlan($data);
+
+                        // Attach driver plan id into internal plan record
+                        $plan
+                            ->drivers()
+                            ->create([
+                                'driver_plan_id' => $newPlan['id'],
+                                'driver'         => $driver,
+                            ]);
+                    } catch (ErrorException $error) {
+
+                        // Format message
+                        $message = "Creating plan {$plan->name}... for $driver failed because of {$error->getMessage()}";
+
+                        // Console log
+                        $this->warn($message);
+
+                        // Error log
+                        Log::error($message);
+                    }
+                }
+            });
+
         // Update plan via gateways api
-        // TODO: check if there some uncreated plans
-        // TODO: get only active plans
         collect(getActiveDrivers())
             ->each(function ($driver) {
-                Plan::all()
+                Plan::where('status', 'active')
+                    ->where('type', 'fixed')
+                    ->cursor()
                     ->each(function ($plan) use ($driver) {
                         $this->info("Synchronizing plans {$plan->name}...");
 
