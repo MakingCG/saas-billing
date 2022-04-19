@@ -43,6 +43,8 @@ class PlanResource extends JsonResource
             'amount'      => $this->amount,
             'features'    => $this->fixedFeatures->pluck('value', 'key'),
             'interval'    => $this->interval,
+            'created_at'  => $this->created_at->formatLocalized('%d. %b. %Y'),
+            'updated_at'  => $this->updated_at->formatLocalized('%d. %b. %Y'),
         ];
     }
 
@@ -63,6 +65,8 @@ class PlanResource extends JsonResource
                     'tiers'              => $price['tiers'],
                 ],
             ]),
+            'created_at'  => $this->created_at->formatLocalized('%d. %b. %Y'),
+            'updated_at'  => $this->updated_at->formatLocalized('%d. %b. %Y'),
         ];
     }
 }

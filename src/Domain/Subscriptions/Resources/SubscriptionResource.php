@@ -26,10 +26,10 @@ class SubscriptionResource extends JsonResource
                     'trial_ends_at' => $this->trial_ends_at,
                     'updated_at'    => $this->updated_at->formatLocalized('%d. %b. %Y'),
                     'created_at'    => $this->created_at->formatLocalized('%d. %b. %Y'),
-                    'renews_at'     => $this->created_at->addDays(28)->formatLocalized('%d. %b. %Y'), // TODO: add renew date
-                    'ends_at'       => $this->ends_at
-                        ? $this->ends_at->formatLocalized('%d. %b. %Y')
-                        : null,
+                    'renews_at'     => $this->renews_at
+                        ? $this->renews_at->formatLocalized('%d. %b. %Y')
+                        : $this->created_at->addDays(28)->formatLocalized('%d. %b. %Y'),
+                    'ends_at'       => $this->ends_at?->formatLocalized('%d. %b. %Y'),
                 ],
                 'relationships' => [
                     'plan' => new PlanResource($this->plan),
