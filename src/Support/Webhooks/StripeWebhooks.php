@@ -3,6 +3,7 @@ namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
@@ -145,14 +146,27 @@ trait StripeWebhooks
         $customer = Customer::where('driver_user_id', $customerCode)
             ->first();
 
-        $subscriptionDriver = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
-            ->first();
+        // Get subscription from database
+        $subscription = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first()
+            ->subscription;
+
+        // Get subscription from stripe api
+        $remoteSubscription = resolve(EngineManager::class)
+            ->driver('stripe')
+            ->getSubscription($subscriptionCode)
+            ->json();
+
+        // Update subscription renews at attribute
+        $subscription->update([
+            'renews_at' => Carbon::parse($remoteSubscription['current_period_end']),
+        ]);
 
         $customer->user->transactions()->create([
             'status'    => 'completed',
             'type'      => 'charge',
             'driver'    => 'stripe',
-            'note'      => $subscriptionDriver->subscription->name,
+            'note'      => $subscription->name,
             'reference' => $request->input('data.object.id'),
             'currency'  => $request->input('data.object.currency'),
             'amount'    => $request->input('data.object.amount_paid') / 100,

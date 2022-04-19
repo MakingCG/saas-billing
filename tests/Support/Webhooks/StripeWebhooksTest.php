@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Support\Webhooks;
 
 use Carbon\Carbon;
@@ -8,6 +9,7 @@ use Tests\Helpers\StripeTestHelpers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use Tests\Mocking\Stripe\GetSubscriptionStripeMocksClass;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
@@ -463,7 +465,7 @@ class StripeWebhooksTest extends TestCase
 
         Notification::assertSentTo($user, SubscriptionWasCreatedNotification::class);
 
-        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -685,7 +687,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -907,7 +909,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => now(),
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1127,7 +1129,7 @@ class StripeWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1332,7 +1334,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => Carbon::createFromTimestamp(1641113362),
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1351,14 +1353,18 @@ class StripeWebhooksTest extends TestCase
 
         $subscription = Subscription::factory()
             ->hasDriver([
-                'driver' => 'stripe',
+                'driver'                 => 'stripe',
+                'driver_subscription_id' => 'sub_1K9m2OB9m4sTKy1qS88pLbae',
             ])
             ->create([
                 'user_id'    => $user->id,
                 'status'     => 'active',
+                'renews_at'  => null,
                 'ends_at'    => null,
                 'created_at' => now()->subDays(14),
             ]);
+
+        resolve(GetSubscriptionStripeMocksClass::class)();
 
         $payload = [
             'id'               => 'evt_1K2BE3B9m4sTKy1qyZYi7bGJ',
@@ -1576,16 +1582,20 @@ class StripeWebhooksTest extends TestCase
             ->postJson('/api/subscriptions/stripe/webhooks', $payload)
             ->assertOk();
 
-        $this->assertDatabaseHas('transactions', [
-            'user_id'   => $user->id,
-            'type'      => 'charge',
-            'status'    => 'completed',
-            'note'      => $subscription->name,
-            'currency'  => 'usd',
-            'amount'    => 20,
-            'driver'    => 'stripe',
-            'reference' => 'in_1K2BE0B9m4sTKy1qiscPsYFt',
-        ]);
+        $this
+            ->assertDatabaseHas('subscriptions', [
+                'renews_at' => '2022-01-23 07:48:32',
+            ])
+            ->assertDatabaseHas('transactions', [
+                'user_id'   => $user->id,
+                'type'      => 'charge',
+                'status'    => 'completed',
+                'note'      => $subscription->name,
+                'currency'  => 'usd',
+                'amount'    => 20,
+                'driver'    => 'stripe',
+                'reference' => 'in_1K2BE0B9m4sTKy1qiscPsYFt',
+            ]);
     }
 
     /**
