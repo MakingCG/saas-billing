@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Webhooks;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
@@ -149,6 +150,29 @@ trait PayStackWebhooks
 
         // Proceed as subscription charge
         if (! empty($plan)) {
+            // Get plan from database
+            $plan = PlanDriver::where('driver_plan_id', $request->input('data.plan.plan_code'))
+                ->first()
+                ->plan;
+
+            // Get subscription from database
+            $subscription = Subscription::where('user_id', $user->id)
+                ->where('plan_id', $plan->id)
+                ->where('status', 'active')
+                ->first();
+
+            // Get subscription from stripe api
+            $remoteSubscription = resolve(EngineManager::class)
+                ->driver('paystack')
+                ->getSubscription($subscription->driverId('paystack'))
+                ->json();
+
+            // Update renews_at attribute
+            $subscription->update([
+                'renews_at' => Carbon::parse($remoteSubscription['data']['next_payment_date']),
+            ]);
+
+            // Store transaction
             $user->transactions()->create([
                 'status'    => 'completed',
                 'type'      => 'charge',
