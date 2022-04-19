@@ -1,4 +1,5 @@
 <?php
+
 namespace VueFileManager\Subscription\Support\Webhooks;
 
 use Carbon\Carbon;
@@ -40,6 +41,37 @@ trait PayPalWebhooks
                 'driver'                 => 'paypal',
                 'driver_subscription_id' => $subscriptionCode,
             ]);
+    }
+
+    public function handleBillingSubscriptionActivated(Request $request): void
+    {
+        $subscriptionCode = $request->input('resource.id');
+
+        // Get subscription from database
+        $subscription = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first()
+            ->subscription;
+
+        // If subscription isn't inactive, then return
+        if ($subscription->status !== 'inactive') {
+            return;
+        }
+
+        // Get notification
+        $SubscriptionWasCreatedNotification = config('subscription.notifications.SubscriptionWasCreatedNotification');
+
+        // Notify user
+        $subscription->user->notify(new $SubscriptionWasCreatedNotification($subscription));
+
+        // Update subscription status
+        $subscription->update([
+            'status' => 'active',
+        ]);
+
+        $subscription->refresh();
+
+        // Dispatch event
+        SubscriptionWasCreated::dispatch($subscription);
     }
 
     public function handleBillingSubscriptionUpdated(Request $request): void
@@ -93,36 +125,16 @@ trait PayPalWebhooks
         // Get subscription code from received webhook
         $subscriptionCode = $request->input('resource.billing_agreement_id');
 
-        // Get original subscription detail from PayPal
-        $remoteSubscription = resolve(EngineManager::class)
-            ->driver('paypal')
-            ->getSubscription($subscriptionCode)
-            ->json();
-
         // Get subscription from database
         $subscription = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
             ->first()
             ->subscription;
 
-        // If subscription is inactive, then activate it
-        if ($subscription->status === 'inactive') {
-
-            // Get notification
-            $SubscriptionWasCreatedNotification = config('subscription.notifications.SubscriptionWasCreatedNotification');
-
-            // Notify user
-            $subscription->user->notify(new $SubscriptionWasCreatedNotification($subscription));
-
-            // Update subscription status
-            $subscription->update([
-                'status' => 'active',
-            ]);
-
-            $subscription->refresh();
-
-            // Dispatch event
-            SubscriptionWasCreated::dispatch($subscription);
-        }
+        // Get original subscription detail from PayPal
+        $remoteSubscription = resolve(EngineManager::class)
+            ->driver('paypal')
+            ->getSubscription($subscriptionCode)
+            ->json();
 
         // Update subscription renews_at attribute
         $subscription->update([
@@ -132,17 +144,12 @@ trait PayPalWebhooks
         // Get our user
         $user = config('auth.providers.users.model')::find($request->input('resource.custom'));
 
-        // Get plan data from our database
-        $plan = PlanDriver::where('driver_plan_id', $remoteSubscription['plan_id'])
-            ->first()
-            ->plan;
-
         // Store transaction
         $user->transactions()->create([
             'status'    => 'completed',
             'type'      => 'charge',
             'driver'    => 'paypal',
-            'note'      => $plan->name,
+            'note'      => $subscription->plan->name,
             'reference' => $request->input('resource.billing_agreement_id'),
             'currency'  => $request->input('resource.amount.currency'),
             'amount'    => $request->input('resource.amount.total'),

@@ -94,6 +94,181 @@ class PayPalWebhooksTest extends TestCase
     /**
      * @test
      */
+    public function paypal_webhook_activated_subscription()
+    {
+        Event::fake([
+            SubscriptionWasCreated::class,
+        ]);
+
+        $user = User::factory()
+            ->create();
+
+        $plan = Plan::factory()
+            ->hasDrivers([
+                'driver' => 'paypal',
+            ])
+            ->create();
+
+        Subscription::factory()
+            ->hasDriver([
+                'driver_subscription_id' => 'I-FHRP6U0C2SP4',
+                'driver'                 => 'paypal',
+            ])
+            ->create([
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'name'    => $plan->name,
+                'status'  => 'inactive',
+            ]);
+
+        $this->postJson('/api/subscriptions/paypal/webhooks', [
+            'id'               => 'WH-9X2911970S406133P-4W189393B5471690K',
+            'event_version'    => '1.0',
+            'create_time'      => '2022-04-19T14:59:38.287Z',
+            'resource_type'    => 'subscription',
+            'resource_version' => '2.0',
+            'event_type'       => 'BILLING.SUBSCRIPTION.ACTIVATED',
+            'summary'          => 'Subscription activated',
+            'resource'         =>
+                [
+                    'quantity'           => '1',
+                    'subscriber'         =>
+                        [
+                            'email_address'    => 'ernest@azet.sk',
+                            'payer_id'         => 'XEBW65LBRMPMA',
+                            'name'             =>
+                                [
+                                    'given_name' => 'Michal',
+                                    'surname'    => 'Kamenicky',
+                                ],
+                            'shipping_address' =>
+                                [
+                                    'address' =>
+                                        [
+                                            'address_line_1' => '1 Main St',
+                                            'admin_area_2'   => 'San Jose',
+                                            'admin_area_1'   => 'CA',
+                                            'postal_code'    => '95131',
+                                            'country_code'   => 'US',
+                                        ],
+                                ],
+                        ],
+                    'create_time'        => '2022-04-19T14:59:17Z',
+                    'custom_id'          => '0907133b-108e-4187-a6c5-2d0061582628',
+                    'plan_overridden'    => false,
+                    'shipping_amount'    =>
+                        [
+                            'currency_code' => 'USD',
+                            'value'         => '0.0',
+                        ],
+                    'start_time'         => '2022-04-19T14:59:00Z',
+                    'update_time'        => '2022-04-19T14:59:19Z',
+                    'billing_info'       =>
+                        [
+                            'outstanding_balance'   =>
+                                [
+                                    'currency_code' => 'USD',
+                                    'value'         => '0.0',
+                                ],
+                            'cycle_executions'      =>
+                                [
+                                    0 =>
+                                        [
+                                            'tenure_type'                    => 'REGULAR',
+                                            'sequence'                       => 1,
+                                            'cycles_completed'               => 1,
+                                            'cycles_remaining'               => 0,
+                                            'current_pricing_scheme_version' => 1,
+                                            'total_cycles'                   => 0,
+                                        ],
+                                ],
+                            'last_payment'          =>
+                                [
+                                    'amount' =>
+                                        [
+                                            'currency_code' => 'USD',
+                                            'value'         => '9.99',
+                                        ],
+                                    'time'   => '2022-04-19T14:59:18Z',
+                                ],
+                            'next_billing_time'     => '2022-05-19T10:00:00Z',
+                            'failed_payments_count' => 0,
+                        ],
+                    'links'              =>
+                        [
+                            0 =>
+                                [
+                                    'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-FHRP6U0C2SP4/cancel',
+                                    'rel'     => 'cancel',
+                                    'method'  => 'POST',
+                                    'encType' => 'application/json',
+                                ],
+                            1 =>
+                                [
+                                    'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-FHRP6U0C2SP4',
+                                    'rel'     => 'edit',
+                                    'method'  => 'PATCH',
+                                    'encType' => 'application/json',
+                                ],
+                            2 =>
+                                [
+                                    'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-FHRP6U0C2SP4',
+                                    'rel'     => 'self',
+                                    'method'  => 'GET',
+                                    'encType' => 'application/json',
+                                ],
+                            3 =>
+                                [
+                                    'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-FHRP6U0C2SP4/suspend',
+                                    'rel'     => 'suspend',
+                                    'method'  => 'POST',
+                                    'encType' => 'application/json',
+                                ],
+                            4 =>
+                                [
+                                    'href'    => 'https://api.sandbox.paypal.com/v1/billing/subscriptions/I-FHRP6U0C2SP4/capture',
+                                    'rel'     => 'capture',
+                                    'method'  => 'POST',
+                                    'encType' => 'application/json',
+                                ],
+                        ],
+                    'id'                 => 'I-FHRP6U0C2SP4',
+                    'plan_id'            => 'P-9F013305BN313892PMI5BTZA',
+                    'status'             => 'ACTIVE',
+                    'status_update_time' => '2022-04-19T14:59:19Z',
+                ],
+            'links'            =>
+                [
+                    0 =>
+                        [
+                            'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-9X2911970S406133P-4W189393B5471690K',
+                            'rel'    => 'self',
+                            'method' => 'GET',
+                        ],
+                    1 =>
+                        [
+                            'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-9X2911970S406133P-4W189393B5471690K/resend',
+                            'rel'    => 'resend',
+                            'method' => 'POST',
+                        ],
+                ],
+        ])->assertOk();
+
+        $this->assertDatabaseHas('subscriptions', [
+            'status' => 'active',
+        ]);
+
+        // Get subscription
+        $subscription = Subscription::first();
+
+        Notification::assertSentTo($user, SubscriptionWasCreatedNotification::class);
+
+        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+    }
+
+    /**
+     * @test
+     */
     public function paypal_webhook_update_subscription()
     {
         Event::fake([
@@ -352,10 +527,6 @@ class PayPalWebhooksTest extends TestCase
      */
     public function paypal_webhook_payment_sale_completed()
     {
-        Event::fake([
-            SubscriptionWasCreated::class,
-        ]);
-
         $user = User::factory()
             ->create();
 
@@ -554,27 +725,16 @@ class PayPalWebhooksTest extends TestCase
         ])
             ->assertOk();
 
-        $this
-            ->assertDatabaseHas('subscriptions', [
-                'renews_at' => '2019-04-09 10:26:04',
-            ])
-            ->assertDatabaseHas('transactions', [
-                'user_id'   => $user->id,
-                'type'      => 'charge',
-                'status'    => 'completed',
-                'note'      => $plan->name,
-                'currency'  => 'USD',
-                'amount'    => 29.99,
-                'driver'    => 'paypal',
-                'reference' => $subscription->driverId('paypal'),
-            ]);
-
-        // Get subscription
-        $subscription = Subscription::first();
-
-        Notification::assertSentTo($user, SubscriptionWasCreatedNotification::class);
-
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        $this->assertDatabaseHas('transactions', [
+            'user_id'   => $user->id,
+            'type'      => 'charge',
+            'status'    => 'completed',
+            'note'      => $plan->name,
+            'currency'  => 'USD',
+            'amount'    => 29.99,
+            'driver'    => 'paypal',
+            'reference' => $subscription->driverId('paypal'),
+        ]);
     }
 
     /**
