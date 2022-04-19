@@ -19,7 +19,7 @@
     verbose="true"
 >
     <testsuites>
-        <testsuite name="Makingcg Test Suite">
+        <testsuite name="MakingCG Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
@@ -36,4 +36,23 @@
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>
+    <php>
+        <server name="APP_ENV" value="testing"/>
+        <server name="BCRYPT_ROUNDS" value="4"/>
+        <server name="CACHE_DRIVER" value="array"/>
+        <server name="DB_CONNECTION" value="sqlite"/>
+        <server name="DB_DATABASE" value=":memory:"/>
+        <server name="MAIL_DRIVER" value="array"/>
+        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="SESSION_DRIVER" value="array"/>
+        <server name="STRIPE_SECRET_KEY" value="sk_test_51K1tczB9m4sTKy1qT03hg6jAP5CT0ERS7WJLY0FutMc45vqF1jxtqiAxdi9qXIEjEsp5rF0y4pHTCCwhafNgjZIT00CC4ZzW6N"/>
+        <server name="STRIPE_PUBLIC_KEY" value="pk_test_51K1tczB9m4sTKy1qbG6iOguMBDJsGUBFjhQ5rOXphms6oqRtfduUIhxA4f7Vif0nCeHdn2oJ0c56OBBZjF1jfigb00ONWOAHDQ"/>
+        <server name="STRIPE_WEBHOOK_SECRET" value="whsec_0zNjKnxyQldSNvRfy2HLwWrjJ9joZOHa"/>
+        <server name="PAYSTACK_SECRET" value="sk_test_5917169d64e9a5aa41f0b07eb43e3f143bc36f08"/>
+        <server name="PAYSTACK_PUBLIC_KEY" value="pk_test_5d69324328b8904cdd3cad17ff60892c93abfe89"/>
+        <server name="PAYPAL_CLIENT_ID" value="Ac_ECj7HlQgkrfjVkv-sL44sIvOnTmgAWcM59figQffWiLIVOi70a7lcbEr0XwyEb9mPTj7jWQBWPP_m"/>
+        <server name="PAYPAL_CLIENT_SECRET" value="EJd_Hl05w4RKamJ9uPxMvgC2W2-L6BxIhk2FMtCuZVDRAYBiS8mSVubdfXOS4nbNNB6lahYKgxTS-uOb"/>
+        <server name="PAYPAL_WEBHOOK_ID" value="4FD44694JM668712G"/>
+        <server name="PAYPAL_IS_LIVE" value="false"/>
+    </php>
 </phpunit>

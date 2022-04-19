@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Support\Webhooks;
 
 use Tests\TestCase;
@@ -21,10 +22,6 @@ class PayPalWebhooksTest extends TestCase
      */
     public function paypal_webhook_create_subscription()
     {
-        Event::fake([
-            SubscriptionWasCreated::class,
-        ]);
-
         $user = User::factory()
             ->create();
 
@@ -85,13 +82,13 @@ class PayPalWebhooksTest extends TestCase
         $this->assertEquals($user->id, $subscription->user->id);
         $this->assertEquals($plan->id, $subscription->plan->id);
 
-        $this->assertDatabaseHas('subscription_drivers', [
-            'driver_subscription_id' => 'I-KHY6B042F1YA',
-        ]);
-
-        Notification::assertSentTo($user, SubscriptionWasCreatedNotification::class);
-
-        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        $this
+            ->assertDatabaseHas('subscriptions', [
+                'status' => 'inactive',
+            ])
+            ->assertDatabaseHas('subscription_drivers', [
+                'driver_subscription_id' => 'I-KHY6B042F1YA',
+            ]);
     }
 
     /**
@@ -227,7 +224,7 @@ class PayPalWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -347,7 +344,7 @@ class PayPalWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -355,6 +352,10 @@ class PayPalWebhooksTest extends TestCase
      */
     public function paypal_webhook_payment_sale_completed()
     {
+        Event::fake([
+            SubscriptionWasCreated::class,
+        ]);
+
         $user = User::factory()
             ->create();
 
@@ -363,6 +364,17 @@ class PayPalWebhooksTest extends TestCase
                 'driver' => 'paypal',
             ])
             ->create();
+
+        $subscription = Subscription::factory()
+            ->hasDriver([
+                'driver' => 'paypal',
+            ])
+            ->create([
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'name'    => $plan->name,
+                'status'  => 'inactive',
+            ]);
 
         Http::fake([
             'https://api-m.sandbox.paypal.com/v1/oauth2/token'            => Http::response([
@@ -374,7 +386,7 @@ class PayPalWebhooksTest extends TestCase
                 'nonce'        => 'nonce',
             ], 204),
             'https://api-m.sandbox.paypal.com/v1/billing/subscriptions/*' => Http::response([
-                'id'                 => 'I-6W1M3FWTVL19',
+                'id'                 => $subscription->driverId('paypal'),
                 'plan_id'            => $plan->driverId('paypal'),
                 'start_time'         => '2019-04-10T07:00:00Z',
                 'quantity'           => '20',
@@ -502,7 +514,7 @@ class PayPalWebhooksTest extends TestCase
                         'currency' => 'USD',
                         'value'    => '1.47',
                     ],
-                'billing_agreement_id'        => 'I-6W1M3FWTVL19',
+                'billing_agreement_id'        => $subscription->driverId('paypal'),
                 'update_time'                 => '2022-03-02T16:43:15Z',
                 'protection_eligibility_type' => 'ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE',
                 'protection_eligibility'      => 'ELIGIBLE',
@@ -550,8 +562,15 @@ class PayPalWebhooksTest extends TestCase
             'currency'  => 'USD',
             'amount'    => 29.99,
             'driver'    => 'paypal',
-            'reference' => 'I-6W1M3FWTVL19',
+            'reference' => $subscription->driverId('paypal'),
         ]);
+
+        // Get subscription
+        $subscription = Subscription::first();
+
+        Notification::assertSentTo($user, SubscriptionWasCreatedNotification::class);
+
+        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**

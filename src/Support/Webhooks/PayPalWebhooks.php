@@ -25,6 +25,7 @@ trait PayPalWebhooks
 
         // Store new subscription
         $subscription = Subscription::create([
+            'status'  => 'inactive',
             'type'    => 'fixed',
             'plan_id' => $planDriver->plan->id,
             'user_id' => $userId,
@@ -38,14 +39,6 @@ trait PayPalWebhooks
                 'driver'                 => 'paypal',
                 'driver_subscription_id' => $subscriptionCode,
             ]);
-
-        // Get notification
-        $SubscriptionWasCreatedNotification = config('subscription.notifications.SubscriptionWasCreatedNotification');
-
-        // Notify user
-        $subscription->user->notify(new $SubscriptionWasCreatedNotification($subscription));
-
-        SubscriptionWasCreated::dispatch($subscription);
     }
 
     public function handleBillingSubscriptionUpdated(Request $request): void
@@ -100,13 +93,38 @@ trait PayPalWebhooks
         $subscriptionCode = $request->input('resource.billing_agreement_id');
 
         // Get original subscription detail from PayPal
-        $subscription = resolve(EngineManager::class)
+        $remoteSubscription = resolve(EngineManager::class)
             ->driver('paypal')
             ->getSubscription($subscriptionCode)
             ->json();
 
+        // Get subscription from database
+        $subscription = SubscriptionDriver::where('driver_subscription_id', $subscriptionCode)
+            ->first()
+            ->subscription;
+
+        // If subscription is inactive, then activate it
+        if ($subscription->status === 'inactive') {
+
+            // Get notification
+            $SubscriptionWasCreatedNotification = config('subscription.notifications.SubscriptionWasCreatedNotification');
+
+            // Notify user
+            $subscription->user->notify(new $SubscriptionWasCreatedNotification($subscription));
+
+            // Update subscription status
+            $subscription->update([
+                'status' => 'active',
+            ]);
+
+            $subscription->refresh();
+
+            // Dispatch event
+            SubscriptionWasCreated::dispatch($subscription);
+        }
+
         // Get plan data from our database
-        $plan = PlanDriver::where('driver_plan_id', $subscription['plan_id'])
+        $plan = PlanDriver::where('driver_plan_id', $remoteSubscription['plan_id'])
             ->first()
             ->plan;
 
