@@ -18,12 +18,14 @@ trait Billable
 
     public function hasSubscription(): bool
     {
-        return $this->subscription && ($this->subscription->active() || $this->subscription->onGracePeriod());
+        return $this->subscription()->exists() && ($this->subscription->active() || $this->subscription->onGracePeriod());
     }
 
     public function subscription(): HasOne
     {
-        return $this->hasOne(Subscription::class);
+        return $this->hasOne(Subscription::class)
+            ->whereIn('status', ['active', 'cancelled'])
+            ->latest();
     }
 
     public function balance(): HasOne
