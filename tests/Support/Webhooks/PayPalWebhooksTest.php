@@ -554,16 +554,20 @@ class PayPalWebhooksTest extends TestCase
         ])
             ->assertOk();
 
-        $this->assertDatabaseHas('transactions', [
-            'user_id'   => $user->id,
-            'type'      => 'charge',
-            'status'    => 'completed',
-            'note'      => $plan->name,
-            'currency'  => 'USD',
-            'amount'    => 29.99,
-            'driver'    => 'paypal',
-            'reference' => $subscription->driverId('paypal'),
-        ]);
+        $this
+            ->assertDatabaseHas('subscriptions', [
+                'renews_at' => '2019-04-09 10:26:04',
+            ])
+            ->assertDatabaseHas('transactions', [
+                'user_id'   => $user->id,
+                'type'      => 'charge',
+                'status'    => 'completed',
+                'note'      => $plan->name,
+                'currency'  => 'USD',
+                'amount'    => 29.99,
+                'driver'    => 'paypal',
+                'reference' => $subscription->driverId('paypal'),
+            ]);
 
         // Get subscription
         $subscription = Subscription::first();

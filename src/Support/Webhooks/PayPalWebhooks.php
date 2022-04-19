@@ -1,6 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Support\Webhooks;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
@@ -123,13 +124,18 @@ trait PayPalWebhooks
             SubscriptionWasCreated::dispatch($subscription);
         }
 
+        // Update subscription renews_at attribute
+        $subscription->update([
+            'renews_at' => Carbon::parse($remoteSubscription['billing_info']['next_billing_time']),
+        ]);
+
+        // Get our user
+        $user = config('auth.providers.users.model')::find($request->input('resource.custom'));
+
         // Get plan data from our database
         $plan = PlanDriver::where('driver_plan_id', $remoteSubscription['plan_id'])
             ->first()
             ->plan;
-
-        // Get our user
-        $user = config('auth.providers.users.model')::find($request->input('resource.custom'));
 
         // Store transaction
         $user->transactions()->create([
