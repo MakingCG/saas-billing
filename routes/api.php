@@ -5,6 +5,7 @@ use VueFileManager\Subscription\Support\Webhooks\WebhooksController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\PlansController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlansController;
 use VueFileManager\Subscription\Domain\Plans\Actions\UpdatePlanFixedItemAction;
+use VueFileManager\Subscription\Domain\Plans\Controllers\SynchronizePlansController;
 use VueFileManager\Subscription\Domain\Plans\Controllers\GetPlanSubscribersController;
 use VueFileManager\Subscription\Domain\Credits\Controllers\CreditUserBalanceController;
 use VueFileManager\Subscription\Domain\BillingAlerts\Controllers\BillingAlertController;
@@ -60,6 +61,7 @@ Route::group(['prefix' => 'api/subscriptions/admin', 'middleware' => ['api', 'au
     // Plans
     Route::get('/plans/{plan}/subscribers', GetPlanSubscribersController::class);
     Route::patch('/plans/{plan}/features', UpdatePlanFixedItemAction::class);
+    Route::get('/plans/synchronize', SynchronizePlansController::class);
     Route::apiResource('/plans', PlansController::class);
 
     // User data
