@@ -1,9 +1,8 @@
 <?php
-
 namespace Tests\Support\Middleware;
 
-use Tests\Models\User;
 use Tests\TestCase;
+use Tests\Models\User;
 
 class MiddlewareTest extends TestCase
 {

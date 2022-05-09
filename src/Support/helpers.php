@@ -19,9 +19,9 @@ if (! function_exists('getActiveDrivers')) {
 
         $activeDrivers = array_filter([
             'paystack' => $isPaystack,
-            'paypal' => $isPayPal,
-            'stripe' => $isStripe,
-        ], fn($driver) => $driver);
+            'paypal'   => $isPayPal,
+            'stripe'   => $isStripe,
+        ], fn ($driver) => $driver);
 
         return array_keys($activeDrivers);
     }

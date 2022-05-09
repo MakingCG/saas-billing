@@ -1,7 +1,6 @@
 <?php
 namespace VueFileManager\Subscription;
 
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;

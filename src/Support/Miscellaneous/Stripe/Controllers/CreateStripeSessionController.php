@@ -1,8 +1,8 @@
 <?php
 namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Support\Services\StripeHttpClient;

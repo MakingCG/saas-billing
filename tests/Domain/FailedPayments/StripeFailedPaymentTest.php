@@ -6,13 +6,13 @@ use Tests\Models\User;
 use Illuminate\Support\Facades\Http;
 use Tests\Helpers\StripeTestHelpers;
 use Illuminate\Support\Facades\Notification;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
+use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\FailedPayments\Models\FailedPayment;
 use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
 use VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification;
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
-use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 
 class StripeFailedPaymentTest extends TestCase
 {

@@ -2,9 +2,8 @@
 namespace Tests;
 
 use Carbon\Carbon;
-use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Tests\Models\User;
+use Illuminate\Foundation\Application;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Illuminate\Support\Facades\Notification;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -12,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Kyslik\ColumnSortable\ColumnSortableServiceProvider;
 use VueFileManager\Subscription\SubscriptionServiceProvider;
+use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 
 class TestCase extends Orchestra
 {

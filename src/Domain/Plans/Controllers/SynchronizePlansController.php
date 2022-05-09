@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
 use Illuminate\Http\JsonResponse;
@@ -10,7 +9,8 @@ class SynchronizePlansController extends Controller
 {
     public function __construct(
         public SynchronizePlansAction $synchronizePlans,
-    ) {}
+    ) {
+    }
 
     public function __invoke(): JsonResponse
     {

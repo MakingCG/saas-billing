@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Support\Webhooks;
 
 use Carbon\Carbon;
@@ -8,8 +7,8 @@ use Tests\Models\User;
 use Tests\Helpers\StripeTestHelpers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use Tests\Mocking\Stripe\GetSubscriptionStripeMocksClass;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasCreated;
 use VueFileManager\Subscription\Support\Events\SubscriptionWasExpired;
@@ -465,7 +464,7 @@ class StripeWebhooksTest extends TestCase
 
         Notification::assertSentTo($user, SubscriptionWasCreatedNotification::class);
 
-        Event::assertDispatched(fn(SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCreated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -687,7 +686,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => $cancelledAt,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -909,7 +908,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => now(),
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasExpired $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1129,7 +1128,7 @@ class StripeWebhooksTest extends TestCase
             'name'    => $planHigher->name,
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasUpdated $event) => $event->subscription->id === $subscription->id);
     }
 
     /**
@@ -1334,7 +1333,7 @@ class StripeWebhooksTest extends TestCase
             'ends_at' => Carbon::createFromTimestamp(1641113362),
         ]);
 
-        Event::assertDispatched(fn(SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
+        Event::assertDispatched(fn (SubscriptionWasCancelled $event) => $event->subscription->id === $subscription->id);
     }
 
     /**

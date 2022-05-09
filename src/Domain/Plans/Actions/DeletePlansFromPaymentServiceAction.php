@@ -11,16 +11,17 @@ class DeletePlansFromPaymentServiceAction
 
     public function __construct(
         public EngineManager $subscription
-    ) {}
+    ) {
+    }
 
     public function __invoke(Plan $plan): void
     {
         // Delete plan from all available payment gateways
         collect($plan->drivers->pluck('driver'))
-            ->each(fn($driver) => $this->subscription
-                ->driver($driver)
-                ->deletePlan(
-                    $plan->driverId($driver)
-                ));
+            ->each(fn ($driver) => $this->subscription
+            ->driver($driver)
+            ->deletePlan(
+                $plan->driverId($driver)
+            ));
     }
 }

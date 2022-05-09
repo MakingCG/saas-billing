@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Plans\Exceptions;
 
 use Exception;

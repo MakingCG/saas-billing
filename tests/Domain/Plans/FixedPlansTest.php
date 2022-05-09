@@ -296,7 +296,7 @@ class FixedPlansTest extends TestCase
         // Create plan drivers
         collect(getActiveDrivers())
             ->each(
-                fn($driver) => PlanDriver::create([
+                fn ($driver) => PlanDriver::create([
                     'driver'         => $driver,
                     'plan_id'        => $plan->id,
                     'driver_plan_id' => Str::random(),

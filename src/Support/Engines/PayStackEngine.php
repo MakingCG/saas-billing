@@ -1,8 +1,8 @@
 <?php
 namespace VueFileManager\Subscription\Support\Engines;
 
-use ErrorException;
 use Exception;
+use ErrorException;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
@@ -203,7 +203,6 @@ class PayStackEngine implements Engine
 
     public function swapSubscription(Subscription $subscription, Plan $plan): Response
     {
-        //
     }
 
     public function createSubscription(Plan $plan, $user = null): array

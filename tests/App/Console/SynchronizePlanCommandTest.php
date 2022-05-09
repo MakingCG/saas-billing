@@ -1,13 +1,12 @@
 <?php
-
 namespace Tests\App\Console;
 
+use Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
 use Tests\Mocking\PayPal\UpdatePlanPayPalMocksClass;
-use Tests\Mocking\PayStack\UpdatePlanPaystackMocksClass;
 use Tests\Mocking\Stripe\CreatePlanStripeMocksClass;
 use Tests\Mocking\Stripe\UpdatePlanStripeMocksClass;
-use Tests\TestCase;
+use Tests\Mocking\PayStack\UpdatePlanPaystackMocksClass;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanDriver;
 
@@ -24,13 +23,13 @@ class SynchronizePlanCommandTest extends TestCase
         PlanDriver::factory()
             ->create([
                 'plan_id' => $plan->id,
-                'driver' => 'paypal'
+                'driver'  => 'paypal',
             ]);
 
         PlanDriver::factory()
             ->create([
                 'plan_id' => $plan->id,
-                'driver' => 'paystack'
+                'driver'  => 'paystack',
             ]);
 
         // Call plan synchronization

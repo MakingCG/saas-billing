@@ -1,17 +1,17 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
 use ErrorException;
+use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
-use VueFileManager\Subscription\Support\EngineManager;
 
 class StoreFixedPlanAction
 {
     public function __construct(
         private EngineManager $subscription,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateFixedPlanData $data)
     {
@@ -50,7 +50,6 @@ class StoreFixedPlanAction
                             'driver'         => $driver,
                         ]);
                 } catch (ErrorException $error) {
-
                     // Delete previously created plan
                     $plan->delete();
 

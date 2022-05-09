@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -24,7 +23,7 @@ class SynchronizePlansCommand extends Command
         }
 
         // Don't synchronize plans
-        if (!$canSynchronizePlans) {
+        if (! $canSynchronizePlans) {
             $this->info('Nothing to synchronize.');
         }
     }

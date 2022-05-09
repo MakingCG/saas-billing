@@ -1,18 +1,18 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
 use ErrorException;
 use Illuminate\Support\Facades\Log;
-use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
-use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Support\EngineManager;
+use VueFileManager\Subscription\Domain\Plans\Models\Plan;
+use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
 
 class SynchronizePlansAction
 {
     public function __construct(
         private EngineManager $subscription,
-    ) {}
+    ) {
+    }
 
     public function __invoke(): array
     {
@@ -28,7 +28,8 @@ class SynchronizePlansAction
         foreach ($plans as $plan) {
             // Get active drivers
             $driversToSynchronize = array_diff(
-                getActiveDrivers(), $plan->drivers()->pluck('driver')->toArray()
+                getActiveDrivers(),
+                $plan->drivers()->pluck('driver')->toArray()
             );
 
             // Create missing plans
