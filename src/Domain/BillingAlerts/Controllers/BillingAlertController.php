@@ -1,35 +1,53 @@
 <?php
 namespace VueFileManager\Subscription\Domain\BillingAlerts\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
 use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
+use VueFileManager\Subscription\Domain\BillingAlerts\Requests\StoreBillingAlertRequest;
+use VueFileManager\Subscription\Domain\BillingAlerts\Requests\UpdateBillingAlertRequest;
 
 class BillingAlertController extends Controller
 {
-    public function store(Request $request): Response|Application|ResponseFactory
+    public function store(StoreBillingAlertRequest $request): JsonResponse
     {
+        $message = [
+            'type'    => 'success',
+            'message' => 'Billing alert was stored successfully',
+        ];
+
         if (is_demo_account()) {
-            return response('Done', 201);
+            return response()->json($message, 201);
         }
 
+        // Check if billing alert exists
+        if ($request->user()->billingAlert()->exists()) {
+            return response()->json([
+                'type'    => 'error',
+                'message' => 'You already have created billing alert.',
+            ], 422);
+        }
+
+        // Create new billing alert
         $request
             ->user()
             ->billingAlert()
-            ->create(
-                $request->all()
-            );
+            ->create([
+                'amount' => $request->input('amount'),
+            ]);
 
-        return response('Done', 201);
+        return response()->json($message, 201);
     }
 
-    public function update(Request $request, BillingAlert $billingAlert): Response|Application|ResponseFactory
+    public function update(UpdateBillingAlertRequest $request, BillingAlert $billingAlert): JsonResponse
     {
+        $message = [
+            'type'    => 'success',
+            'message' => 'Billing alert was updated successfully',
+        ];
+
         if (is_demo_account()) {
-            return response('Done', 204);
+            return response()->json($message);
         }
 
         $billingAlert->update([
@@ -37,17 +55,22 @@ class BillingAlertController extends Controller
             'triggered' => false,
         ]);
 
-        return response('Done', 204);
+        return response()->json($message);
     }
 
-    public function destroy(BillingAlert $billingAlert): Response|Application|ResponseFactory
+    public function destroy(BillingAlert $billingAlert): JsonResponse
     {
+        $message = [
+            'type'    => 'success',
+            'message' => 'Billing alert was deleted successfully',
+        ];
+
         if (is_demo_account()) {
-            return response('Done', 204);
+            return response()->json($message);
         }
 
         $billingAlert->delete();
 
-        return response('Done', 204);
+        return response()->json($message);
     }
 }
