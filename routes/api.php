@@ -53,7 +53,9 @@ Route::group(['prefix' => 'api/subscriptions', 'middleware' => ['api', 'auth:san
     Route::get('/transactions', GetTransactionsController::class);
 
     // Alerts
-    Route::apiResource('/billing-alerts', BillingAlertController::class);
+    Route::post('/billing-alert', [BillingAlertController::class, 'store']);
+    Route::put('/billing-alert', [BillingAlertController::class, 'update']);
+    Route::delete('/billing-alert', [BillingAlertController::class, 'destroy']);
 });
 
 // Admin

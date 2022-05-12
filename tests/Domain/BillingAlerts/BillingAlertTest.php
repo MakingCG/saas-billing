@@ -16,7 +16,7 @@ class BillingAlertTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->postJson('/api/subscriptions/billing-alerts', [
+            ->postJson('/api/subscriptions/billing-alert', [
                 'amount' => 30,
             ])->assertCreated();
 
@@ -40,9 +40,9 @@ class BillingAlertTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->patchJson("/api/subscriptions/billing-alerts/{$user->billingAlert->id}", [
+            ->putJson("/api/subscriptions/billing-alert", [
                 'amount' => 30,
-            ])->assertNoContent();
+            ])->assertOk();
 
         $this->assertDatabaseHas('billing_alerts', [
             'user_id' => $user->id,
@@ -64,8 +64,8 @@ class BillingAlertTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->delete("/api/subscriptions/billing-alerts/{$user->billingAlert->id}")
-            ->assertNoContent();
+            ->delete("/api/subscriptions/billing-alert")
+            ->assertOk();
 
         $this->assertModelMissing($user->billingAlert);
     }

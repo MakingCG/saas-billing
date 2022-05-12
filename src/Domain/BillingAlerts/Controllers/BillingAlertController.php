@@ -3,7 +3,6 @@ namespace VueFileManager\Subscription\Domain\BillingAlerts\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use VueFileManager\Subscription\Domain\BillingAlerts\Models\BillingAlert;
 use VueFileManager\Subscription\Domain\BillingAlerts\Requests\StoreBillingAlertRequest;
 use VueFileManager\Subscription\Domain\BillingAlerts\Requests\UpdateBillingAlertRequest;
 
@@ -39,7 +38,7 @@ class BillingAlertController extends Controller
         return response()->json($message, 201);
     }
 
-    public function update(UpdateBillingAlertRequest $request, BillingAlert $billingAlert): JsonResponse
+    public function update(UpdateBillingAlertRequest $request, $id = null): JsonResponse
     {
         $message = [
             'type'    => 'success',
@@ -50,7 +49,7 @@ class BillingAlertController extends Controller
             return response()->json($message);
         }
 
-        $billingAlert->update([
+        $request->user()->billingAlert->update([
             'amount'    => $request->input('amount'),
             'triggered' => false,
         ]);
@@ -58,7 +57,7 @@ class BillingAlertController extends Controller
         return response()->json($message);
     }
 
-    public function destroy(BillingAlert $billingAlert): JsonResponse
+    public function destroy(): JsonResponse
     {
         $message = [
             'type'    => 'success',
@@ -69,7 +68,7 @@ class BillingAlertController extends Controller
             return response()->json($message);
         }
 
-        $billingAlert->delete();
+        request()->user()->billingAlert->delete();
 
         return response()->json($message);
     }
