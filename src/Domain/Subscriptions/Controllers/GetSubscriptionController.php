@@ -1,20 +1,23 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Subscriptions\Controllers;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 use VueFileManager\Subscription\Domain\Subscriptions\Resources\SubscriptionResource;
 
 class GetSubscriptionController
 {
-    public function __invoke()
+    public function __invoke(): JsonResponse
     {
-        $subscription = Auth::user()
-            ->subscription;
+        // Get subscription
+        $subscription = auth()->user()->subscription;
 
         if ($subscription) {
-            return new SubscriptionResource($subscription);
+            return response()->json(new SubscriptionResource($subscription));
         }
 
-        return response('User do not have subscription', 404);
+        return response()->json([
+            'type'    => 'error',
+            'message' => 'User do not have subscription',
+        ], 404);
     }
 }
