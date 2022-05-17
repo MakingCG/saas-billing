@@ -41,7 +41,7 @@ class BalanceTest extends TestCase
             ->postJson("/api/subscriptions/admin/users/{$this->user->id}/credit", [
                 'amount' => 20,
             ])
-            ->assertNoContent();
+            ->assertOk();
 
         $this
             ->assertDatabaseHas('transactions', [

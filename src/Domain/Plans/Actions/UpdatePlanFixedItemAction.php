@@ -2,14 +2,17 @@
 namespace VueFileManager\Subscription\Domain\Plans\Actions;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanResource;
 
 class UpdatePlanFixedItemAction
 {
-    public function __invoke(Request $request, Plan $plan)
-    {
+    public function __invoke(
+        Request $request,
+        Plan $plan,
+    ): JsonResponse {
         // Get validation rules
         $rules = $plan
             ->fixedFeatures()
@@ -23,7 +26,7 @@ class UpdatePlanFixedItemAction
 
         // Return errors
         if ($validator->stopOnFirstFailure()->fails()) {
-            return response($validator->errors(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
         // Update data
@@ -37,6 +40,6 @@ class UpdatePlanFixedItemAction
                 ]);
         }
 
-        return response(new PlanResource($plan), 200);
+        return response()->json(new PlanResource($plan));
     }
 }

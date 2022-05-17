@@ -40,7 +40,10 @@ class SynchronizePlansAction
 
                     // Error log
                     Log::info($message);
-                    Log::channel('stderr')->info($message);
+
+                    if (! app()->runningUnitTests()) {
+                        Log::channel('stderr')->info($message);
+                    }
 
                     // Format data
                     $data = CreateFixedPlanData::fromArray([
@@ -85,7 +88,9 @@ class SynchronizePlansAction
                     ->where('type', 'fixed')
                     ->cursor()
                     ->each(function ($plan) use ($driver) {
-                        Log::channel('stderr')->info("Synchronizing plans {$plan->name}...");
+                        if (! app()->runningUnitTests()) {
+                            Log::channel('stderr')->info("Synchronizing plans {$plan->name}...");
+                        }
 
                         $this->subscription->driver($driver)->updatePlan($plan);
                     });

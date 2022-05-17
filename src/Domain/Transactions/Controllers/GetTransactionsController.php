@@ -1,19 +1,19 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Transactions\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use VueFileManager\Subscription\Domain\Transactions\Resources\TransactionCollection;
 
 class GetTransactionsController extends Controller
 {
-    public function __invoke()
+    public function __invoke(): JsonResponse
     {
-        $transactions = Auth::user()
+        $transactions = auth()->user()
             ->transactions()
             ->sortable(['created_at' => 'desc'])
             ->paginate(20);
 
-        return new TransactionCollection($transactions);
+        return response()->json(new TransactionCollection($transactions));
     }
 }

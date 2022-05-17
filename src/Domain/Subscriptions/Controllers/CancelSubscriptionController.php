@@ -1,19 +1,19 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Subscriptions\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use VueFileManager\Subscription\Domain\Subscriptions\Resources\SubscriptionResource;
 
 class CancelSubscriptionController extends Controller
 {
-    public function __invoke(): SubscriptionResource
+    public function __invoke(): JsonResponse
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         // Cancel existing user subscription
         $user->subscription->cancel();
 
-        return new SubscriptionResource($user->subscription);
+        return response()->json(new SubscriptionResource($user->subscription));
     }
 }

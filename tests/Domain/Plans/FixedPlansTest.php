@@ -270,7 +270,7 @@ class FixedPlansTest extends TestCase
         $this
             ->actingAs($user)
             ->delete("/api/subscriptions/admin/plans/{$plan->id}")
-            ->assertNoContent();
+            ->assertOk();
 
         $this->assertDatabaseHas('plans', [
             'type'        => 'fixed',
@@ -312,7 +312,7 @@ class FixedPlansTest extends TestCase
         $this
             ->actingAs($user)
             ->delete("/api/subscriptions/admin/plans/{$plan->id}")
-            ->assertNoContent();
+            ->assertOk();
 
         $this
             ->assertDatabaseCount('plan_fixed_features', 0)

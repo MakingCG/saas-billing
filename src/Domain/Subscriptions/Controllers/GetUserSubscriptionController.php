@@ -1,22 +1,23 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Subscriptions\Controllers;
 
-use Illuminate\Http\Response;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\JsonResponse;
 use VueFileManager\Subscription\Domain\Subscriptions\Resources\SubscriptionResource;
 
 class GetUserSubscriptionController
 {
-    public function __invoke($id): Response|SubscriptionResource|Application|ResponseFactory
+    public function __invoke($id): JsonResponse
     {
         $subscription = config('auth.providers.users.model')::find($id)
             ->subscription;
 
         if ($subscription) {
-            return new SubscriptionResource($subscription);
+            return response()->json(new SubscriptionResource($subscription));
         }
 
-        return response('User do not have subscription', 404);
+        return response()->json([
+            'type'    => 'error',
+            'message' => 'User does not have subscription',
+        ], 404);
     }
 }

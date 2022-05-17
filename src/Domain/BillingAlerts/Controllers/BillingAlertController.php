@@ -8,8 +8,9 @@ use VueFileManager\Subscription\Domain\BillingAlerts\Requests\UpdateBillingAlert
 
 class BillingAlertController extends Controller
 {
-    public function store(StoreBillingAlertRequest $request): JsonResponse
-    {
+    public function store(
+        StoreBillingAlertRequest $request
+    ): JsonResponse {
         $message = [
             'type'    => 'success',
             'message' => 'Billing alert was stored successfully',
@@ -38,8 +39,9 @@ class BillingAlertController extends Controller
         return response()->json($message, 201);
     }
 
-    public function update(UpdateBillingAlertRequest $request, $id = null): JsonResponse
-    {
+    public function update(
+        UpdateBillingAlertRequest $request,
+    ): JsonResponse {
         $message = [
             'type'    => 'success',
             'message' => 'Billing alert was updated successfully',

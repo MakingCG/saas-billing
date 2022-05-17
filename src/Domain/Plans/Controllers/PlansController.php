@@ -1,7 +1,7 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanResource;
@@ -19,12 +19,12 @@ class PlansController extends Controller
     /**
      * Show all visible subscription plans
      */
-    public function index(): PlanCollection
+    public function index(): JsonResponse
     {
         $plans = Plan::sortable(['created_at' => 'desc'])
             ->paginate(20);
 
-        return new PlanCollection($plans);
+        return response()->json(new PlanCollection($plans));
     }
 
     /**
@@ -32,8 +32,8 @@ class PlansController extends Controller
      */
     public function show(
         Plan $plan,
-    ): Response {
-        return response(new PlanResource($plan), 200);
+    ): JsonResponse {
+        return response()->json(new PlanResource($plan));
     }
 
     /**
@@ -43,9 +43,12 @@ class PlansController extends Controller
         StorePlanRequest $request,
         StoreFixedPlanAction $storeFixedPlan,
         StoreMeteredPlanAction $storeMeteredPlan,
-    ): Response {
+    ): JsonResponse {
         if (is_demo()) {
-            return response('Done', 201);
+            return response()->json([
+                'type'    => 'success',
+                'message' => 'Subscription plan was stored successfully',
+            ], 201);
         }
 
         // Create fixed Plan
@@ -66,7 +69,7 @@ class PlansController extends Controller
             $plan = $storeMeteredPlan($meteredPlanData);
         }
 
-        return response(new PlanResource($plan), 201);
+        return response()->json(new PlanResource($plan), 201);
     }
 
     /**
@@ -75,14 +78,14 @@ class PlansController extends Controller
     public function update(
         UpdatePlanRequest $request,
         Plan $plan,
-    ): Response {
+    ): JsonResponse {
         if (is_demo()) {
-            return response(new PlanResource($plan), 200);
+            return response()->json(new PlanResource($plan));
         }
 
         $plan->update($request->all());
 
-        return response(new PlanResource($plan), 200);
+        return response()->json(new PlanResource($plan));
     }
 
     /**
@@ -91,9 +94,14 @@ class PlansController extends Controller
     public function destroy(
         Plan $plan,
         DeletePlansFromPaymentServiceAction $deletePlansFromPaymentService
-    ): Response {
+    ): JsonResponse {
+        $response = [
+            'type'    => 'success',
+            'message' => 'Subscription plan was successfully deleted',
+        ];
+
         if (is_demo()) {
-            return response('Deleted', 204);
+            return response()->json($response);
         }
 
         // Delete via API when plan type is fixed
@@ -111,6 +119,6 @@ class PlansController extends Controller
             $plan->delete();
         }
 
-        return response('Deleted', 204);
+        return response()->json($response);
     }
 }

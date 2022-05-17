@@ -1,21 +1,29 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Subscriptions\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 
 class SwapSubscriptionController extends Controller
 {
-    public function __invoke(Plan $plan)
-    {
+    public function __invoke(
+        Plan $plan
+    ): JsonResponse {
         if (is_demo_account()) {
-            return response('Done', 204);
+            return response()->json([
+                'type'    => 'success',
+                'message' => 'Subscription was swapped successfully',
+            ]);
         }
 
-        $user = Auth::user();
+        $response = auth()
+            ->user()
+            ->subscription
+            ->swap($plan)
+            ->json();
 
         // Swap existing user subscription
-        return $user->subscription->swap($plan)->json();
+        return response()->json($response);
     }
 }

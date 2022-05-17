@@ -40,7 +40,7 @@ class BillingAlertTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->putJson("/api/subscriptions/billing-alert", [
+            ->putJson('/api/subscriptions/billing-alert', [
                 'amount' => 30,
             ])->assertOk();
 
@@ -64,7 +64,7 @@ class BillingAlertTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->delete("/api/subscriptions/billing-alert")
+            ->delete('/api/subscriptions/billing-alert')
             ->assertOk();
 
         $this->assertModelMissing($user->billingAlert);

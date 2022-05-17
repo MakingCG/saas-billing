@@ -2,7 +2,7 @@
 namespace VueFileManager\Subscription\Support\Miscellaneous\Stripe\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use VueFileManager\Subscription\Support\EngineManager;
@@ -12,7 +12,7 @@ class CreateStripeSetupIntentController extends Controller
 {
     use StripeHttpClient;
 
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request): JsonResponse
     {
         $user = Auth::user();
 
@@ -38,8 +38,12 @@ class CreateStripeSetupIntentController extends Controller
             );
         }
 
-        return response([
-            'client_secret' => $paymentIntent->json()['client_secret'],
+        return response()->json([
+            'type'    => 'success',
+            'message' => 'Setup intent was created successfully',
+            'data'    => [
+                'client_secret' => $paymentIntent->json()['client_secret'],
+            ],
         ], 201);
     }
 

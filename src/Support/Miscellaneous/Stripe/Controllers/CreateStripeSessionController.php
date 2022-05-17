@@ -40,7 +40,9 @@ class CreateStripeSessionController
 
         // Return stripe checkout url
         return response()->json([
-            'url' => $session->json()['url'],
+            'type'    => 'success',
+            'message' => 'Checkout session was created successfully',
+            'url'     => $session->json()['url'],
         ], 201);
     }
 

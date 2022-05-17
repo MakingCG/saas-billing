@@ -2,17 +2,23 @@
 namespace VueFileManager\Subscription\Domain\Credits\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
 class CreditUserBalanceController extends Controller
 {
-    public function __invoke(Request $request, $id)
+    public function __invoke(Request $request, $id): JsonResponse
     {
+        $response = [
+            'type'    => 'success',
+            'message' => 'User balance was successfully increased',
+        ];
+
         $user = config('auth.providers.users.model')::find($id);
 
         // Abort in demo mode
         if ($user->email === 'howdy@hi5ve.digital') {
-            return response('Done', 204);
+            return response()->json($response);
         }
 
         // Credit user balance
@@ -37,6 +43,6 @@ class CreditUserBalanceController extends Controller
         // Notify user
         $user->notify(new $BonusCreditAddedNotification($bonus));
 
-        return response('Done', 204);
+        return response()->json($response);
     }
 }

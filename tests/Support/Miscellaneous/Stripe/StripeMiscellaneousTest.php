@@ -121,7 +121,7 @@ class StripeMiscellaneousTest extends TestCase
         $this
             ->actingAs($user)
             ->delete("/api/stripe/credit-cards/$creditCard->id")
-            ->assertNoContent();
+            ->assertOk();
 
         $this->assertModelMissing($creditCard);
     }
