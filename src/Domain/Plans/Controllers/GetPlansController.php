@@ -1,19 +1,19 @@
 <?php
 namespace VueFileManager\Subscription\Domain\Plans\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\Plans\Resources\PlanCollection;
 
 class GetPlansController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function __invoke(): PlanCollection
     {
-        $plans = Plan::where('visible', true)
+        $plans = Plan::sortable(['amount' => 'asc'])
+            ->where('visible', true)
             ->where('status', 'active')
             ->get();
 
-        return response()->json(new PlanCollection($plans));
+        return new PlanCollection($plans);
     }
 }

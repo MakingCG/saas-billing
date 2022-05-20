@@ -19,12 +19,12 @@ class PlansController extends Controller
     /**
      * Show all visible subscription plans
      */
-    public function index(): JsonResponse
+    public function index(): PlanCollection
     {
         $plans = Plan::sortable(['created_at' => 'desc'])
             ->paginate(20);
 
-        return response()->json(new PlanCollection($plans));
+        return new PlanCollection($plans);
     }
 
     /**
