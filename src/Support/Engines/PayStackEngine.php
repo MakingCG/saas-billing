@@ -27,16 +27,9 @@ class PayStackEngine implements Engine
      */
     public function createFixedPlan(CreateFixedPlanData $data): array
     {
-        // Get supported currency by paystack
-        // TODO: check this
-        $supportedCurrencies = ['ZAR'];
-
-        // Check currency availability form plan
-        $planCurrency = in_array($data->currency, $supportedCurrencies) ? $data->currency : 'ZAR';
-
         $response = $this->post('/plan', [
             'name'     => $data->name,
-            'currency' => $planCurrency,
+            'currency' => $data->currency,
             'amount'   => $data->amount * 100,
             'interval' => mapPaystackIntervals($data->interval),
         ]);
