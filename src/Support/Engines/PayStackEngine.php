@@ -5,6 +5,7 @@ use Exception;
 use ErrorException;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\Response;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,9 +28,14 @@ class PayStackEngine implements Engine
      */
     public function createFixedPlan(CreateFixedPlanData $data): array
     {
+        // Get currency
+        $currency = config('subscription.is_local')
+            ? 'ZAR'
+            : $data->currency;
+
         $response = $this->post('/plan', [
             'name'     => $data->name,
-            'currency' => $data->currency,
+            'currency' => $currency,
             'amount'   => $data->amount * 100,
             'interval' => mapPaystackIntervals($data->interval),
         ]);
@@ -181,6 +187,8 @@ class PayStackEngine implements Engine
     {
         // Verify webhook
         if (! in_array($request->ip(), config('subscription.paystack.allowed_ips'))) {
+            Log::info('The webhook cannot be verified from IP: ' . $request->ip());
+
             throw new SuspiciousOperationException('This request is counterfeit.', 401);
         }
 

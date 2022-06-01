@@ -58,4 +58,5 @@ return [
     ],
 
     'is_demo' => env('APP_DEMO', false),
+    'is_local' => env('APP_ENV', 'production') === 'local',
 ];
