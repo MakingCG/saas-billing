@@ -1,11 +1,11 @@
 <?php
 
-namespace VueFileManager\Subscription\App\Scheduler;
+namespace VueFileManager\Subscription\Domain\DunningEmails\Actions;
 
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
 use VueFileManager\Subscription\Domain\Usage\Actions\SumUsageForCurrentPeriodAction;
 
-class FraudPreventionMechanismForMeteredBillingAction
+class ScanSubscriptionsToSendDunningEmailAction
 {
     public function __invoke(): void
     {
@@ -34,9 +34,10 @@ class FraudPreventionMechanismForMeteredBillingAction
                     $usage = resolve(SumUsageForCurrentPeriodAction::class)($subscription);
 
                     // Check if actual usage is bigger than account balance
-                    if ($usage->sum('amount') >= $limitUsageInNewAccounts['amount']) {
-                        // TODO: limit_usage_in_new_accounts
-                        //dd('limit_usage_in_new_accounts');
+                    if ($usage->sum('amount') >= $limitUsageInNewAccounts['amount'] && $subscription->user->dunning()->doesntExist()) {
+                        $subscription->user->dunning()->create([
+                            'type' => 'limit_usage_in_new_accounts',
+                        ]);
                     }
                 });
         }
@@ -57,9 +58,10 @@ class FraudPreventionMechanismForMeteredBillingAction
                     $usage = resolve(SumUsageForCurrentPeriodAction::class)($subscription);
 
                     // Check if actual usage is bigger than account balance
-                    if ($usage->sum('amount') >= $subscription->user->balance->amount) {
-                        // TODO: trigger_usage_bigger_than_balance_filter
-                        //dd('trigger_usage_bigger_than_balance_filter');
+                    if ($usage->sum('amount') >= $subscription->user->balance->amount && $subscription->user->dunning()->doesntExist()) {
+                        $subscription->user->dunning()->create([
+                            'type' => 'usage_bigger_than_balance',
+                        ]);
                     }
                 });
         }

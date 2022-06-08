@@ -6,6 +6,7 @@ use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use VueFileManager\Subscription\Domain\DunningEmails\Actions\ScanSubscriptionsToSendDunningEmailAction;
 use VueFileManager\Subscription\Support\EngineManager;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\App\Scheduler\HaltExpiredSubscriptionsSchedule;
@@ -70,6 +71,12 @@ class SubscriptionServiceProvider extends PackageServiceProvider
             // Try failed credit card charge again
             $schedule->call(RetryChargeFromPaymentCardAction::class)
                 ->daily();
+
+            // Scan subscription to send dunning email when needed
+            $schedule->call(ScanSubscriptionsToSendDunningEmailAction::class)
+                ->daily();
+
+            // TODO: scan dunning records to send repeated notifications
         });
     }
 }

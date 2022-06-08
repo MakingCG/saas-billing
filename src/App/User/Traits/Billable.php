@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use VueFileManager\Subscription\Domain\Credits\Models\Balance;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
+use VueFileManager\Subscription\Domain\DunningEmails\Models\Dunning;
 use VueFileManager\Subscription\Domain\Credits\Traits\CreditHelpers;
 use VueFileManager\Subscription\Domain\CreditCards\Models\CreditCard;
 use VueFileManager\Subscription\Domain\Transactions\Models\Transaction;
@@ -56,6 +57,11 @@ trait Billable
     public function customers(): HasMany
     {
         return $this->hasMany(Customer::class, 'user_id', 'id');
+    }
+
+    public function dunning(): HasOne
+    {
+        return $this->hasOne(Dunning::class, 'user_id', 'id');
     }
 
     /**

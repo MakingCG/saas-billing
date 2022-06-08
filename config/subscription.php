@@ -34,6 +34,7 @@ return [
      */
     'notifications' => [
         'ChargeFromCreditCardFailedAgainNotification' => \VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedAgainNotification::class,
+        'DunningEmailToCoverAccountUsageNotification' => \VueFileManager\Subscription\Domain\DunningEmails\Notifications\DunningEmailToCoverAccountUsageNotification::class,
         'ConfirmStripePaymentNotification'            => \VueFileManager\Subscription\Support\Miscellaneous\Stripe\Notifications\ConfirmStripePaymentNotification::class,
         'ChargeFromCreditCardFailedNotification'      => \VueFileManager\Subscription\Domain\FailedPayments\Notifications\ChargeFromCreditCardFailedNotification::class,
         'SubscriptionWasCreatedNotification'          => \VueFileManager\Subscription\Domain\Subscriptions\Notifications\SubscriptionWasCreatedNotification::class,
