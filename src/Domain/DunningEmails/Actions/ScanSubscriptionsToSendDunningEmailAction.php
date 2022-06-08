@@ -1,5 +1,4 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\DunningEmails\Actions;
 
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;

@@ -1,19 +1,19 @@
 <?php
-
 namespace VueFileManager\Subscription\Domain\DunningEmails\Models;
 
-use Domain\DunningEmails\Actions\SendDunningEmailToUserAction;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str;
+use Domain\DunningEmails\Actions\SendDunningEmailToUserAction;
+use VueFileManager\Subscription\Database\Factories\DunningFactory;
 
 /**
  * @method static create(array $array)
  * @method static where(string $key, string $value)
  * @property string id
  * @property string user_id
- * @property integer reminders
+ * @property int reminders
  * @property string type
  */
 class Dunning extends Model
@@ -30,6 +30,11 @@ class Dunning extends Model
         'id' => 'string',
     ];
 
+    protected static function newFactory(): DunningFactory
+    {
+        return DunningFactory::new();
+    }
+
     public function user(): HasOne
     {
         return $this->hasOne(config('auth.providers.users.model'), 'id', 'user_id');
@@ -41,7 +46,7 @@ class Dunning extends Model
 
         static::creating(function ($dunning) {
             $dunning->id = Str::uuid();
-            $dunning->reminders = 1;
+            $dunning->sequence = 0;
         });
 
         // Send first dunning email after creating dunning record

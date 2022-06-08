@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('dunnings', function (Blueprint $table) {
             $table->uuid('id');
             $table->uuid('user_id')->index();
-            $table->integer('reminders');
+            $table->integer('sequence');
             $table->string('type');
             $table->timestamps();
         });

@@ -1,5 +1,4 @@
 <?php
-
 namespace Domain\DunningEmails\Actions;
 
 use VueFileManager\Subscription\Domain\DunningEmails\Models\Dunning;
@@ -10,14 +9,14 @@ class SendDunningEmailToUserAction
         Dunning $dunning
     ): void {
         // Get notification class
-        $dunningEmail = config('subscription.notifications.DunningEmailToCoverAccountUsageNotification');
+        $notification = config('subscription.notifications.DunningEmailToCoverAccountUsageNotification');
 
         // Send notification
-        $dunning->user->notify( new $dunningEmail(clone $dunning));
+        $dunning->user->notify(new $notification(clone $dunning));
 
-        // Increase reminder count
-        if ($dunning->reminders < 3) {
-            $dunning->increment('reminders');
+        // Update reminder count
+        if ($dunning->sequence < 3) {
+            $dunning->increment('sequence');
         }
     }
 }

@@ -6,13 +6,14 @@ use Spatie\LaravelPackageTools\Package;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VueFileManager\Subscription\Domain\DunningEmails\Actions\ScanSubscriptionsToSendDunningEmailAction;
 use VueFileManager\Subscription\Support\EngineManager;
+use Domain\DunningEmails\Actions\SendRepeatedDunningEmailToUsersAction;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
+use VueFileManager\Subscription\Domain\DunningEmails\Actions\ScanSubscriptionsToSendDunningEmailAction;
 
 class SubscriptionServiceProvider extends PackageServiceProvider
 {
@@ -72,11 +73,13 @@ class SubscriptionServiceProvider extends PackageServiceProvider
             $schedule->call(RetryChargeFromPaymentCardAction::class)
                 ->daily();
 
-            // Scan subscription to send dunning email when needed
+            // Check subscriptions to detect whom to send dunning email
             $schedule->call(ScanSubscriptionsToSendDunningEmailAction::class)
                 ->daily();
 
-            // TODO: scan dunning records to send repeated notifications
+            // Get dunning records and send second and third reminders
+            $schedule->call(SendRepeatedDunningEmailToUsersAction::class)
+                ->daily();
         });
     }
 }
