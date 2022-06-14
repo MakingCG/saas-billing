@@ -7,9 +7,9 @@ use Tests\Models\User;
 use Illuminate\Support\Facades\Notification;
 use VueFileManager\Subscription\Domain\Plans\Models\Plan;
 use VueFileManager\Subscription\Domain\DunningEmails\Models\Dunning;
-use Domain\DunningEmails\Actions\SendRepeatedDunningEmailToUsersAction;
 use VueFileManager\Subscription\Domain\Plans\Models\PlanMeteredFeature;
 use VueFileManager\Subscription\Domain\Subscriptions\Models\Subscription;
+use VueFileManager\Subscription\Domain\DunningEmails\Actions\SendRepeatedDunningEmailToUsersAction;
 use VueFileManager\Subscription\Domain\DunningEmails\Actions\ScanSubscriptionsToSendDunningEmailAction;
 use VueFileManager\Subscription\Domain\DunningEmails\Notifications\DunningEmailToCoverAccountUsageNotification;
 

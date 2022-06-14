@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use VueFileManager\Subscription\Support\EngineManager;
-use Domain\DunningEmails\Actions\SendRepeatedDunningEmailToUsersAction;
 use VueFileManager\Subscription\App\Console\Commands\SynchronizePlansCommand;
 use VueFileManager\Subscription\App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
+use VueFileManager\Subscription\Domain\DunningEmails\Actions\SendRepeatedDunningEmailToUsersAction;
 use VueFileManager\Subscription\Domain\DunningEmails\Actions\ScanSubscriptionsToSendDunningEmailAction;
 
 class SubscriptionServiceProvider extends PackageServiceProvider

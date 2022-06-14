@@ -129,7 +129,6 @@ trait PayStackWebhooks
         $user = config('auth.providers.users.model')::where('email', $request->input('data.customer.email'))
             ->first();
 
-        // TODO: resolve conflict with ZAR/USD currency
         // Proceed as credit balance
         if (empty($plan)) {
             $user->creditBalance(
@@ -146,6 +145,8 @@ trait PayStackWebhooks
                 'currency'  => $request->input('data.currency'),
                 'amount'    => $request->input('data.amount') / 100,
             ]);
+
+            // TODO: remove dunning warning
         }
 
         // Proceed as subscription charge

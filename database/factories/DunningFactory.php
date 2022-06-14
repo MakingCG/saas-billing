@@ -14,7 +14,10 @@ class DunningFactory extends Factory
         return [
             'id'         => $this->faker->uuid,
             'user_id'    => $this->faker->uuid,
-            'sequence'  => $this->faker->randomNumber(1),
+            'sequence'   => 2,
+            'type'       => $this->faker->randomElement([
+                'limit_usage_in_new_accounts', 'usage_bigger_than_balance'
+            ]),
             'created_at' => now(),
             'updated_at' => now(),
         ];
