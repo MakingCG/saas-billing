@@ -146,7 +146,8 @@ trait PayStackWebhooks
                 'amount'    => $request->input('data.amount') / 100,
             ]);
 
-            // TODO: remove dunning warning
+            // Remove dunning warning
+            $user->dunning?->delete();
         }
 
         // Proceed as subscription charge
