@@ -212,7 +212,10 @@ class PayPalEngine implements Engine
         if ($paypalPlan) {
             $plan = $this->getPlan($paypalPlan->driver_plan_id);
 
-            return $plan['product_id'];
+            // Check if product id was retrieved
+            if (array_key_exists('product_id', $plan)) {
+                return $plan['product_id'];
+            }
         }
 
         $response = $this->post('/catalogs/products', [

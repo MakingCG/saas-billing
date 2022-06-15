@@ -19,7 +19,7 @@ trait PayPalHttpClient
         $this->secret = config('subscription.credentials.paypal.secret');
         $this->id = config('subscription.credentials.paypal.id');
 
-        $this->api = config('subscription.credentials.paypal.is_live')
+        $this->api = filter_var(config('subscription.credentials.paypal.is_live'), FILTER_VALIDATE_BOOLEAN)
             ? 'https://api-m.paypal.com/v1'
             : 'https://api-m.sandbox.paypal.com/v1';
     }
