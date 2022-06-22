@@ -46,17 +46,6 @@ return [
         'settlement_period' => 30,
     ],
 
-    'paystack'          => [
-        /*
-         * List of allowed ip address to verify paystack webhook request
-         */
-        'allowed_ips' => [
-            '52.214.14.220',
-            '52.49.173.169',
-            '52.31.139.75',
-        ],
-    ],
-
     'is_demo'  => env('APP_DEMO', false),
     'is_local' => env('APP_ENV', 'production') === 'local',
 ];

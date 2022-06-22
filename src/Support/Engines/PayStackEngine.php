@@ -185,9 +185,12 @@ class PayStackEngine implements Engine
      */
     public function webhook(Request $request): \Symfony\Component\HttpFoundation\Response
     {
-        // Verify webhook
-        if (! in_array($request->ip(), config('subscription.paystack.allowed_ips'))) {
-            Log::info('The webhook cannot be verified from IP: ' . $request->ip());
+        // Hash request
+        $hash = hash_hmac('sha512', $request->getContent(), config('subscription.credentials.paystack.secret'));
+
+        // validate event do all at once to avoid timing attack
+        if(! $request->hasHeader('x-paystack-signature') && $request->header('x-paystack-signature') !== $hash) {
+            Log::info('The webhook cannot be verified.');
 
             throw new SuspiciousOperationException('This request is counterfeit.', 401);
         }
