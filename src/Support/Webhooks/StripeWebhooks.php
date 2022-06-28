@@ -214,6 +214,9 @@ trait StripeWebhooks
         if ($customer->user->failedPayments()->exists()) {
             resolve(RetryChargeFromPaymentCardAction::class)($customer->user);
         }
+
+        // Remove dunning warning
+        $customer->user->dunning?->delete();
     }
 
     /**
