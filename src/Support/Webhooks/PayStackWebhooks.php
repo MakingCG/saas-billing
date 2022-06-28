@@ -129,9 +129,16 @@ trait PayStackWebhooks
         $user = config('auth.providers.users.model')::where('email', $request->input('data.customer.email'))
             ->first();
 
+        // Check if transaction isn't recorded
+        $transactionDoesntExists = $user
+            ->transactions()
+            ->where('reference', $request->input('data.reference'))
+            ->doesntExist();
+
         // TODO: resolve conflict with ZAR/USD currency
         // Proceed as credit balance
-        if (empty($plan)) {
+        if (empty($plan) && $transactionDoesntExists) {
+
             $user->creditBalance(
                 credit: $request->input('data.amount') / 100,
                 currency: $request->input('data.currency'),
@@ -149,7 +156,7 @@ trait PayStackWebhooks
         }
 
         // Proceed as subscription charge
-        if (! empty($plan)) {
+        if (! empty($plan) && $transactionDoesntExists) {
             // Get plan from database
             $plan = PlanDriver::where('driver_plan_id', $request->input('data.plan.plan_code'))
                 ->first()
