@@ -183,5 +183,8 @@ trait PayPalWebhooks
 
         // Remove dunning warning
         $user->dunning?->delete();
+
+        // Delete cached dunning count
+        cache()->forget("dunning-count.$user->id");
     }
 }

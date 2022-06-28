@@ -217,6 +217,9 @@ trait StripeWebhooks
 
         // Remove dunning warning
         $customer->user->dunning?->delete();
+
+        // Delete cached dunning count
+        cache()->forget("dunning-count.{$customer->user->id}");
     }
 
     /**
