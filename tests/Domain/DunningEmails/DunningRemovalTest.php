@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Domain\DunningEmails;
 
-use Tests\Helpers\StripeTestHelpers;
-use Tests\Models\User;
 use Tests\TestCase;
+use Tests\Models\User;
+use Tests\Helpers\StripeTestHelpers;
 use VueFileManager\Subscription\Domain\Customers\Models\Customer;
 use VueFileManager\Subscription\Domain\DunningEmails\Models\Dunning;
 
@@ -237,19 +237,19 @@ class DunningRemovalTest extends TestCase
                 'status'         => 'APPROVED',
             ],
             'links'            => [
-                    0 =>
-                        [
-                            'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-59T06126UF194714E-4G3970566J739735U',
-                            'rel'    => 'self',
-                            'method' => 'GET',
-                        ],
-                    1 =>
-                        [
-                            'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-59T06126UF194714E-4G3970566J739735U/resend',
-                            'rel'    => 'resend',
-                            'method' => 'POST',
-                        ],
-                ],
+                0 =>
+                    [
+                        'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-59T06126UF194714E-4G3970566J739735U',
+                        'rel'    => 'self',
+                        'method' => 'GET',
+                    ],
+                1 =>
+                    [
+                        'href'   => 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-59T06126UF194714E-4G3970566J739735U/resend',
+                        'rel'    => 'resend',
+                        'method' => 'POST',
+                    ],
+            ],
         ])->assertOk();
 
         $this

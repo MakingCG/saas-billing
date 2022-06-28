@@ -49,6 +49,7 @@ class ScanSubscriptionsToSendDunningEmailAction
                 ->whereHas('user', function ($q) {
                     $q
                         ->whereDate('created_at', '<=', now()->subDays(30)->toDateTimeString())
+                        ->doesntHave('dunning')
                         ->doesntHave('creditCards');
                 })
                 ->cursor()
@@ -57,7 +58,7 @@ class ScanSubscriptionsToSendDunningEmailAction
                     $usage = resolve(SumUsageForCurrentPeriodAction::class)($subscription);
 
                     // Check if actual usage is bigger than account balance
-                    if ($usage->sum('amount') >= $subscription->user->balance->amount && $subscription->user->dunning()->doesntExist()) {
+                    if ($usage->sum('amount') >= $subscription->user->balance->amount) {
                         $subscription->user->dunning()->create([
                             'type' => 'usage_bigger_than_balance',
                         ]);
