@@ -17,10 +17,14 @@ if (! function_exists('getActiveDrivers')) {
         $isPaystack = config('subscription.credentials.paystack.secret')
             && config('subscription.credentials.paystack.public_key');
 
+        $isRazorpay = config('subscription.credentials.razorpay.key')
+            && config('subscription.credentials.razorpay.secret');
+
         $activeDrivers = array_filter([
             'paystack' => $isPaystack,
             'paypal'   => $isPayPal,
             'stripe'   => $isStripe,
+            'razorpay' => $isRazorpay,
         ], fn ($driver) => $driver);
 
         return array_keys($activeDrivers);

@@ -20,6 +20,10 @@ return [
             'webhook_id' => env('PAYPAL_WEBHOOK_ID'),
             'is_live'    => env('PAYPAL_IS_LIVE', false),
         ],
+        'razorpay'   => [
+            'key'        => env('RAZORPAY_KEY'),
+            'secret'     => env('RAZORPAY_SECRET'),
+        ],
     ],
 
     /*

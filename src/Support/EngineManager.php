@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Manager;
 use VueFileManager\Subscription\Support\Engines\Engine;
 use VueFileManager\Subscription\Support\Engines\PayPalEngine;
+use VueFileManager\Subscription\Support\Engines\RazorpayEngine;
 use VueFileManager\Subscription\Support\Engines\StripeEngine;
 use VueFileManager\Subscription\Support\Engines\PayStackEngine;
 use VueFileManager\Subscription\Domain\Plans\DTO\CreateFixedPlanData;
@@ -34,5 +35,10 @@ class EngineManager extends Manager
     public function createPayPalDriver(): Engine
     {
         return new PayPalEngine();
+    }
+
+    public function createRazorpayDriver(): Engine
+    {
+        return new RazorpayEngine();
     }
 }

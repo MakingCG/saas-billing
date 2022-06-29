@@ -21,6 +21,7 @@
         "guzzlehttp/guzzle": "^7.4.1",
         "kyslik/column-sortable": "^6.4.2",
         "laravel/sanctum": "^2.14.2",
+        "razorpay/razorpay": "^2.8",
         "spatie/data-transfer-object": "^3.7.3",
         "spatie/laravel-package-tools": "^1.11.2",
         "spatie/laravel-queueable-action": "^2.14.1",
