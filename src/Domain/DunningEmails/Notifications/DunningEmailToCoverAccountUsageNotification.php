@@ -12,7 +12,8 @@ class DunningEmailToCoverAccountUsageNotification extends Notification implement
     use Queueable;
 
     public function __construct(
-        private Dunning $dunning
+        private Dunning $dunning,
+        private int $index,
     ) {
     }
 
@@ -55,9 +56,9 @@ class DunningEmailToCoverAccountUsageNotification extends Notification implement
         ];
 
         return (new MailMessage)
-            ->subject($message[$this->dunning->type][$this->dunning->sequence]['subject'])
+            ->subject($message[$this->dunning->type][$this->index]['subject'])
             ->greeting(__('Hi there'))
-            ->line($message[$this->dunning->type][$this->dunning->sequence]['line'])
+            ->line($message[$this->dunning->type][$this->index]['line'])
             ->salutation(__('Regards'));
     }
 }

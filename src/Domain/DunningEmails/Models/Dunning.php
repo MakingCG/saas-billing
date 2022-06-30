@@ -13,7 +13,7 @@ use VueFileManager\Subscription\Domain\DunningEmails\Actions\SendDunningEmailToU
  * @method static where(string $key, string $value)
  * @property string id
  * @property string user_id
- * @property int reminders
+ * @property int sequence
  * @property string type
  */
 class Dunning extends Model
