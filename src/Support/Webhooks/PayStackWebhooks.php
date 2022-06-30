@@ -153,6 +153,12 @@ trait PayStackWebhooks
                 'currency'  => $request->input('data.currency'),
                 'amount'    => $request->input('data.amount') / 100,
             ]);
+
+            // Remove dunning warning
+            $user->dunning?->delete();
+
+            // Delete cached dunning count
+            cache()->forget("dunning-count.$user->id");
         }
 
         // Proceed as subscription charge

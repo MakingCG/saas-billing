@@ -12,6 +12,8 @@ use VueFileManager\Subscription\App\Scheduler\HaltExpiredSubscriptionsSchedule;
 use VueFileManager\Subscription\App\Scheduler\CheckAndTriggerBillingAlertsSchedule;
 use VueFileManager\Subscription\App\Scheduler\SettlePrePaidSubscriptionPeriodSchedule;
 use VueFileManager\Subscription\Domain\FailedPayments\Actions\RetryChargeFromPaymentCardAction;
+use VueFileManager\Subscription\Domain\DunningEmails\Actions\SendRepeatedDunningEmailToUsersAction;
+use VueFileManager\Subscription\Domain\DunningEmails\Actions\ScanSubscriptionsToSendDunningEmailAction;
 
 class SubscriptionServiceProvider extends PackageServiceProvider
 {
@@ -69,6 +71,14 @@ class SubscriptionServiceProvider extends PackageServiceProvider
 
             // Try failed credit card charge again
             $schedule->call(RetryChargeFromPaymentCardAction::class)
+                ->daily();
+
+            // Check subscriptions to detect whom to send dunning email
+            $schedule->call(ScanSubscriptionsToSendDunningEmailAction::class)
+                ->daily();
+
+            // Get dunning records and send second and third reminders
+            $schedule->call(SendRepeatedDunningEmailToUsersAction::class)
                 ->daily();
         });
     }

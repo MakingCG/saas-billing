@@ -180,5 +180,11 @@ trait PayPalWebhooks
             'currency'  => $request->input('resource.purchase_units.0.amount.currency_code'),
             'amount'    => $request->input('resource.purchase_units.0.amount.value'),
         ]);
+
+        // Remove dunning warning
+        $user->dunning?->delete();
+
+        // Delete cached dunning count
+        cache()->forget("dunning-count.$user->id");
     }
 }

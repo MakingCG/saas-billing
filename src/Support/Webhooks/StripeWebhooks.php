@@ -214,6 +214,12 @@ trait StripeWebhooks
         if ($customer->user->failedPayments()->exists()) {
             resolve(RetryChargeFromPaymentCardAction::class)($customer->user);
         }
+
+        // Remove dunning warning
+        $customer->user->dunning?->delete();
+
+        // Delete cached dunning count
+        cache()->forget("dunning-count.{$customer->user->id}");
     }
 
     /**
