@@ -12,7 +12,7 @@ class SendDunningEmailToUserAction
         $notification = config('subscription.notifications.DunningEmailToCoverAccountUsageNotification');
 
         // Send notification
-        $dunning->user->notify(new $notification($dunning, $dunning->sequence));
+        $dunning->user->notify(new $notification($dunning));
 
         // Update reminder count
         if ($dunning->sequence < 3) {

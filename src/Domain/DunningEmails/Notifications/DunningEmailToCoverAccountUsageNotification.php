@@ -13,7 +13,6 @@ class DunningEmailToCoverAccountUsageNotification extends Notification implement
 
     public function __construct(
         private Dunning $dunning,
-        private int $index,
     ) {
     }
 
@@ -55,10 +54,12 @@ class DunningEmailToCoverAccountUsageNotification extends Notification implement
             ],
         ];
 
+        $index = $this->dunning->sequence - 1;
+
         return (new MailMessage)
-            ->subject($message[$this->dunning->type][$this->index]['subject'])
+            ->subject($message[$this->dunning->type][$index]['subject'])
             ->greeting(__('Hi there'))
-            ->line($message[$this->dunning->type][$this->index]['line'])
+            ->line($message[$this->dunning->type][$index]['line'])
             ->salutation(__('Regards'));
     }
 }

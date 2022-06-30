@@ -185,10 +185,10 @@ class DunningNotificationsTest extends TestCase
         $dunning = Dunning::factory()
             ->createOneQuietly([
                 'type'     => 'limit_usage_in_new_accounts',
-                'sequence' => 0,
+                'sequence' => 1,
             ]);
 
-        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning, $dunning->sequence))->toMail();
+        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning))->toMail();
 
         $this->assertStringContainsString('Please make first payment for your account to fund your usage.', $notification->subject);
         $this->assertStringContainsString('We are happy you are using our service. To continue to using our service, please make first payment for your account balance to fund your usage.', $notification->render());
@@ -202,10 +202,10 @@ class DunningNotificationsTest extends TestCase
         $dunning = Dunning::factory()
             ->createOneQuietly([
                 'type'     => 'limit_usage_in_new_accounts',
-                'sequence' => 1,
+                'sequence' => 2,
             ]);
 
-        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning, $dunning->sequence))->toMail();
+        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning))->toMail();
 
         $this->assertStringContainsString('📆 Reminder: Please make first payment for your account to fund your usage.', $notification->subject);
         $this->assertStringContainsString('We are happy you are using our service. To continue to using our service, please make first payment for your account balance to fund your usage.', $notification->render());
@@ -219,10 +219,10 @@ class DunningNotificationsTest extends TestCase
         $dunning = Dunning::factory()
             ->createOneQuietly([
                 'type'     => 'limit_usage_in_new_accounts',
-                'sequence' => 2,
+                'sequence' => 3,
             ]);
 
-        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning, $dunning->sequence))->toMail();
+        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning))->toMail();
 
         $this->assertStringContainsString('‼️ Uh-oh! Your functionality was restricted. Please make payment to continue using your account.', $notification->subject);
         $this->assertStringContainsString('We are sorry for the inconvenience with using our service. To continue to using our service, please make first payment for your account balance to fund your usage and your functionality will be allowed as soon as possible.', $notification->render());
@@ -236,10 +236,10 @@ class DunningNotificationsTest extends TestCase
         $dunning = Dunning::factory()
             ->createOneQuietly([
                 'type'     => 'usage_bigger_than_balance',
-                'sequence' => 0,
+                'sequence' => 1,
             ]);
 
-        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning, $dunning->sequence))->toMail();
+        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning))->toMail();
 
         $this->assertStringContainsString("⚠️ You don't have sufficient funds in your account, please increase your account balance", $notification->subject);
         $this->assertStringContainsString('We are happy you are using our service. To continue to using our service, please increase your funds for your account balance to cover your usage.', $notification->render());
@@ -253,10 +253,10 @@ class DunningNotificationsTest extends TestCase
         $dunning = Dunning::factory()
             ->createOneQuietly([
                 'type'     => 'usage_bigger_than_balance',
-                'sequence' => 1,
+                'sequence' => 2,
             ]);
 
-        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning, $dunning->sequence))->toMail();
+        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning))->toMail();
 
         $this->assertStringContainsString("📆 Reminder: You don't have sufficient funds in your account, please increase your account balance", $notification->subject);
         $this->assertStringContainsString('We are happy you are using our service. To continue to using our service, please increase your funds for your account balance to cover your usage.', $notification->render());
@@ -270,10 +270,10 @@ class DunningNotificationsTest extends TestCase
         $dunning = Dunning::factory()
             ->createOneQuietly([
                 'type'     => 'usage_bigger_than_balance',
-                'sequence' => 2,
+                'sequence' => 3,
             ]);
 
-        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning, $dunning->sequence))->toMail();
+        $notification = (new DunningEmailToCoverAccountUsageNotification($dunning))->toMail();
 
         $this->assertStringContainsString('‼️ Uh-oh! Your functionality was restricted. Please increase your funds for your account balance to cover your usage.', $notification->subject);
         $this->assertStringContainsString('We are sorry for the inconvenience with using our service. To continue to using our service, please increase your funds for your account balance to cover your usage and your functionality will be allowed as soon as possible.', $notification->render());
