@@ -1,12 +1,12 @@
 {
-    "name": "makingcg/subscription",
+    "name": "makingcg/saas-billing",
     "description": "Subscription module for all great payment gateway",
     "keywords": [
         "VueFileManager",
         "laravel",
         "subscription"
     ],
-    "homepage": "https://github.com/makingcg/subscription",
+    "homepage": "https://github.com/makingcg/saas-billing",
     "license": "MIT",
     "authors": [
         {
@@ -75,5 +75,11 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spatie"
+        }
+    ]
 }
